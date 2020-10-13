@@ -1,16 +1,12 @@
-_SANTOMY_
----
+# pbl2_group2
 
-# git branch
-- branch structure
-  - master
-    - release version
-    - must not change
-  - develop  
-    - main branch to develop
-    - if you have update, you should merge this branch and revise conflict
-    - if you revise all conflict, you make pull request
-    - if you make pull request, your code must be reviewed
-  
-    
-  
+# How To Run
+## For Docker
+- 1.Make docker image
+```
+$ docker-compose build
+```
+- 2.Run container
+```
+$ docker run -it "container_name"
+```
