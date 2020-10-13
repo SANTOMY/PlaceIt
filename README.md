@@ -2,6 +2,10 @@
 
 # How To Run
 - Make docker image
-'$ docker-compose build'
+'''
+$ docker-compose build
+'''
 - Run container
+'''
 '$ docker run -it "container_name"'
+'''
