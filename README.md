@@ -8,5 +8,5 @@ $ docker-compose build
 ```
 - 2.Run container
 ```
-'$ docker run -it "container_name"'
+$ docker run -it "container_name"
 ```
