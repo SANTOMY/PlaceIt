@@ -9,3 +9,11 @@ services:
       - ./back/src:/app/src
     ports:
       - "8080:3000"
+  front:
+    build: front
+    working_dir: /app/src
+    tty: true
+    volumes: 
+      - ./front/src:/app/src
+    ports: 
+      - "3000:3000"
