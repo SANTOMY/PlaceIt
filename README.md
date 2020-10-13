@@ -1,11 +1,12 @@
 # pbl2_group2
 
 # How To Run
-- Make docker image
-'''tex
+## For Docker
+- 1.Make docker image
+```
 $ docker-compose build
-'''
-- Run container
-'''tex
+```
+- 2.Run container
+```
 '$ docker run -it "container_name"'
-'''
+```
