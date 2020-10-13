@@ -1,0 +1,9 @@
+#for Mac
+.DS_Store
+#for vscode
+.vscode
+.classpath
+
+
+#for database sec
+./docker-compose.yml

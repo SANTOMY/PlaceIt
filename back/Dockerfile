@@ -7,3 +7,5 @@ ADD package.json .
 RUN apk update && \
     apk add --no-cache nodejs npm && \
     npm install
+
+RUN apk add postgresql
