@@ -9,3 +9,5 @@ RUN apk update && \
     npm install
 
 RUN apk add postgresql
+
+COPY ./src /app/src
