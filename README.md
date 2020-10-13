@@ -1,5 +1,11 @@
 # pbl2_group2
 
+# スプリント情報
+- スプリント1
+- リーダー:松尾
+- 議事担当:
+- スケジュール:10/19-10/27
+
 # How To Run
 ## For Docker
 - 1.Make docker image
