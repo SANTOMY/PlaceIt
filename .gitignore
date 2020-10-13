@@ -6,4 +6,4 @@
 
 
 #for database sec
-./docker-compose.yml
+docker-compose.yml
