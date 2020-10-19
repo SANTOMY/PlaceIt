@@ -8,7 +8,7 @@
             <v-form ref="loginForm">
 
                 <v-text-field label="メールアドレス"
-                    prepend-icon="mdi-account-circle"
+                    prepend-icon="mdi-email"
                     v-model="model.email" 
                     :counter="128"
                     :rules="emailRules"/>
