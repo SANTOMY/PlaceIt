@@ -13,7 +13,7 @@
                     @click:append="showPassword = !showPassword"
                     label="パスワード" />
                 <v-card-actions>
-                    <v-btn>ログイン</v-btn>
+                    <v-btn @click="register">ログイン</v-btn>
                 </v-card-actions>
             </v-form>
         </v-card-text>
@@ -23,10 +23,21 @@
 
 <script>
 export default {
-    name: 'login',
-    data: () => ({
-        showPassword : false
-    })
+
+    data: function() {
+        return {
+            showPassword : false
+        }
+    },
+
+    methods: {
+        register: function() {
+            //
+            // TODO: アカウントを作成できるかチェックする必要がある
+            //
+            this.$router.push('/map')
+        }
+    }
     
 }
 </script>
