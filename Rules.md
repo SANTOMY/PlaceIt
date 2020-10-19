@@ -14,6 +14,7 @@ _SANTOMY_
 - 開発の進め方
   - 'git clone'でリポジトリをクローンする or リポジトリをクローンしている場合はdevelopブランチで'git pull'をする
   - developから'git branch \[ブランチ名\]'を実行してブランチを作成する
+    - frontは'(issue num)-機能名'
   - 'git checkout \[ブランチ名\]'を実行して開発branchに移動する
   - 開発する
   - コミットするときは'git commit -m "#(issue number) メッセージ" '
