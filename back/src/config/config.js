@@ -1,5 +1,3 @@
-var express = require('express');
-var router = express.Router();
 var pg = require('pg');
 
 const dotenv = require('dotenv');
@@ -17,10 +15,11 @@ const client = new Client ({
     ssl: true
   });
 
-  
-client.connect()
-.then(() => console.log("Connected successfuly"))
-.then(() => client.query("select * from test_table"))
-.then(results => console.table(results.rows))
-.catch((e => console.log(e)))
-.finally((() => client.end()))
+exports.connect() = function(query) {
+    client.connect()
+    .then(() => console.log("Connected successfuly"))
+    .then(() => client.query(query))
+    .then(results => console.table(results.rows))
+    .catch((e => console.log(e)))
+    .finally((() => client.end()))
+};
