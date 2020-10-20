@@ -5,6 +5,8 @@
 .vscode
 .classpath
 
+#　環境ファイル
+.env
 
 #for database sec
 docker-compose.yml

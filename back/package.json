@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "description": "",
     "dependencies": {
-      "express": "^4.17.1"
+      "express": "^4.17.1",
+      "pg": "^8.4.1",
+      "dotenv": "^8.2.0"
     },
     "devDependencies": {},
     "scripts": {
@@ -11,5 +13,6 @@
     },
     "author": "",
     "license": "ISC"
+    
 }
   
