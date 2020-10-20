@@ -11,3 +11,4 @@ RUN apk update && \
 RUN apk add postgresql
 
 COPY ./src /app/src
+COPY ./.env /app/.env
