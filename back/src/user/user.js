@@ -9,8 +9,7 @@ class User {
     }
 
     addToDatabase() {
-        //const conf = require('../conf/conifg.js')
-        const conf = require('../sql/connect_database.js')
+        const conf = require('../conf/conifg.js')
         const query = {
             text: 'INSERT INTO users(id, username, email, password) VALUES($1, $2, $3, $4)',
             values: [this.id, this.name, this.mail, this.password]
