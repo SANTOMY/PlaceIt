@@ -10,7 +10,7 @@ class Review{
         this.user_id = user_id;
     }
     addToDatabase() {
-        const conf = require('/Users/shimizu/pbl2_group2/back/src/config/config.js')
+        const conf = require('../config/config.js')
         const query = {
             text: 'INSERT INTO Review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5)',
             values: [this.review_id, this.spot_id, this.comment, this.score, this.user_id]

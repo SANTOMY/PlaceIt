@@ -32,17 +32,3 @@ exports.connect = async function (queries) {
       console.log('Client disconnected successfully')
   }
 }
-// exports.disconnect = function(){
-//   client.disconnect()
-//   .then(() => console.log("Connected successfuly"))
-//   .catch((e => console.log(e)))
-//   .finally((() => client.end()))
-// }
-
-// client.connect()
-// .then(() => console.log("Connected successfuly"))
-// .then(() => client.query(select * from ))
-// .then(results => console.table(results.rows))
-// .then((() => client.disconnect()))
-// .catch((e => console.log(e)))
-// .finally((() => client.end()));
