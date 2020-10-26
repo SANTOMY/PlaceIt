@@ -1,6 +1,18 @@
 <template>
   <div id='map'>
-      <v-btn id='btn'>aaa</v-btn>
+      <v-btn 
+      id='btn1'
+      absolute
+      class="mx-2"
+      fab
+      dark
+      small
+      color="primary"
+      >
+      <v-icon dark>
+        mdi-minus
+      </v-icon>
+      </v-btn>
   </div>
 </template>
 
@@ -10,12 +22,14 @@ import  L from 'leaflet'
 
 delete  L.Icon.Default.prototype._getIconUrl
 
+
 L.Icon.Default.mergeOptions(
     {   iconUrl         : require( 'leaflet/dist/images/marker-icon.png' )
     ,   iconRetinaUrl   : require( 'leaflet/dist/images/marker-icon-2x.png' )
     ,   shadowUrl       : require( 'leaflet/dist/images/marker-shadow.png' )
     }
 )
+
 
 export default {
     name: "Map",
@@ -44,6 +58,9 @@ export default {
       );
       //初期位置を現在地に
       this.map.locate({ setView: true,maxZoom: this.zoom})
+
+      //マーカーをおいてみる
+      L.marker([35,139]).addTo(this.map)
     }
 }
 </script>
@@ -60,7 +77,8 @@ body {
   margin: 0;
   height: 100%;
 }
-#btn{
+#btn1{
   z-index: 1000;
+
 }
 </style>
