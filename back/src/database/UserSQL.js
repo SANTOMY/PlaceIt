@@ -1,6 +1,6 @@
 'use strict';
 
-class User {
+class UserSQL {
     constructor(id, name, mail, password) {
         this.id = id;
         this.name = name;
@@ -12,7 +12,7 @@ class User {
      * Add user data to the database
      */
     addToDatabase() {
-        const conf = require('../config/config.js')
+        const conf = require('./DBHandler.js')
         const query = {
             text: 'INSERT INTO users.users(id, username, email, password) VALUES($1, $2, $3, $4)',
             values: [this.id, this.name, this.mail, this.password]
