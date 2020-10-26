@@ -6,12 +6,9 @@
       class="mx-2"
       fab
       dark
-      small
       color="primary"
       >
-      <v-icon dark>
-        mdi-minus
-      </v-icon>
+      aaaaa
       </v-btn>
   </div>
 </template>
@@ -41,7 +38,6 @@ export default {
       zoom:25,
       counter:0,
       spot:null,
-      showicon:true,
       };
     },
     
@@ -62,7 +58,7 @@ export default {
       this.map.locate({ setView: true,maxZoom: this.zoom})
 
       //マーカーをおいてみる
-      this.marker = L.marker([35,139],{ title: "sample spot"}).addTo(this.map).on(
+      this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
         'click', function(){
           console.log('aiueo')
         }
