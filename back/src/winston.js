@@ -38,7 +38,7 @@ let  options = {
 let logger = winston.createLogger({
     format: combine(
         timestamp(),
-        logKapeco
+        logFormat
     ),
     transports: [
       new winston.transports.File(options.file),
@@ -54,20 +54,21 @@ logger.stream = {
     },
 };
 
-
-export const stream = logger.stream;
-export const info = (label, message)=>{
+const stream = logger.stream;
+const info = (label, message)=>{
     logger.info({label:label, message:message});
 };
 
-export const debug = (label, message)=>{
+const debug = (label, message)=>{
     logger.debug({label:label, message:message});
 };
 
-export const warning = (label, message)=>{
+const warning = (label, message)=>{
     logger.warn({label:label, message:message});
 };
 
-export const error = (label, message)=>{
+const error = (label, message)=>{
     logger.error({label:label, message:message});
 };
+
+module.exports={info,debug,warning,error};

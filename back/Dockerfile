@@ -11,3 +11,7 @@ RUN apk update && \
 RUN apk add postgresql
 
 COPY ./src /app/src
+
+EXPOSE 3000
+
+CMD ["npm","start"]
