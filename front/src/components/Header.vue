@@ -53,7 +53,7 @@
                 color="gray"
                 class="px-5"
             >
-                mdi-account-circle
+                mdi-login
             </v-icon>
             Login
         </v-btn>
