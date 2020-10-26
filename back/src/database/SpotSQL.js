@@ -1,6 +1,6 @@
 'use strict';
 
-class Spot{
+class SpotSQL {
     constructor(spot_id, spot_name, geom, picture, spot_type, user_id, review_id, comment, score){
         
         this.spot_id = spot_id;
@@ -15,7 +15,7 @@ class Spot{
         this.review = new Review(review_id, spot_id, comment, score, user_id);
     }
     addToDatabase() {
-        const conf = require('../config/config.js');
+        const conf = require('./DBHandler.js');
         const query1 = {
             text: 'INSERT INTO spots.spots(spot_id, spot_name, geom, picture, spot_type, user_id) VALUES($1, $2, $3, $4, $5, $6);',
             values: [this.spot_id, this.spot_name, this.geom, this.picture, this.spot_type, this.user_id]
@@ -40,4 +40,4 @@ class Review{
     }
 }
 
-new Spot(8, 'spotname3', null, 'picture', 'spottype3', 3, 6, 'comment2', 90).addToDatabase();
+// new Spot(8, 'spotname3', null, 'picture', 'spottype3', 3, 6, 'comment2', 90).addToDatabase();
