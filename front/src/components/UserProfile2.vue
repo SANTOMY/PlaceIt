@@ -28,16 +28,15 @@
  
 
   
-    <!-- <side class=side>
+    <side class=side>
       <v-card
         class="mx-auto"
         max-width="130"
-        height="500"
         
         tile
       >
         <v-list dense>
-          <v-subheader>menu</v-subheader>
+          <v-subheader>REPORTS</v-subheader>
           <v-list-item-group
             v-model="selectedItem"
             color="primary"
@@ -56,7 +55,7 @@
           </v-list-item-group>
         </v-list>
       </v-card>
-    </side> -->
+    </side>
 
     <main class=main>
       <v-container fluid="true">
@@ -108,8 +107,7 @@ export default {
           user_id: '000000',
           username: 'asada',
           good: 123,
-          photo: "@/assets/pose_kuyashii_man.png",
-          flex: 12
+          photo: "../../assets/pose_kuyashii_man.png"
         },
         {
           name: 'モスバーガー',
@@ -118,8 +116,7 @@ export default {
           username: 'takata',
           user_id: '000000',
           good: 150,
-          photo: '../../assets/pose_kuyashii_man.png',
-          flex: 6
+          photo: '../../assets/pose_kuyashii_man.png'
         },      
         {
           name: 'KFC',
@@ -128,8 +125,7 @@ export default {
           user_id: '000000',
           username: 'matsuo',
           good: 121,
-          photo: '../../assets/pose_kuyashii_man.png', 
-          flex: 6
+          photo: '../../assets/pose_kuyashii_man.png'
         }      
       ]
     }
@@ -142,7 +138,7 @@ export default {
 }
 
 .main {
-  padding: 0px 20px 0px 20px;
+  padding: 0px 20px 0px 180px;
 }
 
 .side {

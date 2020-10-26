@@ -1,30 +1,73 @@
 <template>
   <v-app>
-    <v-card v-bind:class="color" width="600px">
-      <v-card-title>
-        <h1 class="CardTitle">{{name}}</h1>
-      </v-card-title>
-      <v-row
-        v-bind:class="color + ' lighten-4'" 
-        justify="center" align-content="center"
+    <v-card v-bind:class="color" >
+
+      <v-toolbar
+        color="indigo"
+        dark
       >
-        <v-col cols=8 v-for="n in list" :key="n">
-          <v-card width="400px" elevation="12">
-            <v-card-title>
-              <h1 class="CardTitle">{{n.name}}</h1>
-            </v-card-title>
-            <v-card-text>
-              <v-avatar size="100%">
-                <img src="../../assets/pose_kuyashii_man.png">
-              </v-avatar>
-                <br>
-                <h1 class="CardDetaile">作成者：{{n.username}}</h1>
-                <br>
-                <h1 class="CardDetaile">いいね！の数：{{n.good}}</h1>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>  
+
+        <v-app-bar-nav-icon>
+
+
+        </v-app-bar-nav-icon>
+
+        <v-toolbar-title>{{name}}</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-btn icon>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+      </v-toolbar>
+
+      <v-container fluid>
+        <v-row dense>
+          <v-col
+            v-for="card in list"
+            :key="card"
+            :cols="card.flex"
+          >
+            <v-card>
+              <v-img
+                src="@/assets/pose_kuyashii_man.png"
+                class="white--text align-end"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                height="300px"
+              >
+                <v-card-title v-text="card.title"></v-card-title>
+              </v-img>
+
+              <v-card-actions>
+                <!-- <v-card-actions-title>
+                  {{n.name}}
+                </v-card-actions-title> -->
+                <v-spacer></v-spacer>
+
+                <!-- <v-btn icon> -->
+                  <v-icon class="mr-1">mdi-heart</v-icon>
+                <!-- </v-btn> -->
+                <span class="subheading mr-2">{{card.good}}</span>
+                <!-- <span class="mr-1">・</span> -->
+
+                <!-- <v-btn icon>
+                  <v-icon>mdi-bookmark</v-icon>
+                </v-btn> -->
+
+                <!-- <v-btn icon >
+                  <v-icon class="mr-1">mdi-share-variant</v-icon>
+                </v-btn>
+                <span class="subheading">45</span> -->
+              </v-card-actions>
+
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+
+
+
+   
     </v-card>  
   </v-app>
 </template>
