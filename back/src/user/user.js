@@ -8,14 +8,18 @@ class User {
         this.password = password;
     }
 
+    /**
+     * Add user data to the database
+     */
     addToDatabase() {
-        const conf = require('../conf/conifg.js')
+        const conf = require('../config/config.js')
         const query = {
-            text: 'INSERT INTO users(id, username, email, password) VALUES($1, $2, $3, $4)',
+            text: 'INSERT INTO users.users(id, username, email, password) VALUES($1, $2, $3, $4)',
             values: [this.id, this.name, this.mail, this.password]
         }
-        conf.connect(query)
+        const queries = [query]
+        conf.connect(queries)
     }
 }
 
-new User(5, 'goro', 'eee@com', 'pass4').addToDatabase()
+//new User(2, 'jiro', 'bbb@com', 'pass2').addToDatabase()
