@@ -59,15 +59,16 @@ export default {
         login: function() {
             if (this.$refs.loginForm.validate()) {
                 if(this.check_database()) {
+                    this.$store.commit("login")
                     this.$router.push('/map')
                 }
                 else {
-                    console.log("failed to send database")
+                    console.log("failed to login")
                     
                 }
             }
             else {
-                console.log("failed to register")
+                console.log("failed to login")
             }
 
         },
