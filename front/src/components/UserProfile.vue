@@ -3,9 +3,9 @@
   <div>
     <header class=header>
       <h2>ユーザープロファイル</h2>
-      <router-link to="/Map">Go to Map</router-link>
-      <br>
-      <router-link to="/login">Log out</router-link>
+      <!-- <router-link to="/Map">Go to Map</router-link>
+      <br> -->
+      <!-- <router-link to="/login">Log out</router-link> -->
 
       <v-container width=50>
         <v-row >
@@ -104,32 +104,44 @@ export default {
         {
           name: 'マクドナルド',
           id: '000000',
-          tyoe: 'restaurant',
+          type: 'restaurant',
           user_id: '000000',
           username: 'asada',
           good: 123,
-          photo: "@/assets/pose_kuyashii_man.png",
-          flex: 12
+          picture: "@/assets/pose_kuyashii_man.png",
+          flex: 12,
+          review:[
+            { user_id:'000000' },
+            { user_id:'000002' }
+          ]
         },
         {
           name: 'モスバーガー',
           id: '000001',
-          tyoe: 'restaurant',
+          type: 'restaurant',
           username: 'takata',
           user_id: '000000',
           good: 150,
-          photo: '../../assets/pose_kuyashii_man.png',
-          flex: 6
+          picture: '../../assets/pose_kuyashii_man.png',
+          flex: 6,
+          review:[
+            { user_id:'000000' },
+            { user_id:'000002' }
+          ]
         },      
         {
           name: 'KFC',
           id: '000002',
-          tyoe: 'restaurant',
+          type: 'restaurant',
           user_id: '000000',
           username: 'matsuo',
           good: 121,
-          photo: '../../assets/pose_kuyashii_man.png', 
-          flex: 6
+          picture: '../../assets/pose_kuyashii_man.png', 
+          flex: 6,
+          review:[
+            { user_id:'000000' },
+            { user_id:'000002' }
+          ]
         }      
       ]
     }

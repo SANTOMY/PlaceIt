@@ -1,15 +1,13 @@
 <template>
   <v-app>
-    <v-card v-bind:class="color" >
+    <v-card v-bind:class="color + ' lighten-4'" >
 
       <v-toolbar
-        color="indigo"
+        :color="color"
         dark
       >
 
-        <v-app-bar-nav-icon>
-
-
+        <v-app-bar-nav-icon @click="drawer = true">
         </v-app-bar-nav-icon>
 
         <v-toolbar-title>{{name}}</v-toolbar-title>
@@ -21,6 +19,38 @@
         </v-btn>
       </v-toolbar>
 
+      <v-navigation-drawer
+        v-model="drawer"
+        absolute
+        temporary
+      >
+        <v-list
+          nav
+          dense
+        >
+          <v-list-item-group
+            v-model="group"
+            active-class="deep-purple--text text--accent-4"
+            v-btn
+          >
+            <v-list-item
+              v-for="(item, index) in items"
+              :key="item.title"
+              link
+              @click="change(index)"
+            >
+              
+              <v-list-item-icon>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              
+            </v-list-item>
+
+          </v-list-item-group>
+        </v-list>
+      </v-navigation-drawer>
+
       <v-container fluid>
         <v-row dense>
           <v-col
@@ -28,6 +58,9 @@
             :key="card"
             :cols="card.flex"
           >
+            <!-- <v-btn v-card> -->
+
+      
             <v-card>
               <v-img
                 src="@/assets/pose_kuyashii_man.png"
@@ -39,28 +72,17 @@
               </v-img>
 
               <v-card-actions>
-                <!-- <v-card-actions-title>
-                  {{n.name}}
-                </v-card-actions-title> -->
+
                 <v-spacer></v-spacer>
 
-                <!-- <v-btn icon> -->
-                  <v-icon class="mr-1">mdi-heart</v-icon>
-                <!-- </v-btn> -->
+                <v-icon class="mr-1">mdi-heart</v-icon>
+
                 <span class="subheading mr-2">{{card.good}}</span>
-                <!-- <span class="mr-1">・</span> -->
 
-                <!-- <v-btn icon>
-                  <v-icon>mdi-bookmark</v-icon>
-                </v-btn> -->
-
-                <!-- <v-btn icon >
-                  <v-icon class="mr-1">mdi-share-variant</v-icon>
-                </v-btn>
-                <span class="subheading">45</span> -->
               </v-card-actions>
 
             </v-card>
+            <!-- </v-btn> -->
           </v-col>
         </v-row>
       </v-container>
@@ -87,6 +109,23 @@ export default {
       good: Number
     }
   },
+
+  data: () => ({
+    drawer: false,
+    items: [
+        { title: 'いいね！したスポット', icon: 'mdi-home-city' },
+        { title: '作成スポット', icon: 'mdi-account' },
+        { title: 'おすすめスポット', icon: 'mdi-account-group-outline' },
+    ],
+    mini: true,
+    group: null
+  }),
+
+  change(i) {
+    // let name2 = items[index].title
+    console.log(i)
+
+  }
 
   
 };
