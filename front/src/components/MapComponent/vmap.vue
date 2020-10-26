@@ -18,7 +18,7 @@ L.Icon.Default.mergeOptions(
 )
 
 export default {
-    name: "Map",
+    name: "vmap",
     data: function(){
       return {
       lat:0,//緯度
