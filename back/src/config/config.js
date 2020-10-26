@@ -15,21 +15,23 @@ const client = new Client ({
     ssl: true
   });
 
-exports.connect = function(querys) {
-    client.connect()
-    .then(() => console.log("Connected successfuly"))
-    .then(() => {
-     for(const query of querys){
-      try{
-        console.log(query)
-        client.query(query)
-      }catch(e){
-        console.log(e)
-      }}}
-    )
-    .catch((e => console.log(e)))
-    .finally((() => client.end()))
-};
+exports.connect = async function (queries) {
+  try {
+      await client.connect()
+      console.log('Connected successfully in async')
+      for (const query of queries) {
+          console.log(query)
+          await client.query(query)
+      }
+      client.end()
+      console.log("Client disconnected successfully")
+  } catch (ex) {
+      console.log(`Something wrong happend ${ex}`)
+  } finally {
+      await client.end()
+      console.log('Client disconnected successfully')
+  }
+}
 // exports.disconnect = function(){
 //   client.disconnect()
 //   .then(() => console.log("Connected successfuly"))
