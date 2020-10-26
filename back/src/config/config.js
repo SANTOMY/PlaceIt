@@ -15,11 +15,32 @@ const client = new Client ({
     ssl: true
   });
 
-exports.connect() = function(query) {
+exports.connect = function(querys) {
     client.connect()
     .then(() => console.log("Connected successfuly"))
-    .then(() => client.query(query))
-    .then(results => console.table(results.rows))
+    .then(() => {
+     for(const query of querys){
+      try{
+        console.log(query)
+        client.query(query)
+      }catch(e){
+        console.log(e)
+      }}}
+    )
     .catch((e => console.log(e)))
     .finally((() => client.end()))
 };
+// exports.disconnect = function(){
+//   client.disconnect()
+//   .then(() => console.log("Connected successfuly"))
+//   .catch((e => console.log(e)))
+//   .finally((() => client.end()))
+// }
+
+// client.connect()
+// .then(() => console.log("Connected successfuly"))
+// .then(() => client.query(select * from ))
+// .then(results => console.table(results.rows))
+// .then((() => client.disconnect()))
+// .catch((e => console.log(e)))
+// .finally((() => client.end()));
