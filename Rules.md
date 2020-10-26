@@ -8,8 +8,10 @@ _SANTOMY_
     - 基本的に変更しない
   - develop  
     - 開発の最新の状態を維持するbranch
-  - feature/(taskの役割)
-    - 作業ブランチ
+  - front/(taskの役割)
+    - frontの作業ブランチ
+  - back/(taskの役割)
+    - backの作業ブランチ
 
 - 開発の進め方
   - 'git clone'でリポジトリをクローンする or リポジトリをクローンしている場合はdevelopブランチで'git pull'をする
