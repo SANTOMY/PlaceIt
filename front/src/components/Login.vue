@@ -25,6 +25,9 @@
                 <v-card-actions>
                     <v-btn @click="login">ログイン</v-btn>
                 </v-card-actions>
+                <v-card-actions>
+                    <v-btn @click="logout">ログアウト</v-btn>
+                </v-card-actions>
             </v-form>
         </v-card-text>
     </v-card>
@@ -76,6 +79,11 @@ export default {
         check_database: function() {
             //TODO: ログインできるか確認
             return true
+        },
+
+        logout() { //ほんとはいらないけどデバッグ用として...
+            this.$store.commit("logout")
+            this.$router.push('/map')
         }
     }
     
