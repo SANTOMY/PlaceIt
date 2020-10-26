@@ -1,5 +1,5 @@
 <template>
-  <div id='map'>
+  <div class="folium-map" id='map'>
       <v-btn 
       id='btn1'
       absolute
@@ -40,6 +40,8 @@ export default {
       map: null,
       zoom:25,
       counter:0,
+      spot:null,
+      showicon:true,
       };
     },
     
@@ -60,8 +62,13 @@ export default {
       this.map.locate({ setView: true,maxZoom: this.zoom})
 
       //マーカーをおいてみる
-      L.marker([35,139]).addTo(this.map)
+      this.marker = L.marker([35,139],{ title: "sample spot"}).addTo(this.map).on(
+        'click', function(){
+          console.log('aiueo')
+        }
+        )
     }
+  
 }
 </script>
 
