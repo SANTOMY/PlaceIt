@@ -30,10 +30,14 @@ async function saveUser(newUser) {
             });
         });
     }).catch((exception)=>{
-        error(fileLabel,"Error trying to connect to database: " + exception);
-        return {"sucess":false,"data":exception};
+        connection.end().then(()=>{
+            error(fileLabel,"Error trying to connect to database: " + exception);
+            return {"sucess":false,"data":exception};
+        });
     });
 }
 
-const testUser = new User(1000,'testName','some@Email','testPassword');
-saveUser(testUser);
+module.exports = {saveUser:saveUser};
+
+//const testUser = new User(1000,'testName','some@Email','testPassword');
+//saveUser(testUser);
