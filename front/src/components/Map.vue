@@ -1,14 +1,15 @@
 <template>
-  <div class="folium-map" id='map'>
+  <div id='map'>
       <v-btn 
       id='btn1'
       absolute
       class="mx-2"
-      fab
       dark
+      large
+      right
       color="primary"
       >
-      aaaaa
+      sample button
       </v-btn>
   </div>
 </template>
@@ -36,15 +37,22 @@ export default {
       lon:0,//経度
       map: null,
       zoom:25,
-      counter:0,
       spot:null,
       };
     },
-    
+    methods: {
+      MapClicEvent(event){
+        this.GetPoint(event);
+      },
+      GetPoint: function(event){
+        this.lat = event.latlng.lat;
+        this.lon = event.latlng.lng;
+        console.log(this.lat);
+        console.log(this.lon);
+      },
+    },
     mounted() {
       //テストの値
-      this.lon = 135;
-      this.lat = 35;
 
       //Mapオブジェクトの生成
       this.map = L.map('map')
@@ -54,16 +62,16 @@ export default {
             'Map data &copy <a href="https://openstreetmap.org">OpenStreetMap</a>'
         })
       );
+      this.map.on('click', this.MapClicEvent);
       //初期位置を現在地に
       this.map.locate({ setView: true,maxZoom: this.zoom})
-
       //マーカーをおいてみる
       this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
         'click', function(){
-          console.log('aiueo')
-        }
-        )
-    }
+          console.log('aiueo');
+        });
+    },
+    
   
 }
 </script>
