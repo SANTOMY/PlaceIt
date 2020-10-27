@@ -18,19 +18,19 @@ async function saveSpot(newSpot){
     connection.connect().then(()=>{
         //TODO: NULL CHECK
         return connection.query(query1)
-        .then((newUser)=>{
+        .then((newSpot)=>{
             return connection.query(query2)
-            .then((newUser)=>{
+            .then((newSpot)=>{
                 connection.end()
                 .then(()=>{
-                    debug(fileLabel,"saved user: " + newUser);
-                    return {"sucess":true,"data":newUser};
+                    debug(fileLabel,"saved spot: " + newSpot);
+                    return {"sucess":true,"data":newSpot};
                 })
             })
         })
         .catch((exception)=>{
             connection.end().then(()=>{
-                error(fileLabel,"Error while saving user: " + exception);
+                error(fileLabel,"Error while saving spot: " + exception);
                 return {"success":false,"data":exception};
             });
         });
@@ -40,6 +40,6 @@ async function saveSpot(newSpot){
     });
 }
 
-const testSpot = new Spot(43300, 'spotname3', null, 'picture', 'spottype3', "user_id111", 100, 'comment2', 90);
+const testSpot = new Spot(4344400, 'spotname3', null, 'picture', 'spottype3', "user_id111", 6666, 'comment2', 90);
 saveSpot(testSpot);
 // new Spot(8, 'spotname3', null, 'picture', 'spottype3', 3, 6, 'comment2', 90).addToDatabase();
