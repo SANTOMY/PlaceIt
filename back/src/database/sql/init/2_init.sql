@@ -4,7 +4,7 @@ create table spots.spots
   spot_name text,
   geom GEOMETRY,
   spot_type text,
-  picture text
+  picture text,
   user_id text
 );
 create table spots.review

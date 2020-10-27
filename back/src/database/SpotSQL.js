@@ -40,6 +40,6 @@ async function saveSpot(newSpot){
     });
 }
 
-const testSpot = new Spot(43300, 'spotname3', null, 'picture', 'spottype3', 3, 90, 'comment2', 90);
+const testSpot = new Spot(43300, 'spotname3', null, 'picture', 'spottype3', "user_id111", 100, 'comment2', 90);
 saveSpot(testSpot);
 // new Spot(8, 'spotname3', null, 'picture', 'spottype3', 3, 6, 'comment2', 90).addToDatabase();
