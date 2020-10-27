@@ -1,4 +1,4 @@
-var pg = require('pg');
+const pg = require('pg');
 
 const dotenv = require('dotenv');
 const env = dotenv.config();
@@ -15,23 +15,4 @@ const client = new Client ({
     ssl: true
 });
 
-/**
- * Connect database and execute queries
- * @param {Array} queries - execution queries
- */
-exports.connect = async function (queries) {
-    try {
-        await client.connect()
-        console.log('Connected successfully in async')
-        for (const query of queries) {
-            await client.query(query)
-        }
-        client.end()
-        console.log("Client disconnected successfully")
-    } catch (ex) {
-        console.log(`Something wrong happend ${ex}`)
-    } finally {
-        await client.end()
-        console.log('Client disconnected successfully')
-    }
-}
+module.exports={connection:client}
