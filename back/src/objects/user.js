@@ -6,5 +6,14 @@ module.exports = class User{
         this.email = email;
         this.password = password;
     }
+
+    getJSON(){
+        let user = {
+            "userId": this.userId,
+            "userName": this.userName,
+            "email": this.email
+        };
+      return user;
+    }
 }
 

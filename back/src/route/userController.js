@@ -21,7 +21,6 @@ module.exports = class UserController{
         const user = new User(uuidv4(),userName,email, encryptedPassword);
         //return res.status(200).json({"success": true, "userId": user['userId'], "userName": user['userName']});
         return userSQL.saveUser(user).then((result)=>{
-
             if(result.success){
                 debug(fileLabel, "Successful Registration for " + email);
                 return res.status(200).json({"success": true, "userId": user.userId, "userName": user.userName});
@@ -31,7 +30,7 @@ module.exports = class UserController{
             }
     
         }).catch((exception)=>{
-            error(fileLabel,"Error in attempt to register by "+ email + ": " + JSON.stringify(exception));
+            error(fileLabel,"Error in attempt to register "+ email + ": " + exception);
             return res.status(400).json({"success": false, "error": exception});
         });
     }
