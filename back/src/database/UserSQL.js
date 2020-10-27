@@ -35,6 +35,3 @@ async function saveUser(newUser) {
 }
 
 module.exports = {saveUser:saveUser};
-
-//const testUser = new User(1000,'testName','some@Email','testPassword');
-//saveUser(testUser);

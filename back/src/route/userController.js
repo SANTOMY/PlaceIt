@@ -13,13 +13,10 @@ module.exports = class UserController{
     
     async register(req, res){
         const {userName, email, password} = req.body;
-        //debug(fileLabel,"Register user with email:" + email);
-        
         //encrypt password
         let salt = bcrypt.genSaltSync(10);
         const encryptedPassword = bcrypt.hashSync(req.body.password ,salt);
         const user = new User(uuidv4(),userName,email, encryptedPassword);
-        //return res.status(200).json({"success": true, "userId": user['userId'], "userName": user['userName']});
         return userSQL.saveUser(user).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Registration for " + email);
