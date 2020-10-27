@@ -31,4 +31,20 @@ module.exports = class UserController{
             return res.status(400).json({"success": false, "error": exception});
         });
     }
+
+    async get(req, res){
+        return userSQL.roadAllUser().then((result)=>{
+            if(result.success){
+                //debug(fileLabel, "Successful Registration for " + email);
+                return res.status(200).json({"success": true, "data": result.data});
+            }else{
+                //info(fileLabel, "Unsuccessful Registration for " + email +": " + JSON.stringify(result));
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+
+        }).catch((exception)=>{
+            //error(fileLabel,"Error in attempt to register "+ email + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
 }

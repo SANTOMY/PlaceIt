@@ -34,4 +34,27 @@ async function saveUser(newUser) {
     });
 }
 
+async function roadAllUser() {
+    const query = {
+        text: 'SELECT username FROM users.users'
+    };
+
+    return connection.connect().then(()=>{
+        return connection.query(query).then( result => {
+            connection.end();
+            info(result);
+            return {"success":true, "data":result.rows};
+        }).catch((exception)=>{
+            connection.end();
+            error(fileLabel,"Error while saving user. " + exception);
+            return {"success":false, "data":exception};      
+        });
+    }).catch((exception)=>{
+        connection.end();
+        error(fileLabel,"Error trying to connect to database: " + exception);
+        return {"success":false, "data":exception};
+    });
+}
+
 module.exports = {saveUser:saveUser};
+module.exports = {roadAllUser:roadAllUser};
