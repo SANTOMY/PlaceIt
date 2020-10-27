@@ -1,43 +1,45 @@
 'use strict';
+const con = require('./DBHandler.js');
+const connection = con.connection;
+const {info, debug, warning, error}  = require('../winston');
+// const { connect } = require('../route/userRoute.js');
+const fileLabel = "SpotSQL"
+const Spot = require('../objects/spot');
 
-class SpotSQL {
-    constructor(spot_id, spot_name, geom, picture, spot_type, user_id, review_id, comment, score){
-        
-        this.spot_id = spot_id;
-        this.spot_name = spot_name;
-        this.geom = geom;
-        this.picture = picture;
-        this.spot_type = spot_type;
-        this.user_id = user_id;
-        this.review_id = review_id;
-        this.comment = comment;
-        this.score = score;
-        this.review = new Review(review_id, spot_id, comment, score, user_id);
-    }
-    addToDatabase() {
-        const conf = require('./DBHandler.js');
-        const query1 = {
-            text: 'INSERT INTO spots.spots(spot_id, spot_name, geom, picture, spot_type, user_id) VALUES($1, $2, $3, $4, $5, $6);',
-            values: [this.spot_id, this.spot_name, this.geom, this.picture, this.spot_type, this.user_id]
-        };
-        const query2 = {
-            text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5);',
-            values: [ this.review_id, this.spot_id, this.comment, this.score, this.user_id]
-        };
-        const querys = [query1, query2];
-        conf.connect(querys);
-    }
-
+async function saveSpot(newSpot){
+    const query1 = {
+        text: 'INSERT INTO spots.spots(spot_id, spot_name, geom, picture, spot_type, user_id) VALUES($1, $2, $3, $4, $5, $6);',
+        values: [newSpot.spot_id, newSpot.spot_name, newSpot.geom, newSpot.picture, newSpot.spot_type, newSpot.user_id]
+    };
+    const query2 = {
+        text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5);',
+        values: [newSpot.review_id, newSpot.spot_id, newSpot.comment, newSpot.score, newSpot.user_id]
+    };
+    connection.connect().then(()=>{
+        //TODO: NULL CHECK
+        return connection.query(query1)
+        .then((newUser)=>{
+            return connection.query(query2)
+            .then((newUser)=>{
+                connection.end()
+                .then(()=>{
+                    debug(fileLabel,"saved user: " + newUser);
+                    return {"sucess":true,"data":newUser};
+                })
+            })
+        })
+        .catch((exception)=>{
+            connection.end().then(()=>{
+                error(fileLabel,"Error while saving user: " + exception);
+                return {"success":false,"data":exception};
+            });
+        });
+    }).catch((exception)=>{
+        error(fileLabel,"Error trying to connect to database: " + exception);
+        return {"sucess":false,"data":exception};
+    });
 }
 
-class Review{
-    constructor(review_id, spot_id, comment, score, user_id){
-        this.review_id = review_id;
-        this.spot_id = spot_id;
-        this.comment = comment;
-        this.score = score;
-        this.user_id = user_id;
-    }
-}
-
+const testSpot = new Spot(43300, 'spotname3', null, 'picture', 'spottype3', 3, 90, 'comment2', 90);
+saveSpot(testSpot);
 // new Spot(8, 'spotname3', null, 'picture', 'spottype3', 3, 6, 'comment2', 90).addToDatabase();
