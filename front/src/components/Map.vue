@@ -41,7 +41,7 @@ export default {
       };
     },
     methods: {
-      MapClicEvent(event){
+      MapClickEvent(event){
         this.GetPoint(event);
       },
       GetPoint: function(event){
@@ -62,7 +62,7 @@ export default {
             'Map data &copy <a href="https://openstreetmap.org">OpenStreetMap</a>'
         })
       );
-      this.map.on('click', this.MapClicEvent);
+      this.map.on('click', this.MapClickEvent);
       //初期位置を現在地に
       this.map.locate({ setView: true,maxZoom: this.zoom})
       //マーカーをおいてみる
