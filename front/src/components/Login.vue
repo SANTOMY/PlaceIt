@@ -25,6 +25,9 @@
                 <v-card-actions>
                     <v-btn @click="login">ログイン</v-btn>
                 </v-card-actions>
+                <v-card-actions>
+                    <v-btn @click="logout">ログアウト</v-btn>
+                </v-card-actions>
             </v-form>
         </v-card-text>
     </v-card>
@@ -59,15 +62,16 @@ export default {
         login: function() {
             if (this.$refs.loginForm.validate()) {
                 if(this.check_database()) {
+                    this.$store.commit("login")
                     this.$router.push('/map')
                 }
                 else {
-                    console.log("failed to send database")
+                    console.log("failed to login")
                     
                 }
             }
             else {
-                console.log("failed to register")
+                console.log("failed to login")
             }
 
         },
@@ -75,6 +79,11 @@ export default {
         check_database: function() {
             //TODO: ログインできるか確認
             return true
+        },
+
+        logout() { //ほんとはいらないけどデバッグ用として...
+            this.$store.commit("logout")
+            this.$router.push('/map')
         }
     }
     
