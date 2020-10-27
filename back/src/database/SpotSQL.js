@@ -15,6 +15,10 @@ async function saveSpot(newSpot){
         text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5);',
         values: [newSpot.review_id, newSpot.spot_id, newSpot.comment, newSpot.score, newSpot.user_id]
     };
+    const deleteSpotQuery = {
+        text: 'DELETE from spots.spots where spot_id = $1;',
+        values: [newSpot.spot_id]
+    };
     connection.connect().then(()=>{
         //TODO: NULL CHECK
         return connection.query(query1)
@@ -29,8 +33,19 @@ async function saveSpot(newSpot){
             })
             .catch((exception)=>{
                 error(fileLabel,"Error while saving review: " + exception);
-                return {"success":false,"data":exception};
-            })
+                return connection.query(deleteSpotQuery)
+                .then(()=>{
+                    connection.end()
+                    .then(()=> {
+                        debug(fileLabel,"deleted spot: " + newSpot);
+                        return {"sucess":true,"data":newSpot};
+                    });
+                })
+                .catch(()=>{
+                    error(fileLabel,"Error while deleting spot: " + exception);
+                    return {"success":false,"data":exception};
+                })
+            });
         })
         .catch((exception)=>{
             connection.end().then(()=>{
@@ -44,6 +59,6 @@ async function saveSpot(newSpot){
     });
 }
 
-const testSpot = new Spot(43440, 'spotname3', null, 'picture', 'spottype3', "user_id111", 66, 'comment2', 90);
+const testSpot = new Spot(4311, 'spotname3', null, 'picture', 'spottype3', "user_id111", 67, 'comment2', 90);
 saveSpot(testSpot);
 // new Spot(8, 'spotname3', null, 'picture', 'spottype3', 3, 6, 'comment2', 90).addToDatabase();
