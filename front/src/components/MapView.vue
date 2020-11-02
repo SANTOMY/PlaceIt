@@ -40,6 +40,8 @@ export default {
       GetPoint: function(event){
         this.lat = event.latlng.lat;
         this.lon = event.latlng.lng;
+        console.log(this.lat)//debug
+        console.log(this.lon)//debug
       },
       //Markerがクリックされた時に起動する関数
       MarkerClickEvent(event){
