@@ -32,9 +32,9 @@ module.exports = class UserController{
         });
     }
 
-    async getByEmail(req, res){
+    async getUserByEmail(req, res){
         const email = req.body.email;
-        return userSQL.roadUserByEmail(email).then((result)=>{
+        return userSQL.getUserByEmail(email).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Get Information by email " + email);
                 return res.status(200).json({"success": true, "data": result.data});

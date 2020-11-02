@@ -34,7 +34,7 @@ async function saveUser(newUser) {
     });
 }
 
-async function roadUserByEmail(email) {
+async function getUserByEmail(email) {
     const query = {
         text: `SELECT * FROM users.users WHERE email='${email}'`
     };
@@ -55,4 +55,4 @@ async function roadUserByEmail(email) {
     });
 }
 
-module.exports = {saveUser:saveUser, roadUserByEmail:roadUserByEmail};
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail};
