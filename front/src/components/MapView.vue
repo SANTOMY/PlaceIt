@@ -28,6 +28,7 @@ export default {
       map: null,//Mapオブジェクト
       zoom:15,//zoomのサイズ まだうまく制御できてない(SATD)
       spot:null,//spot用のオブジェクト
+      myplace:null,
       };
     },
     methods: {
@@ -42,12 +43,13 @@ export default {
       },
       //Markerがクリックされた時に起動する関数
       MarkerClickEvent(event){
-        console.log(event.latlng);
+        console.log(event.latlng);//debug
       },
     },
     mounted() {
       //Mapオブジェクトの生成
       this.map = L.map('map',{zoom: this.zoom})
+      //.setView(true)
       .addLayer(
         L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
           attribution:
