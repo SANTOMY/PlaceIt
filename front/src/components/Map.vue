@@ -26,7 +26,7 @@ export default {
   //MapViewのマップレイヤーを利用
     components:{
     mapview,
-  }, 
+    }, 
     }
 </script>
 

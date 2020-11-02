@@ -23,35 +23,34 @@ export default {
     name: "MapView",
     data: function(){
       return {
-      lat:0,//緯度
-      lon:0,//経度
-      map: null,//Mapオブジェクト
-      zoom:15,//zoomのサイズ まだうまく制御できてない(SATD)
-      spot:null,//spot用のオブジェクト
-      myplace:null,
+        lat:0,//緯度
+        lon:0,//経度
+        map: null,//Mapオブジェクト
+        zoom:15,//zoomのサイズ まだうまく制御できてない(SATD)
+        spot:null,//spot用のオブジェクト
+        myplace:null,//現在地オブジェクト
       };
     },
     methods: {
     //Map上のどこかををクリックした時に起動する関数
-      MapClickEvent(event){
+      mapClickEvent(event){
         this.GetPoint(event);
       },
     //Map上のクリックされた箇所の経緯度を取得する関数
-      GetPoint: function(event){
+      getPoint: function(event){
         this.lat = event.latlng.lat;
         this.lon = event.latlng.lng;
         console.log(this.lat)//debug
         console.log(this.lon)//debug
       },
       //Markerがクリックされた時に起動する関数
-      MarkerClickEvent(event){
+      markerClickEvent(event){
         console.log(event.latlng);//debug
       },
     },
     mounted() {
       //Mapオブジェクトの生成
       this.map = L.map('map',{zoom: this.zoom})
-      //.setView(true)
       .addLayer(
         L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
           attribution:
@@ -59,14 +58,14 @@ export default {
         })
       );
       //Map上のある地点がクリックされた時に起動する関数の登録
-      this.map.on('click', this.MapClickEvent);
+      this.map.on('click', this.mapClickEvent);
 
       //初期位置を現在地に
       this.map.locate({ setView: true,maxZoom: 18})
 
       //マーカーの登録とマーカークリック時に起動する関数の登録
       this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
-        'click', this.MarkerClickEvent);
+        'click', this.markerClickEvent);
     }, 
 }
 </script>
