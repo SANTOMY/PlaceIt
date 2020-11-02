@@ -28,6 +28,7 @@
             to="/user"
             class="px-10 mx-2"
             text
+            v-if="isLoggedIn"
         >
             <v-icon
                 left
@@ -39,15 +40,35 @@
             </v-icon>
             User
         </v-btn>
+
+        <v-btn
+            to="/login"
+            class="px-10 mx-2"
+            text
+            v-if="!isLoggedIn"
+        >
+            <v-icon
+                left
+                large
+                color="gray"
+                class="px-5"
+            >
+                mdi-login
+            </v-icon>
+            Login
+        </v-btn>
     </v-app-bar>
 </template>
 
 <script>
 export default {
     
-    methods: {
-
+    computed: {
+        isLoggedIn() {
+            return this.$store.state.isLoginState
+        }
     }
+
 
 }
 </script>
