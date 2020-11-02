@@ -31,4 +31,21 @@ module.exports = class UserController{
             return res.status(400).json({"success": false, "error": exception});
         });
     }
+
+    async getUserByEmail(req, res){
+        const email = req.body.email;
+        return userSQL.getUserByEmail(email).then((result)=>{
+            if(result.success){
+                debug(fileLabel, "Successful Get Information by email " + email);
+                return res.status(200).json({"success": true, "data": result.data});
+            }else{
+                info(fileLabel, "Unsuccessful Get Information by email " + email +": " + JSON.stringify(result));
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+
+        }).catch((exception)=>{
+            error(fileLabel,"Error in attempt to register "+ email + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
 }

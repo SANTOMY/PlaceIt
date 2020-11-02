@@ -34,4 +34,27 @@ async function saveUser(newUser) {
     });
 }
 
-module.exports = {saveUser:saveUser};
+async function getUserByEmail(email) {
+    const query = {
+        text: `SELECT * FROM users.users WHERE email='${email}'`
+    };
+    return connection.connect().then(()=>{
+        return connection.query(query).then( result => {
+            connection.end();
+            if (result.rowCount == 0)
+                return {"success":false, "data":"User does not exist"};
+            info(fileLabel,"get user by email: " + util.inspect(email,{showHidden: false, depth: null}));
+            return {"success":true, "data":result.rows};
+        }).catch((exception)=>{
+            connection.end();
+            error(fileLabel,"Error while getting user. " + exception);
+            return {"success":false, "data":exception};      
+        });
+    }).catch((exception)=>{
+        connection.end();
+        error(fileLabel,"Error trying to connect to database: " + exception);
+        return {"success":false, "data":exception};
+    });
+}
+
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail};
