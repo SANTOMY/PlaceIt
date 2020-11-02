@@ -6,6 +6,7 @@ const fileLabel = "spotController";
 const SpotSQL = require("../database/SpotSQL");
 
 
+
 module.exports = class SpotController{
     constructor(){
         this.register.bind(this);
@@ -47,4 +48,3 @@ module.exports = class SpotController{
         })
     }
 }
-
