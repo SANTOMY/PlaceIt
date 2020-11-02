@@ -1,15 +1,13 @@
 <template>
+    <v-container>
+      <h1>ユーザープロファイル</h1>
 
-  <div>
-    <header class=header>
-      <h2>ユーザープロファイル</h2>
-
-      <v-container width=50>
+      <v-container width=50 class="px-20">
         <v-row >
           <v-col>
             <v-layout justify-center>
               <v-avatar size="200">
-                <img src="@/assets/pose_kuyashii_man.png">
+                <img v-bind:src="user.src">
               </v-avatar>
             </v-layout>
           </v-col>
@@ -21,18 +19,17 @@
           </v-col>
         </v-row>
       </v-container>
-    </header>
- 
-    <main class=main>
-      <v-container fluid>
+    
+      <v-container fluid class="px-20">
         <SpotListCard 
           v-bind:list="spot"
           v-bind:user="user"
           color="green"
         ></SpotListCard>
       </v-container>
-    </main>
-  </div>
+
+    </v-container>
+
 
 </template>
 
@@ -49,9 +46,9 @@ export default {
     return {
       user: {
         name: 'タカタ',
-        user_id: '000000'
+        user_id: '000000',
+        src: require('@/assets/pose_kuyashii_man.png')
       },
-      selectedItem: 1,
       spot: [
         {
           name: 'マクドナルド',
@@ -61,7 +58,6 @@ export default {
           username: 'asada',
           good: 123,
           src: require("@/assets/Mac.jpg"),
-          flex: 4,
           review:[
             { user_id:'000000' },
             { user_id:'000002' }
@@ -75,7 +71,6 @@ export default {
           user_id: '000001',
           good: 150,
           src: require('@/assets/mos.png'),
-          flex: 6,
           review:[
             { user_id:'000000' },
             { user_id:'000002' }
@@ -89,7 +84,6 @@ export default {
           username: 'matsuo',
           good: 121,
           src: require('@/assets/KFC.jpg'), 
-          flex: 6,
           review:[
             { user_id:'000000' },
             { user_id:'000002' }
@@ -100,18 +94,3 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
-.header {
-  padding: 0px 20px 0px 20px;
-}
-
-.main {
-  padding: 0px 20px 0px 20px;
-}
-
-.side {
-  /* 左側に固定 */
-  // padding: 0px 0px 0px 0px;
-  float: left;
-}
-</style>
