@@ -5,9 +5,8 @@ const {info, debug, warning, error}  = require('../winston');
 // const { connect } = require('../route/userRoute.js');
 const fileLabel = "SpotSQL"
 const Spot = require('../objects/spot');
-module.exports = {saveSpot:saveSpot};
 
-async function saveSpot(newSpot){
+module.exports.saveSpot = function(newSpot){
     const query1 = {
         text: 'INSERT INTO spots.spots(spot_id, spot_name, geom, picture, spot_type, user_id) VALUES($1, $2, $3, $4, $5, $6);',
         values: [newSpot.spot_id, newSpot.spot_name, newSpot.geom, newSpot.picture, newSpot.spot_type, newSpot.user_id]
@@ -39,7 +38,7 @@ async function saveSpot(newSpot){
                     connection.end()
                     .then(()=> {
                         debug(fileLabel,"deleted spot: " + newSpot);
-                        return {"success":false,"data":newSpot};
+                        return {"success":false,"data":exception};
                     });
                 })
                 .catch(()=>{
