@@ -9,37 +9,33 @@ const Spot = require('../objects/spot');
 module.exports.saveSpot = function(newSpot){
     const query1 = {
         text: 'INSERT INTO spots.spots(spot_id, spot_name, geom, picture, spot_type, user_id) VALUES($1, $2, $3, $4, $5, $6);',
-        values: [newSpot.spot_id, newSpot.spot_name, newSpot.geom, newSpot.picture, newSpot.spot_type, newSpot.user_id]
+        values: [newSpot.spotId, newSpot.spotName, newSpot.geom, newSpot.picture, newSpot.spotType, newSpot.userId]
     };
     const query2 = {
         text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5);',
-        values: [newSpot.review_id, newSpot.spot_id, newSpot.comment, newSpot.score, newSpot.user_id]
+        values: [newSpot.reviewId, newSpot.spotId, newSpot.comment, newSpot.score, newSpot.userId]
     };
     const deleteSpotQuery = {
         text: 'DELETE from spots.spots where spot_id = $1;',
-        values: [newSpot.spot_id]
+        values: [newSpot.spotId]
     };
-    connection.connect().then(()=>{
+    return connection.connect().then(()=>{
         //TODO: NULL CHECK
         return connection.query(query1)
         .then(()=>{
             return connection.query(query2)
             .then(()=>{
                 connection.end()
-                .then(()=>{
-                    debug(fileLabel,"saved spot: " + newSpot);
-                    return {"sucess":true,"data":newSpot};
-                })
+                debug(fileLabel,"saved spot: " + newSpot);
+                return {"success":true,"data":newSpot};
             })
             .catch((exception)=>{
                 error(fileLabel,"Error while saving review: " + exception);
                 return connection.query(deleteSpotQuery)
                 .then(()=>{
                     connection.end()
-                    .then(()=> {
-                        debug(fileLabel,"deleted spot: " + newSpot);
-                        return {"success":false,"data":exception};
-                    });
+                    debug(fileLabel,"deleted spot: " + newSpot);
+                    return {"success":false,"data":exception};
                 })
                 .catch(()=>{
                     error(fileLabel,"Error while deleting spot: " + exception);
@@ -48,14 +44,13 @@ module.exports.saveSpot = function(newSpot){
             });
         })
         .catch((exception)=>{
-            connection.end().then(()=>{
-                error(fileLabel,"Error while saving spot: " + exception);
-                return {"success":false,"data":exception};
-            });
+            connection.end()
+            error(fileLabel,"Error while saving spot: " + exception);
+            return {"success":false,"data":exception};
         });
     }).catch((exception)=>{
         error(fileLabel,"Error trying to connect to database: " + exception);
-        return {"sucess":false,"data":exception};
+        return {"success":false,"data":exception};
     });
 }
 
