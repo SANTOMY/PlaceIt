@@ -55,5 +55,4 @@ async function roadUserByEmail(email) {
     });
 }
 
-module.exports = {saveUser:saveUser};
-module.exports = {roadUserByEmail:roadUserByEmail};
+module.exports = {saveUser:saveUser, roadUserByEmail:roadUserByEmail};
