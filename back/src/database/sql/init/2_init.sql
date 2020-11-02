@@ -1,16 +1,17 @@
 create table spots.spots
 (
-  spot_id serial primary key,
-  spot_name varchar(50) unique not null,
-  geom GEOMETRY(),
-  spot_type varchar(50) unique not null,
-  this.user_id bigint;
+  spot_id bigint primary key,
+  spot_name text,
+  geom GEOMETRY,
+  spot_type text,
+  picture text,
+  user_id text
 );
 create table spots.review
 (
-  review_id serial primary key,
+  review_id bigint primary key,
   spot_id bigint,
-  comment varchar(255) unique not null,
+  comment text,
   score bigint,
-  user_id bigint
+  user_id text
 );
