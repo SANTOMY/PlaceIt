@@ -34,19 +34,18 @@ async function saveUser(newUser) {
     });
 }
 
-async function roadAllUser() {
+async function roadUserByEmail(email) {
     const query = {
-        text: 'SELECT username FROM users.users'
+        text: `SELECT * FROM users.users WHERE email='${email}'`
     };
-
     return connection.connect().then(()=>{
         return connection.query(query).then( result => {
             connection.end();
-            info(result);
+            info(fileLabel,"road user by email: " + util.inspect(email,{showHidden: false, depth: null}));
             return {"success":true, "data":result.rows};
         }).catch((exception)=>{
             connection.end();
-            error(fileLabel,"Error while saving user. " + exception);
+            error(fileLabel,"Error while roading user. " + exception);
             return {"success":false, "data":exception};      
         });
     }).catch((exception)=>{
@@ -57,4 +56,4 @@ async function roadAllUser() {
 }
 
 module.exports = {saveUser:saveUser};
-module.exports = {roadAllUser:roadAllUser};
+module.exports = {roadUserByEmail:roadUserByEmail};
