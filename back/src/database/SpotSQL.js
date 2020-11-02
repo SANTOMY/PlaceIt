@@ -56,3 +56,25 @@ module.exports.saveSpot = function(newSpot){
 
 // const testSpot = new Spot(4311, 'spotname3', null, 'picture', 'spottype3', "user_id111", 67, 'comment2', 90);
 // saveSpot(testSpot);
+
+module.exports.getSpot = function(){
+    const query = {
+        text: 'SELECT * FROM spots.spots',
+        values: []
+    }
+    return connection.connect().then(()=>{
+        return connection.query(query).then((results)=>{
+            connection.end();
+            info(fileLabel, "Load spots")
+            return {"success":true, "data":results.rows};
+        }).catch((exception)=>{
+            connection.end();
+            info(fileLabel, "Error while loading:" + exception)
+            return {"success":false, "data":exception};
+        })
+    }).catch((exception)=>{
+        connection.end();
+        info(fileLabel, "Error while connecting" + exception)
+        return {"success":false, "data":exception};
+    })
+}
