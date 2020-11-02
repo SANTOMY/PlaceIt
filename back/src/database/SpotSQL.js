@@ -5,6 +5,7 @@ const {info, debug, warning, error}  = require('../winston');
 // const { connect } = require('../route/userRoute.js');
 const fileLabel = "SpotSQL"
 const Spot = require('../objects/spot');
+module.exports = {saveSpot:saveSpot};
 
 async function saveSpot(newSpot){
     const query1 = {
@@ -38,7 +39,7 @@ async function saveSpot(newSpot){
                     connection.end()
                     .then(()=> {
                         debug(fileLabel,"deleted spot: " + newSpot);
-                        return {"sucess":true,"data":newSpot};
+                        return {"false":true,"data":newSpot};
                     });
                 })
                 .catch(()=>{
@@ -59,6 +60,5 @@ async function saveSpot(newSpot){
     });
 }
 
-const testSpot = new Spot(4311, 'spotname3', null, 'picture', 'spottype3', "user_id111", 67, 'comment2', 90);
-saveSpot(testSpot);
-// new Spot(8, 'spotname3', null, 'picture', 'spottype3', 3, 6, 'comment2', 90).addToDatabase();
+// const testSpot = new Spot(4311, 'spotname3', null, 'picture', 'spottype3', "user_id111", 67, 'comment2', 90);
+// saveSpot(testSpot);
