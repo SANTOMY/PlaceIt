@@ -39,7 +39,7 @@ async function saveSpot(newSpot){
                     connection.end()
                     .then(()=> {
                         debug(fileLabel,"deleted spot: " + newSpot);
-                        return {"false":true,"data":newSpot};
+                        return {"success":false,"data":newSpot};
                     });
                 })
                 .catch(()=>{
