@@ -67,6 +67,7 @@ export default {
     methods: {
         register: function() {
             if (this.$refs.loginForm.validate()) {
+                console.log(this.model)
                 if(this.check_database()) {
                     this.create_account()
                     this.$router.push('/map')
