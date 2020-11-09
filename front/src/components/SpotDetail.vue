@@ -2,16 +2,17 @@
     <v-container>
         <v-card>
             <!-- 写真 -->
-            <v-img
-                height="200px"
-                src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg"
+            <v-parallax
+                dark
+                height="200"
+                src="@/assets/Hakataramen.jpg"
             >
-            </v-img>
+            </v-parallax>
 
             <v-app-bar>
                 <!-- スポット名 -->
                 <v-toolbar-title>
-                    NAME
+                    ラーメン屋
                 </v-toolbar-title>
                 <v-spacer />
 
@@ -33,23 +34,28 @@
 
             <v-row>
                 <!-- スポットの評価 -->
-                <v-col>
-                    <v-card>
+                <v-col class="ml-4 mr-0">
+                    <v-card class="px-5">
                         <star-rating
                             v-model="rating"
                             read-only
-                            :show-rating=false
                             :increment=0.5
                         >
                         </star-rating>
                     </v-card>
                 </v-col>
-                <!-- レビュー -->
-                <v-col>
+                <!-- レビュー 一覧 -->
+                <v-col class="ml-0 mr-4">
                     <v-card>
-                        <v-card>
-                            
-                        </v-card>
+                        <v-layout column style="height: 300px">      
+                            <v-flex style="overflow: auto">
+                                <!-- TODO: v-forで書き直す -->
+                                <spot-review />
+                                <spot-review />
+                                <spot-review />
+                                <spot-review />
+                            </v-flex>
+                        </v-layout>
                     </v-card>
                 </v-col>
             </v-row>
@@ -60,10 +66,12 @@
 
 <script>
 import starRating from 'vue-star-rating'
+import spotReview from './SpotReview.vue'
 
 export default {
     components: {
-        starRating
+        starRating,
+        spotReview
     },
     data: function() {
         return {
