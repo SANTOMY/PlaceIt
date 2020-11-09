@@ -51,12 +51,17 @@ module.exports = class UserController{
 
     async edit(req, res){
         const {currentEmail, newEmail, newPassword, newUserName} = req.body;
-        let salt = bcrypt.genSaltSync(10);
-        const encryptedNewPassword = bcrypt.hashSync(newPassword ,salt);
+        let encryptedNewPassword;
+        if (newPassword != "") {
+            let salt = bcrypt.genSaltSync(10);
+            encryptedNewPassword = bcrypt.hashSync(newPassword ,salt);
+        } else {
+            encryptedNewPassword = "";
+        }
         return userSQL.edit(currentEmail, newEmail, encryptedNewPassword, newUserName).then((result)=>{
             if(result.success){
-                debug(fileLabel, "Successful Edit Information " + currentEmail + " -> " + newEmail);
-                return res.status(200).json({"success": true, "newEmail": newEmail});
+                debug(fileLabel, "Successful Edit Information " + currentEmail);
+                return res.status(200).json({"success": true,  "newEmail":newEmail, "newUserName":newUserName});
             }else{
                 info(fileLabel, "Unsuccessful Edit Information " + currentEmail + ": " + JSON.stringify(result));
                 return res.status(400).json({"success": false, "error": exception});

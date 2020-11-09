@@ -58,16 +58,30 @@ async function getUserByEmail(email) {
 }
 
 async function edit(currentEmail, newEmail, newPassword, newUserName) {
+    var setQuery = "" 
+    if (newEmail != "") {
+        setQuery = setQuery + ` email='${newEmail}',`
+    }
+    if (newPassword != "") {
+        setQuery = setQuery + ` password='${newPassword}',`
+    }
+    if (newUserName!= "") {
+        setQuery = setQuery + ` username='${newUserName}',`
+    }
+    setQuery = setQuery.slice(0, -1)
+
     const query = {
-        text: `UPDATE users.users SET email='${newEmail}', password='${newPassword}', username='${newUserName}' WHERE email='${currentEmail}'`
+        //text: `UPDATE users.users SET email='${newEmail}', password='${newPassword}', username='${newUserName}' WHERE email='${currentEmail}'`
+        text: `UPDATE users.users SET ${setQuery} WHERE email='${currentEmail}'`
     };
+
     return connection.connect().then(()=>{
         return connection.query(query).then( result => {
             connection.end();
             if (result.rowCount == 0)
                 return {"success":false, "data":"User does not exist"};
             info(fileLabel,"edit user: " + util.inspect(currentEmail,{showHidden: false, depth: null}));
-            return {"success":true, "data":newEmail};
+            return {"success":true, "newEmail":newEmail, "newUserName":newUserName};
         }).catch((exception)=>{
             connection.end();
             error(fileLabel,"Error while editing information. " + exception);
