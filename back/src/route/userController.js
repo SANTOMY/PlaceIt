@@ -13,9 +13,10 @@ module.exports = class UserController{
     
     async register(req, res){
         const {userName, email, password} = req.body;
+        debug(fileLabel,"Username: " + userName + " Email: " + email + " Password: " + password);
         //encrypt password
         let salt = bcrypt.genSaltSync(10);
-        const encryptedPassword = bcrypt.hashSync(req.body.password ,salt);
+        const encryptedPassword = bcrypt.hashSync(password ,salt);
         const user = new User(uuidv4(),userName,email, encryptedPassword);
         return userSQL.saveUser(user).then((result)=>{
             if(result.success){

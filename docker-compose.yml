@@ -30,7 +30,7 @@ services:
   front:
     build: front
     working_dir: /app
-    tty: true
+    tty: false
     volumes: 
       - ./front:/app/front
     ports: 

@@ -28,7 +28,7 @@
                     :rules="passwordRules" />
                     
                 <v-card-actions>
-                    <v-btn @click="register">ログイン</v-btn>
+                    <v-btn @click="createUser">ログイン</v-btn>
                 </v-card-actions>
             </v-form>
         </v-card-text>
@@ -37,14 +37,15 @@
 </template>
 
 <script>
+import {register} from '../routes/userRequest'
 export default {
 
     data: function() {
         return {
             model: {
-                username : "",
-                email : "",
-                password : "",
+                username : '',
+                email : '',
+                password : '',
             },
 
             showPassword : false,
@@ -65,11 +66,13 @@ export default {
     },
 
     methods: {
-        register: function() {
+        createUser: function() {
             if (this.$refs.loginForm.validate()) {
                 if(this.check_database()) {
+                    register(this.username,this.email,this.password)
+                    //console.log(resp.success)
                     this.create_account()
-                    this.$router.push('/map')
+                    //this.$router.push('/map')
                 }
                 else {
                     console.log("failed to send database")
@@ -88,7 +91,6 @@ export default {
         },
 
         create_account: function() {
-            //TODO: アカウントを作成する処理
             console.log("create_account")
         }
     }
