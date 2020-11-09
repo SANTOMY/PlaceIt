@@ -57,9 +57,9 @@ async function getUserByEmail(email) {
     });
 }
 
-async function edit(currentEmail, newEmail, newPassword) {
+async function edit(currentEmail, newEmail, newPassword, newUserName) {
     const query = {
-        text: `UPDATE users.users SET email='${newEmail}', password='${newPassword}' WHERE email='${currentEmail}'`
+        text: `UPDATE users.users SET email='${newEmail}', password='${newPassword}', username='${newUserName}' WHERE email='${currentEmail}'`
     };
     return connection.connect().then(()=>{
         return connection.query(query).then( result => {
