@@ -13,6 +13,9 @@ module.exports = class UserController{
     
     async register(req, res){
         const {userName, email, password} = req.body;
+        if (userName == undefined || email == undefined || password == undefined){
+            return res.status(400).json({"success": false, "error": "Received undefined credentials"});
+        }
         debug(fileLabel,"Username: " + userName + " Email: " + email + " Password: " + password);
         //encrypt password
         let salt = bcrypt.genSaltSync(10);

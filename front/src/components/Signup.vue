@@ -8,13 +8,13 @@
             <v-form ref="loginForm">
                 <v-text-field label="ユーザ名"
                     prepend-icon="mdi-account-circle"
-                    v-model="model.username" 
+                    v-model="username" 
                     :counter="32"
                     :rules="usernameRules"/>
 
                 <v-text-field label="メールアドレス"
                     prepend-icon="mdi-email"
-                    v-model="model.email" 
+                    v-model="email" 
                     :counter="128"
                     :rules="emailRules"/>
 
@@ -23,7 +23,7 @@
                     v-bind:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
                     v-bind:type="showPassword ? 'text' : 'password'" 
                     @click:append="showPassword = !showPassword"
-                    v-model="model.password"
+                    v-model="password"
                     :counter="32"
                     :rules="passwordRules" />
                     
@@ -69,6 +69,7 @@ export default {
         createUser: function() {
             if (this.$refs.loginForm.validate()) {
                 if(this.check_database()) {
+                    console.log("Front username" + this.username)
                     register(this.username,this.email,this.password)
                     //console.log(resp.success)
                     this.create_account()
