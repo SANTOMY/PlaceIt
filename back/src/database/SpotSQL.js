@@ -5,6 +5,7 @@ const {info, debug, warning, error}  = require('../winston');
 // const { connect } = require('../route/userRoute.js');
 const fileLabel = "SpotSQL"
 const Spot = require('../objects/spot');
+const util = require('util');
 
 module.exports.saveSpot = function(newSpot){
     const query1 = {
@@ -75,3 +76,34 @@ module.exports.getSpot = function(){
         return {"success":false, "data":exception};
     })
 }
+
+module.exports.getReview = function(spot_id){
+    const query = {
+        text: `SELECT * FROM spots.review WHERE spot_id='${spot_id}'`
+    };
+    return connection.connect().then(()=>{
+        return connection.query(query).then( result => {
+            connection.end();
+            if (result.rowCount == 0)
+                return {"success":false, "data":"review does not exist"};
+            info(fileLabel,"get review: " + util.inspect(spot_id,{showHidden: false, depth: null}));
+            // for(var i=0; i<result.rows.length; i++){
+            //     const row = result.rows[i]
+            //     console.log(row.review_id)
+            // }
+            return {"success":true, "data":result.rows};
+        }).catch((exception)=>{
+            connection.end();
+            error(fileLabel,"Error while getting review. " + exception);
+            return {"success":false, "data":exception};      
+        });
+    }).catch((exception)=>{
+        connection.end();
+        error(fileLabel,"Error trying to connect to database: " + exception);
+        return {"success":false, "data":exception};
+    });
+}
+
+const SpotSQL = require('./SpotSQL');
+SpotSQL.getReview("spot_id1111");
+
