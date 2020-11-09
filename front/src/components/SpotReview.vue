@@ -1,27 +1,34 @@
 <template>
-    <v-card class="mb-2">
+    <v-card class="mb-2" width="600px">
         <v-container>
             <v-row 
                 class="mx-1"
                 align="center"
             >
+                <!--
                 <v-avatar
                     class="mr-5"
                 >
-                    <img src="@/assets/pose_kuyashii_man.png">
+                    <img src="user_avater">
                 </v-avatar>
-                <h2>ASADA</h2>
+                -->
+                <v-icon 
+                    class="mr-5"
+                    large
+                >
+                    mdi-account-circle
+                </v-icon>
+                <h2> {{ user_name }} </h2>
             </v-row>
             <v-row class="mx-5 mt-2">
-                ラーメンが美味しかったです。店員さんが優しくて替え玉一杯おごってくれました。
-                また今度来ようと思います。
+                {{ comment }}
             </v-row>
             <v-row class="mx-3 mt-1">
                 <v-spacer />
                 <v-icon class="mr-1">
                     mdi-star-outline
                 </v-icon>
-                5
+                {{ score }}
             </v-row>
         </v-container>
     </v-card>
@@ -29,6 +36,10 @@
 
 <script>
 export default {
-    
+    props: {
+        user_name: String,
+        comment: String,
+        score: Number
+    }
 }
 </script>
