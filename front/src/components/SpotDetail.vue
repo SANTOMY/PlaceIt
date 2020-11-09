@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container>
         <v-card>
             <!-- 写真 -->
             <v-parallax
@@ -8,13 +8,15 @@
             >
             </v-parallax>
 
-            <v-row class="mx-10 mt-3 mb-5">
+            <v-row
+                justify="center"
+                class="mx-10
+                mt-3 mb-5"
+            >
                 <!-- スポット名 -->
                 <h1 class="mr-10"> {{ spot_data.name }} </h1>
 
                 <!-- スポットタイプ -->
-                <!-- TODO: v-forで書き直す -->
-
                 <v-icon v-for="type in spot_data.types" :key="type"
                     class="mr-5"
                     large
@@ -25,9 +27,9 @@
 
             </v-row>
 
-            <v-row>
+            <v-row justify="center">
                 <!-- スポットの評価 -->
-                <v-col class="ml-6 mr-0">
+                <v-col>
                     <v-row justify="center">
                         <star-rating
                             v-model="spot_data.rating"
@@ -37,23 +39,11 @@
                         </star-rating>
                     </v-row>
                 </v-col>
+
                 <!-- レビュー 一覧 -->
-                <v-col class="ml-0 mr-6">
+                <v-col>
                     <v-row justify="center">
-                        <v-card flat color="grey lighten-4">
-                            <v-layout column style="height: 300px">      
-                                <v-flex style="overflow: auto">
-                                    <v-container fluid>
-                                    <!-- TODO: v-forで書き直す -->
-                                    <spot-review v-for="review in reviews" :key="review"
-                                        :user_name="review.user_name"
-                                        :comment="review.comment"
-                                        :score="review.score"
-                                    />
-                                    </v-container>
-                                </v-flex>
-                            </v-layout>
-                        </v-card>
+                        <spot-review-list :reviews="reviews" />
                         <v-btn
                             class="mt-5 mb-2"
                             width="200px"
@@ -71,12 +61,12 @@
 
 <script>
 import starRating from 'vue-star-rating'
-import spotReview from './SpotReview.vue'
+import spotReviewList from './SpotReviewList.vue'
 
 export default {
     components: {
         starRating,
-        spotReview
+        spotReviewList
     },
     data: function() {
         return {
@@ -93,17 +83,17 @@ export default {
                 {
                     user_name: "asada",
                     comment: "ラーメンが美味しかったです。店員さんが優しくて替え玉一杯おごってくれました。また今度来ようと思います。",
-                    score: 3
+                    score: 5
                 },
                 {
                     user_name: "hoge",
-                    comment: "HOGE",
-                    score: 0
+                    comment: "うまい",
+                    score: 3
                 },
                 {
                     user_name: "piyo",
-                    comment: "PIYO",
-                    score: 5
+                    comment: "",
+                    score: 1
                 }
             ]
         }

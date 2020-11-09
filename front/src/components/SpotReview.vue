@@ -1,10 +1,16 @@
 <template>
-    <v-card class="mb-2" width="600px">
+    <v-card
+        class="mb-2 mr-2"
+        color="grey lighten-4"
+        width="500px"
+        flat
+    >
         <v-container>
             <v-row 
                 class="mx-1"
                 align="center"
             >
+                <!-- いつかavaterに変えたい -->
                 <!--
                 <v-avatar
                     class="mr-5"
