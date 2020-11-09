@@ -1,43 +1,159 @@
 <template>
-  <div>
-   <v-btn 
-      id='btn1'
+<!-- レイヤのような形で生成される -->
+  <div id='map'>
+    <v-btn 
+      id='map-reg'
       absolute
-      class="mx-2"
-      dark
-      large
+      class="mx-4 my-10"
+      small
       right
-      color="primary"
-      >
-      sample button
-      </v-btn>
-  <!-- ボタンなどのオブジェクトはこれより上に作成する -->
-  <mapview>
-  </mapview>
+      fab
+      v-on:click="changeMode()"
+    >
+     <v-icon
+      v-if="!regFlag"
+      color="#CC1651"
+      class="px-5">
+        mdi-map-marker
+     </v-icon>
+     <v-icon
+      v-if="regFlag"
+      color="#16A6CC"
+      class="px-5">
+        mdi-map-marker
+     </v-icon>
+    </v-btn>
+    <v-btn
+    id='now-loc'
+    absolute
+    class="mx-4 my-15"
+    small
+    right
+    bottom
+    fab
+    v-on:click="nowLocation()"
+    >
+    <v-icon
+      color="#5D8C99"
+      class="px-5">
+        mdi-crosshairs-gps
+    </v-icon>
+    </v-btn>
   </div>
 </template>
 
 <script>
-import mapview from './MapView'
+import  'leaflet/dist/leaflet.css'
+import  L from 'leaflet'
+
+delete  L.Icon.Default.prototype._getIconUrl
+
+
+L.Icon.Default.mergeOptions(
+    {   iconUrl         : require( 'leaflet/dist/images/marker-icon.png' )
+    ,   iconRetinaUrl   : require( 'leaflet/dist/images/marker-icon-2x.png' )
+    ,   shadowUrl       : require( 'leaflet/dist/images/marker-shadow.png' )
+    }
+)
+
 
 export default {
-  //コンポーネント名
-    name: "Map",
-  //MapViewのマップレイヤーを利用
-    components:{
-    mapview,
+    name: "MapView",
+    data: function(){
+      return {
+        lat:0,//緯度
+        lon:0,//経度
+        map: L.map,//Mapオブジェクト
+        zoom:15,//zoomのサイズ まだうまく制御できてない(SATD)
+        spot:null,//spot用のオブジェクト
+        myplace:null,//現在地オブジェクト
+        regFlag:false,//スポット登録モードのフラグ
+      };
+    },
+    methods: {
+    //Map上のどこかををクリックした時に起動する関数
+      mapClickEvent(event){
+        this.getPoint(event);
+        console.log(this.lat);//debug
+        console.log(this.lon);//debug 
+      },
+    //Map上のクリックされた箇所の経緯度を取得する関数
+      getPoint: function(event){
+        this.lat = event.latlng.lat;
+        this.lon = event.latlng.lng;
+        this.regSpot(event);
+      },
+      //Markerがクリックされた時に起動する関数
+      markerClickEvent(event){
+        console.log(event.latlng);//debug
+      },
+      regSpot: function(){
+        this.$router.push('/register')
+        console.log('spot')//debug
+      },
+      changeMode: function(){
+        this.regFlag = !this.regFlag;
+        if(this.regFlag){
+        this.map.on('click', this.mapClickEvent);
+        }
+        else{
+          this.map.off('click')
+        }
+      },
+      nowLocation: function(){
+        this.map.locate({ setView: true,maxZoom: 18});
+        console.log('nowLocation');
+      },
+
+    },
+    mounted() {
+      //Mapオブジェクトの生成
+      this.map = L.map('map',{zoom: this.zoom})
+      .addLayer(
+        L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+          attribution:
+            'Map data &copy <a href="https://openstreetmap.org">OpenStreetMap</a>'
+        })
+      );
+      //Map上のある地点がクリックされた時に起動する関数の登録
+        //this.map.on('click', this.mapClickEvent);
+        //this.map.off('click');//debug
+
+      //初期位置を現在地に
+      this.map.locate({ setView: true,maxZoom: 18});
+      //this.myplace = navigator.geolocation
+
+      //マーカーの登録とマーカークリック時に起動する関数の登録
+      this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
+        'click', this.markerClickEvent);
+      console.log(this.map)
+      this.nowLocation();
     }, 
-    }
+}
 </script>
 
 <style scoped>
-div{
+/* むやみにいじると地図表示が消えるので注意*/
+html,
+body,
+#map { 
+  height: 100%; 
   width: 100%;
+  z-index: 0;
+  }
+body {
+  margin: 0;
   height: 100%;
 }
-#btn1{
+#aaa {
+  z-index:1000;
+}
+#map-reg{
   /* 各オブジェクトのstyleでz-indexを0以上に設定する 
   基本は1000でOK*/
+  z-index: 1000;
+}
+#now-loc{
   z-index: 1000;
 }
 </style>
