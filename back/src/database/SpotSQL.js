@@ -54,9 +54,6 @@ module.exports.saveSpot = function(newSpot){
     });
 }
 
-// const testSpot = new Spot(4311, 'spotname3', null, 'picture', 'spottype3', "user_id111", 67, 'comment2', 90);
-// saveSpot(testSpot);
-
 module.exports.getSpot = function(){
     const query = {
         text: 'SELECT * FROM spots.spots',

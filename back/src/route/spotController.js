@@ -5,12 +5,10 @@ const Spot = require("../objects/spot");
 const fileLabel = "spotController";
 const SpotSQL = require("../database/SpotSQL");
 
-
-
 module.exports = class SpotController{
     constructor(){
         this.register.bind(this);
-        this.fetch.bind(this);
+        this.search.bind(this);
     }
     
     async register(req, res){
@@ -32,7 +30,7 @@ module.exports = class SpotController{
         });
     }
 
-    async fetch(req, res){
+    async search(req, res){
         // const searchWord = req;
         return SpotSQL.getSpot().then((results)=>{
             if(results.success){

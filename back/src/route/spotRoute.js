@@ -4,6 +4,6 @@ const SpotController = require('./spotController');
 const spotController = new SpotController();
 
 router.post("/register",spotController.register);
-router.get("/fetch",spotController.fetch);
+router.get("/search",spotController.search);
 
 module.exports = router;
