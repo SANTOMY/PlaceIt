@@ -54,6 +54,6 @@ module.exports.getReviewBySpotId = function(spotId){
 }
 
 
-// const testReview = new Review("review_id111", "spot_id1111", 'comment2', 90, "user_id111");
+// const testReview = new Review("review_id114", "spot_id1111", 'comment2', 90, "user_id111");
 // const ReviewSQL = require('./ReviewSQL');
 // ReviewSQL.saveReview(testReview);
