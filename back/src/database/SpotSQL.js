@@ -57,55 +57,45 @@ module.exports.saveSpot = function(newSpot){
 }
 
 module.exports.getSpot = function(keywords){
-    const query = {
+    const query1 = {
         text: 'SELECT * FROM spots.spots',
         values: []
     }
     var spotIds = [];
     if( keywords != null ){
-        query.text = makeSQL.makeSQLforSpot("spots.spots", keywords);
-        console.log(query)
+        query1.text = makeSQL.makeSQLforSpot("spots.spots", keywords);
     }
-    return connection.connect().then(()=>{
-        return connection.query(query).then((results)=>{
-            connection.end();
+    return connection.connect()
+    .then(()=>{
+        return connection.query(query1)
+        .then((results1)=>{
             info(fileLabel, "Load spots")
-            for(var i=0; i<results.rows.length; i++){
-                const spot = results.rows[i];
-                console.log(spot)
+            for(var i=0; i<results1.rows.length; i++){
+                const spot = results1.rows[i];
                 spotIds.push(spot.spot_id);
             }
-            return {"success":true, "data":results.rows, "spotIds":spotIds};
+            const query2 = makeSQL.makeSQLforReview(spotIds);
+            return connection.query(query2)
+            .then( (results2) => {
+                connection.end();
+                if (results2.rowCount == 0)
+                    return {"success":false, "data":"review does not exist"};
+                info(fileLabel,"get review: " + util.inspect(spotIds,{showHidden: false, depth: null}));
+                return {"success":true, "data":results1.rows, "review":results2.rows};
+            }).catch((exception)=>{
+                connection.end();
+                error(fileLabel,"Error while getting review. " + exception);
+                return {"success":false, "data":exception};      
+            });
         }).catch((exception)=>{
             connection.end();
-            info(fileLabel, "Error while loading:" + exception)
+            error(fileLabel,"Error while getting spot " + exception);
             return {"success":false, "data":exception};
-        })
+        });
     }).catch((exception)=>{
         connection.end();
         info(fileLabel, "Error while connecting" + exception)
         return {"success":false, "data":exception};
     })
-}
-
-module.exports.getReview = function(spotIds){
-    const query = makeSQL.makeSQLforReview(spotIds);
-    return connection.connect().then(()=>{
-        return connection.query(query).then( results => {
-            connection.end();
-            if (result.rowCount == 0)
-                return {"success":false, "data":"review does not exist"};
-            info(fileLabel,"get review: " + util.inspect(spotId,{showHidden: false, depth: null}));
-            return {"success":true, "data":results.rows};
-        }).catch((exception)=>{
-            connection.end();
-            error(fileLabel,"Error while getting review. " + exception);
-            return {"success":false, "data":exception};      
-        });
-    }).catch((exception)=>{
-        connection.end();
-        error(fileLabel,"Error trying to connect to database: " + exception);
-        return {"success":false, "data":exception};
-    });
 }
 

@@ -54,7 +54,6 @@ module.exports.makeSQLforSpot = function(table, keywords){
         query += ` user_id='${keywords.userId}'`;
     }
     query += ';';
-    console.log( query );
     return query;
 }
 
@@ -66,9 +65,9 @@ module.exports.makeSQLforReview = function(spotIds){
     else{
         for(var i=0; i<spotIds.length; i++){
             if(i==0){
-                query += `spot_id=${spotIds[i]}`
+                query += `spot_id='${spotIds[i]}'`
             }else{
-                query += ` or spot_id=${spotIds[i]}`
+                query += ` or spot_id='${spotIds[i]}'`
             }
         }
         return query
