@@ -63,17 +63,19 @@ module.exports.getSpot = function(keywords){
     }
     var spotIds = [];
     if( keywords != null ){
-        query.text = makeSQL("spots.spots", keywords);
+        query.text = makeSQL.makeSQLforSpot("spots.spots", keywords);
+        console.log(query)
     }
     return connection.connect().then(()=>{
         return connection.query(query).then((results)=>{
             connection.end();
             info(fileLabel, "Load spots")
-            for(var i=0; i<result.rows.length; i++){
-                const spot = result.rows[i];
-                this.getReview(spot.spot_id);
+            for(var i=0; i<results.rows.length; i++){
+                const spot = results.rows[i];
+                console.log(spot)
+                spotIds.push(spot.spot_id);
             }
-            return {"success":true, "data":results.rows};
+            return {"success":true, "data":results.rows, "spotIds":spotIds};
         }).catch((exception)=>{
             connection.end();
             info(fileLabel, "Error while loading:" + exception)
@@ -86,17 +88,15 @@ module.exports.getSpot = function(keywords){
     })
 }
 
-module.exports.getReview = function(spotId){
-    const query = {
-        text: `SELECT * FROM spots.review WHERE spot_id='${spotId}'`
-    };
+module.exports.getReview = function(spotIds){
+    const query = makeSQL.makeSQLforReview(spotIds);
     return connection.connect().then(()=>{
-        return connection.query(query).then( result => {
+        return connection.query(query).then( results => {
             connection.end();
             if (result.rowCount == 0)
                 return {"success":false, "data":"review does not exist"};
             info(fileLabel,"get review: " + util.inspect(spotId,{showHidden: false, depth: null}));
-            return {"success":true, "data":result.rows};
+            return {"success":true, "data":results.rows};
         }).catch((exception)=>{
             connection.end();
             error(fileLabel,"Error while getting review. " + exception);

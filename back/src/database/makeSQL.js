@@ -1,7 +1,7 @@
 'use strict';
 const searchWords = require("./searchWords");
 
-module.exports = function makeSQL(table, keywords){
+module.exports.makeSQLforSpot = function(table, keywords){
     var query = `SELECT * FROM ${table}`;
     if(
         keywords.spotId != null 
@@ -56,6 +56,23 @@ module.exports = function makeSQL(table, keywords){
     query += ';';
     console.log( query );
     return query;
+}
+
+module.exports.makeSQLforReview = function(spotIds){
+    var query = `SELECT * FROM spots.review where `;
+    if(spotIds == null){
+        return null;
+    }
+    else{
+        for(var i=0; i<spotIds.length; i++){
+            if(i==0){
+                query += `spot_id=${spotIds[i]}`
+            }else{
+                query += ` or spot_id=${spotIds[i]}`
+            }
+        }
+        return query
+    }
 }
 
 // const makeSQL = require("./makeSQL"); // unsure to be needed but it does'nt work without this
