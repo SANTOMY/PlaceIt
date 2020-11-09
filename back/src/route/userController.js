@@ -48,4 +48,23 @@ module.exports = class UserController{
             return res.status(400).json({"success": false, "error": exception});
         });
     }
+
+    async edit(req, res){
+        const {currentEmail, newEmail, newPassword} = req.body;
+        let salt = bcrypt.genSaltSync(10);
+        const encryptedNewPassword = bcrypt.hashSync(newPassword ,salt);
+        return userSQL.edit(currentEmail, newEmail, encryptedNewPassword).then((result)=>{
+            if(result.success){
+                debug(fileLabel, "Successful Edit Information " + currentEmail + " -> " + newEmail);
+                return res.status(200).json({"success": true, "newEmail": newEmail});
+            }else{
+                info(fileLabel, "Unsuccessful Edit Information " + currentEmail + ": " + JSON.stringify(result));
+                return res.status(400).json({"success": false, "error": exception});
+            }
+
+        }).catch((exception)=>{
+            error(fileLabel,"Error in attempt to edit "+ currentEmail + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
 }

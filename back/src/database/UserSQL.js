@@ -57,4 +57,27 @@ async function getUserByEmail(email) {
     });
 }
 
-module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail};
+async function edit(currentEmail, newEmail, newPassword) {
+    const query = {
+        text: `UPDATE users.users SET email='${newEmail}', password='${newPassword}' WHERE email='${currentEmail}'`
+    };
+    return connection.connect().then(()=>{
+        return connection.query(query).then( result => {
+            connection.end();
+            if (result.rowCount == 0)
+                return {"success":false, "data":"User does not exist"};
+            info(fileLabel,"edit user: " + util.inspect(currentEmail,{showHidden: false, depth: null}));
+            return {"success":true, "data":newEmail};
+        }).catch((exception)=>{
+            connection.end();
+            error(fileLabel,"Error while editing information. " + exception);
+            return {"success":false, "data":exception};      
+        });
+    }).catch((exception)=>{
+        connection.end();
+        error(fileLabel,"Error trying to connect to database: " + exception);
+        return {"success":false, "data":exception};
+    });
+}
+
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, edit:edit};
