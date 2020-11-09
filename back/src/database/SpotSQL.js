@@ -6,6 +6,7 @@ const {info, debug, warning, error}  = require('../winston');
 const fileLabel = "SpotSQL"
 const Spot = require('../objects/spot');
 const util = require('util');
+const makeSQL = require('./makeSQL');
 
 module.exports.saveSpot = function(newSpot){
     const query1 = {
@@ -55,10 +56,13 @@ module.exports.saveSpot = function(newSpot){
     });
 }
 
-module.exports.getSpot = function(){
+module.exports.getSpot = function(keywords){
     const query = {
         text: 'SELECT * FROM spots.spots',
         values: []
+    }
+    if( keywords != null ){
+        query.text = makeSQL("spots.spots", keywords);
     }
     return connection.connect().then(()=>{
         return connection.query(query).then((results)=>{

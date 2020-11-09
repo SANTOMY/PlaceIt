@@ -31,8 +31,8 @@ module.exports = class SpotController{
     }
 
     async search(req, res){
-        // const searchWord = req;
-        return SpotSQL.getSpot().then((results)=>{
+        const keywords = req.body;
+        return SpotSQL.getSpot(keywords).then((results)=>{
             if(results.success){
                 debug(fileLabel, "Loaded Successfully");
                 return res.status(200).json({"success": true, "data": results.data});
