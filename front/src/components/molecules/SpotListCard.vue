@@ -101,8 +101,8 @@ export default {
   
   props: {
     color: String,
-    list: null,
-    user: null
+    spot_list: null,
+    user_list: null
   },
 
   data: () => ({
@@ -116,7 +116,8 @@ export default {
     ]
   }),
   mounted() {
-    this.spot = this.list
+    this.spot = this.spot_list
+    this.user = this.user_list
   },
   methods:  {
     ChangeCategory: function(i) {
@@ -128,24 +129,24 @@ export default {
       }else if(i==1){
         this.CreatedSpot()
       }else if(i==2){
-        this.spot = this.list
+        this.spot = this.spot_list
       }
     },
     CreatedSpot: function () {  
       let j = 0
-      for (let i = 0; i < this.list.length; i++){
-        if (this.list[i].user_id==this.user.user_id){
-          this.spot[j] = this.list[i]
+      for (let i = 0; i < this.spot_list.length; i++){
+        if (this.spot_list[i].user_id==this.user.user_id){
+          this.spot[j] = this.spot_list[i]
           j++;
         }
       }
     },
     GoodSpot: function () {  
       let j = 0
-      for (let i = 0; i < this.list.length; i++){
-        for (let k = 0; k < this.list[i].review.length; k++){
-          if (this.list[i].review[k].user_id==this.user.user_id){
-            this.spot[j] = this.list[i]
+      for (let i = 0; i < this.spot_list.length; i++){
+        for (let k = 0; k < this.spot_list[i].review.length; k++){
+          if (this.spot_list[i].review[k].user_id==this.user.user_id){
+            this.spot[j] = this.spot_list[i]
             j++;
             continue;
           }
