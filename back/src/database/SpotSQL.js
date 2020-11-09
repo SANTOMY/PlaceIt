@@ -61,6 +61,7 @@ module.exports.getSpot = function(keywords){
         text: 'SELECT * FROM spots.spots',
         values: []
     }
+    var spotIds = [];
     if( keywords != null ){
         query.text = makeSQL("spots.spots", keywords);
     }
@@ -68,6 +69,10 @@ module.exports.getSpot = function(keywords){
         return connection.query(query).then((results)=>{
             connection.end();
             info(fileLabel, "Load spots")
+            for(var i=0; i<result.rows.length; i++){
+                const spot = result.rows[i];
+                this.getReview(spot.spot_id);
+            }
             return {"success":true, "data":results.rows};
         }).catch((exception)=>{
             connection.end();
@@ -81,20 +86,16 @@ module.exports.getSpot = function(keywords){
     })
 }
 
-module.exports.getReview = function(spot_id){
+module.exports.getReview = function(spotId){
     const query = {
-        text: `SELECT * FROM spots.review WHERE spot_id='${spot_id}'`
+        text: `SELECT * FROM spots.review WHERE spot_id='${spotId}'`
     };
     return connection.connect().then(()=>{
         return connection.query(query).then( result => {
             connection.end();
             if (result.rowCount == 0)
                 return {"success":false, "data":"review does not exist"};
-            info(fileLabel,"get review: " + util.inspect(spot_id,{showHidden: false, depth: null}));
-            // for(var i=0; i<result.rows.length; i++){
-            //     const row = result.rows[i]
-            //     console.log(row.review_id)
-            // }
+            info(fileLabel,"get review: " + util.inspect(spotId,{showHidden: false, depth: null}));
             return {"success":true, "data":result.rows};
         }).catch((exception)=>{
             connection.end();
@@ -107,7 +108,4 @@ module.exports.getReview = function(spot_id){
         return {"success":false, "data":exception};
     });
 }
-
-const SpotSQL = require('./SpotSQL');
-SpotSQL.getReview("spot_id1111");
 
