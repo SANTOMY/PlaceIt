@@ -71,7 +71,6 @@ async function edit(currentEmail, newEmail, newPassword, newUserName) {
     setQuery = setQuery.slice(0, -1)
 
     const query = {
-        //text: `UPDATE users.users SET email='${newEmail}', password='${newPassword}', username='${newUserName}' WHERE email='${currentEmail}'`
         text: `UPDATE users.users SET ${setQuery} WHERE email='${currentEmail}'`
     };
 
