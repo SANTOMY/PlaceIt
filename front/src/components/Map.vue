@@ -1,6 +1,7 @@
 <template>
-<!-- レイヤのような形で生成される -->
+<!-- mapレイヤのような形で生成される -->
   <div id='map'>
+    <!-- 通常モードとスポット登録モードの切り替えボタン -->
     <v-btn 
       id='map-reg'
       absolute
@@ -23,6 +24,8 @@
         mdi-map-marker
      </v-icon>
     </v-btn>
+
+    <!-- 現在地ボタン -->
     <v-btn
     id='now-loc'
     absolute
@@ -68,20 +71,25 @@ export default {
         spot:null,//spot用のオブジェクト
         myplace:null,//現在地オブジェクト
         regFlag:false,//スポット登録モードのフラグ
+        flag :false//実装上の都合で導入したフラグ
       };
     },
     methods: {
     //Map上のどこかををクリックした時に起動する関数
       mapClickEvent(event){
-        this.getPoint(event);
-        console.log(this.lat);//debug
-        console.log(this.lon);//debug 
+        if(this.flag){
+          this.flag=false;
+          this.getPoint(event);
+          this.regSpot(event);
+        }
+        else{this.flag=true}
+        //console.log(this.lat);//debug
+        //console.log(this.lon);//debug 
       },
     //Map上のクリックされた箇所の経緯度を取得する関数
       getPoint: function(event){
         this.lat = event.latlng.lat;
         this.lon = event.latlng.lng;
-        this.regSpot(event);
       },
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
@@ -97,7 +105,7 @@ export default {
         this.map.on('click', this.mapClickEvent);
         }
         else{
-          this.map.off('click')
+        this.map.off('click')
         }
       },
       nowLocation: function(){
