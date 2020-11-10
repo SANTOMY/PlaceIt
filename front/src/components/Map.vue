@@ -61,7 +61,7 @@ L.Icon.Default.mergeOptions(
 
 
 export default {
-    name: "MapView",
+    name: "Map",
     data: function(){
       return {
         lat:0,//緯度
@@ -71,7 +71,8 @@ export default {
         spot:null,//spot用のオブジェクト
         myplace:null,//現在地オブジェクト
         regFlag:false,//スポット登録モードのフラグ
-        flag :false//実装上の都合で導入したフラグ
+        flag :false,//実装上の都合で導入したフラグ
+        locMarker:false,//現在地のマーカーオブジェクト
       };
     },
     methods: {
@@ -83,8 +84,6 @@ export default {
           this.regSpot(event);
         }
         else{this.flag=true}
-        //console.log(this.lat);//debug
-        //console.log(this.lon);//debug 
       },
     //Map上のクリックされた箇所の経緯度を取得する関数
       getPoint: function(event){
@@ -96,8 +95,7 @@ export default {
         console.log(event.latlng);//debug
       },
       regSpot: function(){
-        this.$router.push('/register')
-        console.log('spot')//debug
+        this.$router.push({ name: 'register', query: { "lat": this.lat,"lon":this.lon}});
       },
       changeMode: function(){
         this.regFlag = !this.regFlag;
@@ -110,11 +108,10 @@ export default {
       },
       nowLocation: function(){
         this.map.locate({ setView: true,maxZoom: 18});
-        console.log('nowLocation');
       },
 
     },
-    mounted() {
+    mounted: async function() {
       //Mapオブジェクトの生成
       this.map = L.map('map',{zoom: this.zoom})
       .addLayer(
@@ -129,12 +126,10 @@ export default {
 
       //初期位置を現在地に
       this.map.locate({ setView: true,maxZoom: 18});
-      //this.myplace = navigator.geolocation
 
       //マーカーの登録とマーカークリック時に起動する関数の登録
       this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
         'click', this.markerClickEvent);
-      console.log(this.map)
       this.nowLocation();
     }, 
 }
