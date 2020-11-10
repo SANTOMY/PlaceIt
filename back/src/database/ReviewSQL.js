@@ -6,7 +6,7 @@ const fileLabel = "ReviewSQL"
 const Review = require('../objects/review');
 const util = require('util');
 
-module.exports.saveReview = function(newReview){
+module.exports.saveReview = async function(newReview){
     const query = {
         text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5);',
         values: [newReview.reviewId, newReview.spotId, newReview.comment, newReview.score, newReview.userId]
@@ -30,7 +30,7 @@ module.exports.saveReview = function(newReview){
     });
 }
 
-module.exports.getReviewBySpotId = function(spotId){
+module.exports.getReviewBySpotId = async function(spotId){
     const query = {
         text: `SELECT * FROM spots.review WHERE spot_id='${spotId}'`
     };
