@@ -3,7 +3,7 @@
         <v-card>
             <!-- 写真 -->
             <v-parallax
-                height="200"
+                height="300"
                 :src="spot_data.photo"
             >
             </v-parallax>
@@ -17,13 +17,12 @@
                 <h1 class="mr-10"> {{ spot_data.name }} </h1>
 
                 <!-- スポットタイプ -->
-                <v-icon v-for="type in spot_data.types" :key="type"
+                <spot-type-icon v-for="type in spot_data.types" :key="type"
+                    :type="type"
                     class="mr-5"
                     large
                     color="gray"
-                >
-                    {{ type }}
-                </v-icon>
+                />
 
             </v-row>
 
@@ -62,19 +61,22 @@
 <script>
 import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
+import spotTypeIcon from './SpotTypeIcon.vue'
 
 export default {
     components: {
         starRating,
-        spotReviewList
+        spotReviewList,
+        spotTypeIcon
     },
     data: function() {
         return {
             spot_data: {
                 name: "ラーメン屋",
                 types: [
-                    "mdi-silverware-fork-knife",
-                    "mdi-bag-suitcase"
+                    "restaurant",
+                    "travel",
+                    "shopping"
                 ],
                 photo: require("@/assets/Hakataramen.jpg"),
                 rating: 3.5
