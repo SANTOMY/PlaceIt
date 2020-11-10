@@ -13,6 +13,6 @@ RUN apk add postgresql
 COPY ./src /app/src
 COPY ./.env /app/.env
 
-EXPOSE 3000
+EXPOSE 5000
 
 CMD ["npm","start"]

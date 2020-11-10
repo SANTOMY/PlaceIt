@@ -8,8 +8,6 @@
 #　環境ファイル
 .env
 
-#for database sec
-docker-compose.yml
 
 #for front
 front/node_modules
