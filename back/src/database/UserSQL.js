@@ -58,15 +58,24 @@ async function getUserByEmail(email) {
 }
 
 async function edit(currentEmail, newEmail, newPassword, newUserName) {
-    var setQuery = "" 
-    if (newEmail != "") {
+    var setQuery = "";
+    var emailStatus = "not updated";
+    var passwordStatus = "not updated";
+    var usernameStatus = "not updated";
+    if (newEmail && typeof newEmail !== 'undefined') {
         setQuery = setQuery + ` email='${newEmail}',`
+        emailStatus = `updated to ${newEmail}`
     }
-    if (newPassword != "") {
+    if (newPassword && typeof newPassword !== 'undefined') {
         setQuery = setQuery + ` password='${newPassword}',`
+        passwordStatus = `updated to ${newPassword}`
     }
-    if (newUserName!= "") {
+    if (newUserName && typeof newUserName !== 'undefined') {
         setQuery = setQuery + ` username='${newUserName}',`
+        usernameStatus = `updated to ${newUserName}`
+    }
+    if (!setQuery) {
+        return {"success":false, "data":"no changes"};
     }
     setQuery = setQuery.slice(0, -1)
 
@@ -80,7 +89,7 @@ async function edit(currentEmail, newEmail, newPassword, newUserName) {
             if (result.rowCount == 0)
                 return {"success":false, "data":"User does not exist"};
             info(fileLabel,"edit user: " + util.inspect(currentEmail,{showHidden: false, depth: null}));
-            return {"success":true, "newEmail":newEmail, "newUserName":newUserName};
+            return {"success":true, "email":emailStatus, "password":passwordStatus, "username":usernameStatus};
         }).catch((exception)=>{
             connection.end();
             error(fileLabel,"Error while editing information. " + exception);

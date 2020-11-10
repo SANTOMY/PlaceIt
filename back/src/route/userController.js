@@ -61,7 +61,7 @@ module.exports = class UserController{
         return userSQL.edit(currentEmail, newEmail, encryptedNewPassword, newUserName).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Edit Information " + currentEmail);
-                return res.status(200).json({"success": true,  "newEmail":newEmail, "newUserName":newUserName});
+                return res.status(200).json({"success": true,  "email":result.email, "password":result.password, "username":result.username});
             }else{
                 info(fileLabel, "Unsuccessful Edit Information " + currentEmail + ": " + JSON.stringify(result));
                 return res.status(400).json({"success": false, "error": exception});
