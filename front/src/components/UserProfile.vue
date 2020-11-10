@@ -10,8 +10,8 @@
             </UserEdit>
         </v-dialog>
 
-        <v-container width=50 class="px-20">
-            <v-row >
+        <v-container width=50 class="px-16">
+            <v-row>
                 <v-col>
                     <v-layout justify-center>
                         <v-avatar size="200">
@@ -21,18 +21,20 @@
                 </v-col>
 
                 <v-col>
-                    <v-card>   
-                        <v-app-bar>ユーザー名</v-app-bar>
+                    
+                        ユーザー名
                         <h1>{{ user.name }}</h1>
-
-                        <v-btn
-                            v-model="editer"
-                            @click="editProfile"
-                        >
-                        edit
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                    </v-card>
+                        
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                v-model="editer"
+                                @click="editProfile"
+                            >
+                            edit
+                            </v-btn>
+                        
+                        
+                    
                 </v-col>
             </v-row>
         </v-container>
@@ -126,13 +128,13 @@ export default {
             console.log(this.editer)
             console.log(value)
           
-            if(value.email_email==true){
+            if(value.edit_email==true){
                 this.user.mail=value.email_edit
             }
             if(value.edit_password == true){
                 this.user.password=value.password_edit
             }
-            if(value.username != this.user.name){
+            if(value.edit_username == true){
                 this.user.name=value.username
             }      
             console.log(this.user.name,this.user.mail,this.user.password)

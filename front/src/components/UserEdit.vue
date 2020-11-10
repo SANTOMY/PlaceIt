@@ -18,12 +18,26 @@
 
         <v-card-text>
             <v-form ref="loginForm">
+
+                <!-- ユーザー名変更 -->
+                <v-text v-if='editUserName'>
+                    ユーザー名
+                </v-text>
+
                 <v-text-field label="変更後のユーザー名"
                     prepend-icon="mdi-human"
-                    v-model="model.username" 
+                    v-model="model.username"
+                    :rules="usernameRules"
+                    v-if='editUserName'
                     :counter="128"/>
+                
+                <v-card-actions v-if='editUserName'>
+                    <v-spacer/>
+                    <v-btn @click="NotChange(1)">変更しない</v-btn>
+                </v-card-actions>
 
-                <v-text v-if='editmail'>
+                <!-- メールアドレス変更 -->
+                <v-text v-if='editEmail'>
                     メールアドレス
                 </v-text>
 
@@ -32,21 +46,20 @@
                     v-model="model.email" 
                     :counter="128"
                     :rules="emailRules"
-                    v-if='editmail'/>
+                    v-if='editEmail'/>
                 <v-text-field label="変更後のメールアドレス"
                     prepend-icon="mdi-email"
                     v-model="model.email_edit" 
                     :counter="128"
                     :rules="emailRules2"
-                    v-if='editmail'/>
+                    v-if='editEmail'/>
 
-                <v-card-actions v-if='editmail'>
+                <v-card-actions v-if='editEmail'>
                     <v-spacer/>
-                    <v-btn v-if="editpassword" @click="changeEmail">変更しない</v-btn>
-                    <v-btn v-if="!editpassword" @click="changeEmail">パスワードを変更</v-btn>
-                    <v-btn @click="register">修正</v-btn>
+                    <v-btn @click="NotChange(2)">変更しない</v-btn>
                 </v-card-actions>
-                                
+
+                <!-- パスワード変更-->
                 <v-text v-if='editpassword'>
                     パスワード
                 </v-text>
@@ -72,11 +85,16 @@
                 
                 <v-card-actions v-if='editpassword'>
                     <v-spacer/>
+                    <v-btn @click="NotChange(3)">変更しない</v-btn>
+                </v-card-actions>
+
+                <!-- 修正実行ボタンとクリアボタン -->
+                <v-card-actions>
+                    <v-spacer/>
                     <v-btn @click="initialState">Clear</v-btn>
-                    <v-btn v-if="editmail" @click="changePassword">変更しない</v-btn>
-                    <v-btn v-if="!editmail" @click="changePassword">メールアドレスを変更</v-btn>
                     <v-btn @click="register">修正</v-btn>
                 </v-card-actions>
+
             </v-form>
         </v-card-text>
     </v-card>
@@ -91,7 +109,8 @@ export default {
     data: function() {
         return {
             editer: true,
-            editmail: true,
+            editUserName: true,
+            editEmail: true,
             editpassword: true,
             model: {},
             showPassword : false,
@@ -125,10 +144,12 @@ export default {
     methods: {
         initialState: function() {
                 this.editer= true
-                this.editmail= true
+                this.editUserName= true,
+                this.editEmail= true
                 this.editpassword= true
                 this.model= {
                     username : "",
+                    username_edit : "",
                     email : "",
                     email_edit: "",
                     password : "",
@@ -139,8 +160,9 @@ export default {
         register: function() {
             if (this.$refs.loginForm.validate()) {
                 if(this.check_database()) {
-                    this.create_account()
-                    this.model.edit_email = this.editmail
+                    this.edit_account()
+                    this.model.edit_username = this.editUserName
+                    this.model.edit_email = this.editEmail
                     this.model.edit_password = this.editpassword
                     this.$emit('close',this.model)
                     
@@ -162,9 +184,9 @@ export default {
             return true
         },
 
-        create_account: function() {
+        edit_account: function() {
             //TODO: アカウントを作成する処理
-            console.log("create_account")
+            console.log("edit_account")
             
         },
 
@@ -175,17 +197,18 @@ export default {
             // this.$router.push('../user')
         },
 
-        changeEmail: function(){
-            this.editmail = false
-            this.editpassword = true
+        NotChange: function(value){
+            if(value==1){
+                this.editUserName = false
+            }
+            else if(value==2){
+                this.editEmail = false
+            }            
+            else if(value==3){
+                this.editpassword = false
+            }        
         },
-
-        changePassword: function(){
-            this.editpassword = false
-            this.editmail = true
-        }
     
-
     }
     
 }
