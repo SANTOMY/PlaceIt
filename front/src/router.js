@@ -6,7 +6,6 @@ import UserProfile from './components/UserProfile.vue'
 import Map from './components/Map.vue'
 import SpotDetail from './components/SpotDetail.vue'
 import SpotRegister from './components/SpotRegister.vue'
-import UserEdit from './components/UserEdit.vue'
 
 
 Vue.use(Router)
@@ -44,11 +43,5 @@ export default new Router({
         name: 'register',
         component: SpotRegister
     },
-    {
-      path: '/user/edit',
-      name: 'user_edit',
-      component: UserEdit
-  },    
-
   ]
 })
