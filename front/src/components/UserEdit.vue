@@ -164,7 +164,7 @@ export default {
                     this.model.edit_username = this.editUserName
                     this.model.edit_email = this.editEmail
                     this.model.edit_password = this.editpassword
-                    this.$emit('close',this.model)
+                    this.$emit('close',this.model) // 親コンポーネントへ変数を渡す処理
                     
                     // this.$router.push('/user')
                 }
@@ -185,7 +185,7 @@ export default {
         },
 
         edit_account: function() {
-            //TODO: アカウントを作成する処理
+            //TODO: アカウントを修正する処理
             console.log("edit_account")
             
         },
