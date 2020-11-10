@@ -14,16 +14,16 @@ services:
     depends_on:
       - db
     ports:
-      - "3000:3000"
+      - "5000:5000"
   db:
     image: postgres:11-alpine
     container_name: dbforpbl
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRESS_DB: ${POSTGRESS_DB}
-      DATABASE_URL: ${DATABASE_URL}
+      PGUSER: ${POSTGRES_USER}
+      PGHOST: ${POSTGRES_HOST}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRESS_DB}
+      PGPORT: 5432
     ports:
       - "5432:5432"
 
