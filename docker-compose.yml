@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  back:
+    build: 
+      context: ./back/
+      dockerfile: Dockerfile
+    tty: true
+    image: pbl2-back
+    container_name: pbl2-back
+    volumes:
+      - ./back/src:/app/src
+    working_dir: /app
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+  db:
+    image: postgres:11-alpine
+    container_name: dbforpbl
+    environment:
+      PGUSER: ${POSTGRES_USER}
+      PGHOST: ${POSTGRES_HOST}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRESS_DB}
+      PGPORT: 5432
+    ports:
+      - "5432:5432"
+
+  front:
+    build: front
+    working_dir: /app
+    tty: true
+    volumes: 
+      - ./front:/app/front
+    ports: 
+      - "8080:8080"
