@@ -2,7 +2,6 @@
     <v-card
         class="mb-2 mr-2"
         color="grey lighten-4"
-        width="500px"
         flat
     >
         <v-container>
