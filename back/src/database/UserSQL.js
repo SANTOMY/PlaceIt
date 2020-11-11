@@ -34,22 +34,17 @@ async function getUserByEmail(email) {
     const query = {
         text: `SELECT * FROM users.users WHERE email='${email}'`
     };
-    return connection.connect().then(()=>{
-        return connection.query(query).then( result => {
-            connection.end();
-            if (result.rowCount == 0)
-                return {"success":false, "data":"User does not exist"};
-            info(fileLabel,"get user by email: " + util.inspect(email,{showHidden: false, depth: null}));
-            return {"success":true, "data":result.rows};
-        }).catch((exception)=>{
-            connection.end();
-            error(fileLabel,"Error while getting user. " + exception);
-            return {"success":false, "data":exception};      
-        });
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+       client.release();
+        if (result.rowCount == 0)
+            return {"success":false, "data":"User does not exist"};
+        info(fileLabel,"get user by email: " + util.inspect(email,{showHidden: false, depth: null}));
+        return {"success":true, "data":result.rows};
     }).catch((exception)=>{
-        connection.end();
-        error(fileLabel,"Error trying to connect to database: " + exception);
-        return {"success":false, "data":exception};
+        client.release();
+        error(fileLabel,"Error while getting user. " + exception);
+        return {"success":false, "data":exception};      
     });
 }
 
@@ -78,23 +73,17 @@ async function edit(currentEmail, newEmail, newPassword, newUserName) {
     const query = {
         text: `UPDATE users.users SET ${setQuery} WHERE email='${currentEmail}'`
     };
-
-    return connection.connect().then(()=>{
-        return connection.query(query).then( result => {
-            connection.end();
-            if (result.rowCount == 0)
-                return {"success":false, "data":"User does not exist"};
-            info(fileLabel,"edit user: " + util.inspect(currentEmail,{showHidden: false, depth: null}));
-            return {"success":true, "email":emailStatus, "password":passwordStatus, "username":usernameStatus};
-        }).catch((exception)=>{
-            connection.end();
-            error(fileLabel,"Error while editing information. " + exception);
-            return {"success":false, "data":exception};      
-        });
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+        client.release();
+        if (result.rowCount == 0)
+            return {"success":false, "data":"User does not exist"};
+        info(fileLabel,"edit user: " + util.inspect(currentEmail,{showHidden: false, depth: null}));
+        return {"success":true, "email":emailStatus, "password":passwordStatus, "username":usernameStatus};
     }).catch((exception)=>{
-        connection.end();
-        error(fileLabel,"Error trying to connect to database: " + exception);
-        return {"success":false, "data":exception};
+        client.release();
+        error(fileLabel,"Error while editing information. " + exception);
+        return {"success":false, "data":exception};      
     });
 }
 
