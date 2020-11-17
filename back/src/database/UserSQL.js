@@ -53,15 +53,15 @@ async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     var emailStatus = "not updated";
     var passwordStatus = "not updated";
     var usernameStatus = "not updated";
-    if (newEmail && typeof newEmail !== 'undefined') {
+    if (typeof newEmail !== 'undefined') {
         setQuery = setQuery + ` email='${newEmail}',`
         emailStatus = `updated to ${newEmail}`
     }
-    if (newPassword && typeof newPassword !== 'undefined') {
+    if (typeof newPassword !== 'undefined') {
         setQuery = setQuery + ` password='${newPassword}',`
         passwordStatus = `updated to ${newPassword}`
     }
-    if (newUserName && typeof newUserName !== 'undefined') {
+    if (typeof newUserName !== 'undefined') {
         setQuery = setQuery + ` username='${newUserName}',`
         usernameStatus = `updated to ${newUserName}`
     }

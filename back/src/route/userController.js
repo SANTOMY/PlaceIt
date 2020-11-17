@@ -58,19 +58,30 @@ module.exports = class UserController{
     async editUser(req, res){
         const {currentEmail, newEmail, newPassword, newUserName} = req.body;
         let encryptedNewPassword;
-        if (newEmail != "" && newEmail.trim() == "") {
-            return res.status(400).json({"success": false, "error": "newEmail is only white space"}); 
+        console.log(currentEmail, newEmail, newPassword, newUserName);
+        const reg = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
+        if (typeof newEmail == 'undefined') {
+            debug(fileLabel,"Email is not updated"); 
+        } else if (reg.test(newEmail)) {
+            debug(fileLabel,"New Email is valid: " + newEmail);
+        } else {
+            return res.status(400).json({"success": false, "error": "newEmail is not valid"});  
         }
-        if (newPassword != "" && newPassword.trim() == "") {
-            return res.status(400).json({"success": false, "error": "newPassword is only white space"});
-        }
-        if (newUserName != "" && newUserName.trim() == "") {
-            return res.status(400).json({"success": false, "error": "newUsername is only white space"});
-        }else if (newPassword != "") {
+        if (typeof newPassword == 'undefined') {
+            debug(fileLabel,"Password is not updated"); 
+        } else if (newPassword.trim()) {
             let salt = bcrypt.genSaltSync(10);
             encryptedNewPassword = bcrypt.hashSync(newPassword ,salt);
+            debug(fileLabel,"New hashed password is valid: " + encryptedNewPassword);
         } else {
-            encryptedNewPassword = "";
+            return res.status(400).json({"success": false, "error": "newPassword is not valid"});
+        }
+        if (typeof newUserName == 'undefined') {
+            debug(fileLabel,"User name is not updated"); 
+        } else if (newUserName.trim()) {
+            debug(fileLabel,"New user name is valid: " + newUserName);
+        } else {
+            return res.status(400).json({"success": false, "error": "newUsername is not valid"});
         }
 
         return userSQL.editUser(currentEmail, newEmail, encryptedNewPassword, newUserName).then((result)=>{
@@ -87,4 +98,5 @@ module.exports = class UserController{
             return res.status(400).json({"success": false, "error": exception});
         });
     }
+
 }
