@@ -58,12 +58,21 @@ module.exports = class UserController{
     async editUser(req, res){
         const {currentEmail, newEmail, newPassword, newUserName} = req.body;
         let encryptedNewPassword;
-        if (newPassword != "") {
+        if (newEmail != "" && newEmail.trim() == "") {
+            return res.status(400).json({"success": false, "error": "newEmail is only white space"}); 
+        }
+        if (newPassword != "" && newPassword.trim() == "") {
+            return res.status(400).json({"success": false, "error": "newPassword is only white space"});
+        }
+        if (newUserName != "" && newUserName.trim() == "") {
+            return res.status(400).json({"success": false, "error": "newUsername is only white space"});
+        }else if (newPassword != "") {
             let salt = bcrypt.genSaltSync(10);
             encryptedNewPassword = bcrypt.hashSync(newPassword ,salt);
         } else {
             encryptedNewPassword = "";
         }
+
         return userSQL.editUser(currentEmail, newEmail, encryptedNewPassword, newUserName).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Edit Information " + currentEmail);
