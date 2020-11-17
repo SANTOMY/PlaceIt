@@ -1,5 +1,5 @@
 'use strict';
-const searchWords = require("./searchWords");
+const SearchWords = require("../objects/SearchWords");
 
 module.exports.makeSQLforSpot = function(table, keywords){
     var query = `SELECT * FROM ${table}`;
@@ -75,5 +75,5 @@ module.exports.makeSQLforReview = function(spotIds){
 }
 
 // const makeSQL = require("./makeSQL"); // unsure to be needed but it does'nt work without this
-// const words = new searchWords( 123, "abc", "def", "ghi", 456 );
+// const words = new SearchWords( 123, "abc", "def", "ghi", 456 );
 // makeSQL( "spots.spots", words );

@@ -1,11 +1,12 @@
 const Review = require('../objects/review');
 
 module.exports = class Spot {
-    constructor(spotId, spotName, geom, picture, spotType, userId, reviewId, comment, score){
+    constructor(spotId, spotName, x, y, picture, spotType, userId, reviewId, comment, score){
         
         this.spotId = spotId;
         this.spotName = spotName;
-        this.geom = geom;
+        this.x = x;
+        this.y = y;
         this.picture = picture;
         this.spotType = spotType;
         this.userId = userId;

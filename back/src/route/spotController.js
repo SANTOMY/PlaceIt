@@ -12,9 +12,9 @@ module.exports = class SpotController{
     }
     
     async register(req, res){
-        const {spotName, geom, picture, spotType, userId, comment, score} = req.body;
+        const {spotName, x, y, picture, spotType, userId, comment, score} = req.body;
         debug(fileLabel,"Register spot information:" + spotName);
-        const spot = new Spot(uuidv4(), spotName, geom, picture, spotType, userId, uuidv4(), comment, score);
+        const spot = new Spot(uuidv4(), spotName, x, y, picture, spotType, userId, uuidv4(), comment, score);
         // return res.status(200).json({"success": true, "spotId": spot['spotId'], "spotName": spot['spotName']});
         return SpotSQL.saveSpot(spot).then((result)=>{
             if(result.success){
