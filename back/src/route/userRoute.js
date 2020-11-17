@@ -5,6 +5,6 @@ const userController = new UserController();
 
 router.post("/register",userController.register);
 router.get("/getUserByEmail",userController.getUserByEmail);
-router.put("/edit",userController.edit);
+router.put("/editUser",userController.editUser);
 
 module.exports = router;

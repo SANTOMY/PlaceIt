@@ -39,7 +39,7 @@ async function getUserByEmail(email) {
        client.release();
         if (result.rowCount == 0)
             return {"success":false, "data":"User does not exist"};
-        info(fileLabel,"get user by email: " + util.inspect(email,{showHidden: false, depth: null}));
+        info(fileLabel,"get user by email: " + email);
         return {"success":true, "data":result.rows};
     }).catch((exception)=>{
         client.release();
@@ -48,7 +48,7 @@ async function getUserByEmail(email) {
     });
 }
 
-async function edit(currentEmail, newEmail, newPassword, newUserName) {
+async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     var setQuery = "";
     var emailStatus = "not updated";
     var passwordStatus = "not updated";
@@ -78,7 +78,7 @@ async function edit(currentEmail, newEmail, newPassword, newUserName) {
         client.release();
         if (result.rowCount == 0)
             return {"success":false, "data":"User does not exist"};
-        info(fileLabel,"edit user: " + util.inspect(currentEmail,{showHidden: false, depth: null}));
+        info(fileLabel,"edit user: " + currentEmail);
         return {"success":true, "email":emailStatus, "password":passwordStatus, "username":usernameStatus};
     }).catch((exception)=>{
         client.release();
@@ -87,4 +87,4 @@ async function edit(currentEmail, newEmail, newPassword, newUserName) {
     });
 }
 
-module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, edit:edit};
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser};
