@@ -35,11 +35,11 @@ async function getUser(email){
             body: JSON.stringify({email: email})
         });
         return await response.json();
-        
+
     } catch(exception){
         console.log(exception);
         return {success:false, data:exception};
     }
 }
 
-export {register};
+export {register,getUser};
