@@ -2,7 +2,7 @@
 const con = require('./DBHandler.js');
 const {info, debug, warning, error}  = require('../winston');
 const { connect } = require('../route/userRoute.js');
-const connection = con.connection;
+const pool = con.pool;
 const fileLabel = "UserSQL"
 const User = require('../objects/user');
 const util = require('util');
@@ -16,22 +16,18 @@ async function saveUser(newUser) {
         text: 'INSERT INTO users.users(id, username, email, password) VALUES($1, $2, $3, $4)',
         values: [newUser.userId, newUser.userName, newUser.email, newUser.password]
     };
-    return connection.connect().then(()=>{
-        //Need to add check if email/username already exists in database
-        return connection.query(query).then(()=>{
-            connection.end();
-            info(fileLabel,"saved user: " + util.inspect(newUser,{showHidden: false, depth: null}));
-            return {"success":true,"data":newUser};
-        }).catch((exception)=>{
-            connection.end();
-            error(fileLabel,"Error while saving user. " + exception);
-            return {"success":false,"data":exception};      
-        });
-    }).catch((exception)=>{
-        connection.end();
-        error(fileLabel,"Error trying to connect to database: " + exception);
-        return {"success":false,"data":exception};
-    });
+    const client = await pool.connect();
+    //await client.query(query);
+    return client.query(query).then(() =>{
+        client.release();
+        info(fileLabel,"saved user: " + util.inspect(newUser,{showHidden: false, depth: null}));
+        return {"success":true,"data":newUser};
+    }).catch(err=>{
+        client.release();
+        info(fileLabel,"ERROR OBJECT:" + util.inspect(err,{showHidden: false, depth: null}));
+        error(fileLabel,"Error while saving user. " + err);
+        return {"success":false,"data":err}; 
+    })
 }
 
 async function getUserByEmail(email) {

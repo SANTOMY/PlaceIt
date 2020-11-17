@@ -1,9 +1,9 @@
 module.exports = class Review {
-    constructor(review_id, spot_id, comment, score, user_id){
-        this.review_id = review_id;
-        this.spot_id = spot_id;
+    constructor(reviewId, spotId, comment, score, userId){
+        this.reviewId = reviewId;
+        this.spotId = spotId;
         this.comment = comment;
         this.score = score;
-        this.user_id = user_id;
+        this.userId = userId;
     }
 }
