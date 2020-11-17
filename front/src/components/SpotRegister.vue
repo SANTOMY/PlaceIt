@@ -4,8 +4,13 @@
             <v-container>
                 <v-row>
                     <v-col>
+                        <h1>新しいスポットを追加</h1>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
                         <v-text-field
-                            label="Regular"
+                            label="スポット名"
                             solo
                         ></v-text-field>
 
@@ -13,7 +18,7 @@
                             v-model="selected_types"
                             :items="types"
                             chips
-                            label="types"
+                            label="スポットの種類"
                             multiple
                             solo
                         ></v-select>
@@ -21,7 +26,7 @@
                         <v-textarea
                             solo
                             name="input-7-4"
-                            label="Solo textarea"
+                            label="説明"
                         ></v-textarea>
 
                         <input 
@@ -35,7 +40,7 @@
                         <v-btn
                             @click="btnclick"
                         >
-                            SELECT IMAGE
+                            写真を追加
                         </v-btn>
 
                     </v-col>

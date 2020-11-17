@@ -83,7 +83,6 @@
                 </v-col>
             </v-row>
         </v-card>
-        <p>{{lat}}</p>
     </v-container>
 
 </template>
