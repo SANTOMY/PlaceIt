@@ -11,6 +11,7 @@
                     <v-col>
                         <!-- スポットの名前 -->
                         <v-text-field
+                            :rules="nameRules"
                             v-model="spot_data.name"
                             label="スポット名"
                             solo
@@ -18,6 +19,7 @@
 
                         <!-- スポットの種類 -->
                         <v-select
+                            :rules="typeRules"
                             v-model="spot_data.types"
                             :items="all_spot_types"
                             chips
@@ -34,22 +36,24 @@
                             label="説明"
                         ></v-textarea>
 
-                        <!-- ブラウザから画像ファイルを読み込むためのタグ ブラウザからは見えない -->
-                        <input 
-                            ref="input_image"
-                            type="file" 
-                            accept="image/*"
-                            style="display: none"
-                            @change="onFileChange($event)"
+                        <!-- スポットの画像ファイル -->
+                        <v-file-input
+                            v-model="uploadedFiles"
+                            placeholder=""
+                            label="写真ファイルを追加"
+                            multiple
+                            prepend-icon="mdi-paperclip"
                         >
-
-                        <!-- 写真の追加ボタン -->
-                        <v-btn
-                            @click="onClickedPhotoButton"
-                        >
-                            写真を追加
-                        </v-btn>
-
+                            <template v-slot:selection="{ text }">
+                                <v-chip
+                                    small
+                                    label
+                                    color="grey lighten-4"
+                                >
+                                    {{ text }}
+                                </v-chip>
+                            </template>
+                        </v-file-input>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -66,9 +70,7 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-btn
-                            @click="onClickedRegisterButton"
-                        >
+                        <v-btn @click="onClickedRegisterButton">
                             登録
                         </v-btn>
                     </v-col>
@@ -96,32 +98,40 @@ export default {
                 "restaurant",
                 "travel",
                 "shopping"
+            ],
+
+            // アップロードされたファイルを一時的に保管する変数
+            // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
+            uploadedFiles: [],
+
+            nameRules: [
+                v => !!v || "スポット名は必須項目です。"
+            ],
+            typeRules: [
+                v => v.length > 0 || "必ず一つ以上選択してください。"
             ]
+
         }
     },
 
     methods: {
-        onClickedPhotoButton: function() {
-            this.$refs.input_image.click()
-        },
-        onFileChange(event) {
-            const files = event.target.files
-
-            if(files.length == 0) return;
-
-            files.forEach(file => {
-                const reader = new FileReader()         //ファイルリーダを用意
-                reader.onload = (e) => {                //読み込みが完了したら配列に追加
-                    this.spot_data.photos.push(e.target.result)
-                };
-                reader.readAsDataURL(file)
-            });
-        },
         onClickedRegisterButton: function() {
             //TODO: スポットをデータベースに登録する処理
             console.log(this.spot_data);
         }
+    },
 
+    watch: {
+        uploadedFiles: function() {
+            this.spot_data.photos = []
+            this.uploadedFiles.forEach(file => {
+                const reader = new FileReader()         //ファイルリーダを用意
+                reader.onload = (e) => {                //読み込みが完了したら配列に追加
+                    this.spot_data.photos.push(e.target.result)
+                }
+                reader.readAsDataURL(file)    
+            })
+        }
     }
     
 }
