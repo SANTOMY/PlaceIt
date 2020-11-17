@@ -1,26 +1,63 @@
 <template>
 <!-- mapレイヤのような形で生成される -->
   <div id='map'>
+    <v-container>
+      <v-row>
+    <v-btn
+    id='feature'
+    absolute
+    class="mx-10 my-5"
+    small
+    fab
+    >
+    aaa
+    </v-btn>
+
+    <v-btn
+    id='feature'
+    absolute
+    class="mx-10 my-5"
+    small
+    fab
+    >
+    bbb
+    </v-btn>
+
+    <v-btn
+    id='feature'
+    absolute
+    class="mx-10 my-5"
+    small
+    fab
+    >
+    ccc
+    </v-btn>
+    </v-row>
+    </v-container>
+
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
     <v-btn 
       id='map-reg'
       absolute
-      class="mx-4 my-10"
       small
       right
       fab
       v-on:click="changeMode()"
     >
+    <!-- 通常モードアイコン -->
      <v-icon
       v-if="!regFlag"
       color="#CC1651"
-      class="px-5">
+      class="px-5"
+      >
         mdi-map-marker
      </v-icon>
+      <!-- 登録モードアイコン -->
      <v-icon
       v-if="regFlag"
       color="#16A6CC"
-      class="px-5">
+      class="px-5"
+      >
         mdi-map-marker
      </v-icon>
     </v-btn>
@@ -42,6 +79,7 @@
         mdi-crosshairs-gps
     </v-icon>
     </v-btn>
+
   </div>
 </template>
 
@@ -79,11 +117,10 @@ export default {
     //Map上のどこかををクリックした時に起動する関数
       mapClickEvent(event){
         if(this.flag){
-          this.flag=false;
+          this.flag=false
           this.getPoint(event);
           this.regSpot(event);
-        }
-        else{this.flag=true}
+        }else{this.flag=true;}
       },
     //Map上のクリックされた箇所の経緯度を取得する関数
       getPoint: function(event){
@@ -100,6 +137,7 @@ export default {
       changeMode: function(){
         this.regFlag = !this.regFlag;
         if(this.regFlag){
+        this.flag=false
         this.map.on('click', this.mapClickEvent);
         }
         else{
@@ -130,7 +168,7 @@ export default {
       //マーカーの登録とマーカークリック時に起動する関数の登録
       this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
         'click', this.markerClickEvent);
-      this.nowLocation();
+
     }, 
 }
 </script>
@@ -157,6 +195,9 @@ body {
   z-index: 1000;
 }
 #now-loc{
+  z-index: 1000;
+}
+#feature{
   z-index: 1000;
 }
 </style>
