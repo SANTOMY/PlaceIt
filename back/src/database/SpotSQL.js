@@ -2,13 +2,13 @@
 const con = require('./DBHandler.js');
 const connection = con.connection;
 const {info, debug, warning, error}  = require('../winston');
-// const { connect } = require('../route/userRoute.js');
+const pool = con.pool;
 const fileLabel = "SpotSQL"
 const Spot = require('../objects/spot');
 const util = require('util');
 const makeSQL = require('./makeSQL');
 
-module.exports.saveSpot = function(newSpot){
+async function saveSpot(newSpot){
     const query1 = {
         text: 'INSERT INTO spots.spots(spot_id, spot_name, geom, picture, spot_type, user_id) VALUES($1, $2, $3, $4, $5, $6);',
         values: [newSpot.spotId, newSpot.spotName, newSpot.geom, newSpot.picture, newSpot.spotType, newSpot.userId]
@@ -21,42 +21,36 @@ module.exports.saveSpot = function(newSpot){
         text: 'DELETE from spots.spots where spot_id = $1;',
         values: [newSpot.spotId]
     };
-    return connection.connect().then(()=>{
-        //TODO: NULL CHECK
-        return connection.query(query1)
-        .then(()=>{
-            return connection.query(query2)
-            .then(()=>{
-                connection.end()
-                debug(fileLabel,"saved spot: " + newSpot);
-                return {"success":true,"data":newSpot};
-            })
-            .catch((exception)=>{
-                error(fileLabel,"Error while saving review: " + exception);
-                return connection.query(deleteSpotQuery)
-                .then(()=>{
-                    connection.end()
-                    debug(fileLabel,"deleted spot: " + newSpot);
-                    return {"success":false,"data":exception};
-                })
-                .catch(()=>{
-                    error(fileLabel,"Error while deleting spot: " + exception);
-                    return {"success":false,"data":exception};
-                })
-            });
+    const client = await pool.connect();
+    //TODO: NULL CHECK
+    return client.query(query1).then(()=>{
+        return client.query(query2).then(()=>{
+            client.release();
+            info(fileLabel,"saved spot: " + newSpot);
+            return {"success":true,"data":newSpot};
         })
-        .catch((exception)=>{
-            connection.end()
-            error(fileLabel,"Error while saving spot: " + exception);
-            return {"success":false,"data":exception};
+        .catch(err=>{
+            client.release();
+            info(fileLabel,"Error while saving review: " + err);
+            return client.query(deleteSpotQuery).then(()=>{
+                client.release();
+                debug(fileLabel,"deleted spot: " + newSpot);
+                return {"success":false,"data":err};
+            })
+            .catch(err=>{
+                error(fileLabel,"Error while deleting spot: " + err);
+                return {"success":false,"data":err};
+            })
         });
-    }).catch((exception)=>{
-        error(fileLabel,"Error trying to connect to database: " + exception);
-        return {"success":false,"data":exception};
+    })
+    .catch(err=>{
+        client.release();
+        error(fileLabel,"Error while saving spot: " + err);
+        return {"success":false,"data":err};
     });
 }
 
-module.exports.getSpot = function(keywords){
+async function getSpot(keywords){
     const query1 = {
         text: 'SELECT * FROM spots.spots',
         values: []
@@ -65,37 +59,33 @@ module.exports.getSpot = function(keywords){
     if( keywords != null ){
         query1.text = makeSQL.makeSQLforSpot("spots.spots", keywords);
     }
-    return connection.connect()
-    .then(()=>{
-        return connection.query(query1)
-        .then((results1)=>{
-            info(fileLabel, "Load spots")
-            for(var i=0; i<results1.rows.length; i++){
-                const spot = results1.rows[i];
-                spotIds.push(spot.spot_id);
-            }
-            const query2 = makeSQL.makeSQLforReview(spotIds);
-            return connection.query(query2)
-            .then( (results2) => {
-                connection.end();
-                if (results2.rowCount == 0)
-                    return {"success":false, "data":"review does not exist"};
-                info(fileLabel,"get review: " + util.inspect(spotIds,{showHidden: false, depth: null}));
-                return {"success":true, "data":results1.rows, "review":results2.rows};
-            }).catch((exception)=>{
-                connection.end();
-                error(fileLabel,"Error while getting review. " + exception);
-                return {"success":false, "data":exception};      
-            });
+    const client = await pool.connect();
+    return client.query(query1)
+    .then((results1)=>{
+        info(fileLabel, "Load spots")
+        for(var i=0; i<results1.rows.length; i++){
+            const spot = results1.rows[i];
+            spotIds.push(spot.spot_id);
+        }
+        const query2 = makeSQL.makeSQLforReview(spotIds);
+        return client.query(query2)
+        .then( (results2) => {
+            client.release();
+            if (results2.rowCount == 0)
+                return {"success":false, "data":"review does not exist"};
+            info(fileLabel,"get review: " + util.inspect(spotIds,{showHidden: false, depth: null}));
+            return {"success":true, "data":results1.rows, "review":results2.rows};
         }).catch((exception)=>{
-            connection.end();
-            error(fileLabel,"Error while getting spot " + exception);
-            return {"success":false, "data":exception};
+            client.release();
+            error(fileLabel,"Error while getting review. " + exception);
+            return {"success":false, "data":exception};      
         });
     }).catch((exception)=>{
-        connection.end();
-        info(fileLabel, "Error while connecting" + exception)
+        client.release();
+        error(fileLabel,"Error while getting spot " + exception);
         return {"success":false, "data":exception};
-    })
+    });
 }
 
+
+module.exports = {saveSpot:saveSpot, getSpot:getSpot}
