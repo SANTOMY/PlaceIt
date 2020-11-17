@@ -35,7 +35,7 @@ module.exports = class SpotController{
         return SpotSQL.getSpot(keywords).then((results)=>{
             if(results.success){
                 debug(fileLabel, "Loaded Successfully");
-                return res.status(200).json({"success": true, "data": results.data});
+                return res.status(200).json({"success": true, "data": results.data, "review": results.review});
             }else{
                 info(fileLabel, "Loaded Unsuccessfully: " + JSON.stringify(results));
                 return res.status(400).json({"success": false, "error": results.data});
