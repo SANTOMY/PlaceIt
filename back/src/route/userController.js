@@ -56,9 +56,11 @@ module.exports = class UserController{
     }
 
     async editUser(req, res){
-        const {currentEmail, newEmail, newPassword, newUserName} = req.body;
+        const currentEmail = req.body.currentEmail;
+        const newEmail = req.body.newEmail;
+        const newPassword = req.body.newPassword;
+        const newUserName = req.body.newUserName;
         let encryptedNewPassword;
-        console.log(currentEmail, newEmail, newPassword, newUserName);
         const reg = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
         if (typeof newEmail == 'undefined') {
             debug(fileLabel,"Email is not updated"); 
