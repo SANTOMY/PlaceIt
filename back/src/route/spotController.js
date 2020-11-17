@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const {info, debug, warning, error} = require("../winston");
 const Spot = require("../objects/spot");
@@ -7,15 +6,14 @@ const SpotSQL = require("../database/SpotSQL");
 
 module.exports = class SpotController{
     constructor(){
-        this.register.bind(this);
+        this.saveSpot.bind(this);
         this.search.bind(this);
     }
     
-    async register(req, res){
+    async saveSpot(req, res){
         const {spotName, geom, picture, spotType, userId, comment, score} = req.body;
         debug(fileLabel,"Register spot information:" + spotName);
         const spot = new Spot(uuidv4(), spotName, geom, picture, spotType, userId, uuidv4(), comment, score);
-        // return res.status(200).json({"success": true, "spotId": spot['spotId'], "spotName": spot['spotName']});
         return SpotSQL.saveSpot(spot).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Registration for " + spotName);
@@ -31,7 +29,6 @@ module.exports = class SpotController{
     }
 
     async search(req, res){
-        // const searchWord = req;
         return SpotSQL.getSpot().then((results)=>{
             if(results.success){
                 debug(fileLabel, "Loaded Successfully");
