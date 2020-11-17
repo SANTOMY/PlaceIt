@@ -21,4 +21,25 @@ async function register(userName,email,password){
     }
 }
 
+async function getUser(email){
+    const url = serverIP + '/user/getUserByEmail';
+    console.log(email);
+
+    try{
+        let response = await fetch(url,{
+            mode: 'cors',
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: email})
+        });
+        return await response.json();
+        
+    } catch(exception){
+        console.log(exception);
+        return {success:false, data:exception};
+    }
+}
+
 export {register};
