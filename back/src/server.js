@@ -6,13 +6,15 @@ let port = "5000"
 
 const bodyParser = require('body-parser')
 const userRoute = require('./route/userRoute');
-//const spotRoute = require('./route/spotRoute');
+const spotRoute = require('./route/spotRoute');
+const reviewRoute = require('./route/reviewRoute');
 
 app.use(cors())
 
 app.use(bodyParser.json())
 app.use('/user',userRoute)
-//app.use('/spot',spotRoute)
+app.use('/spot',spotRoute)
+app.use('/review',reviewRoute)
 
 
 
