@@ -30,18 +30,19 @@ async function saveSpot(newSpot){
     return client.query(query1).then(()=>{
         return client.query(query2).then(()=>{
             client.release();
-            info(fileLabel,"saved spot: " + newSpot);
+            info(fileLabel,"saved spot: " + util.inspect(newSpot,{showHidden: false, depth: null}));
             return {"success":true,"data":newSpot};
         })
         .catch(err=>{
             client.release();
-            info(fileLabel,"Error while saving review: " + err);
+            info(fileLabel,"Error while saving review: " + util.inspect(err,{showHidden: false, depth: null}));
             return client.query(deleteSpotQuery).then(()=>{
                 client.release();
-                debug(fileLabel,"deleted spot: " + newSpot);
+                info(fileLabel,"deleted spot: " + util.inspect(err,{showHidden: false, depth: null}));
                 return {"success":false,"data":err};
             })
             .catch(err=>{
+                info(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
                 error(fileLabel,"Error while deleting spot: " + err);
                 return {"success":false,"data":err};
             })
@@ -49,6 +50,7 @@ async function saveSpot(newSpot){
     })
     .catch(err=>{
         client.release();
+        info(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
         error(fileLabel,"Error while saving spot: " + err);
         return {"success":false,"data":err};
     });
@@ -85,11 +87,13 @@ async function getSpot(keywords){
             return {"success":true, "data":results1.rows, "review":results2.rows};
         }).catch((exception)=>{
             client.release();
+            info(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));
             error(fileLabel,"Error while getting review. " + exception);
             return {"success":false, "data":exception};      
         });
     }).catch((exception)=>{
         client.release();
+        info(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));
         error(fileLabel,"Error while getting spot " + exception);
         return {"success":false, "data":exception};
     });

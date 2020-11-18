@@ -3,6 +3,7 @@ const {info, debug, warning, error} = require("../winston");
 const Spot = require("../objects/spot");
 const fileLabel = "spotController";
 const SpotSQL = require("../database/SpotSQL");
+const util = require('util');
 
 module.exports = class SpotController{
     constructor(){
@@ -12,17 +13,18 @@ module.exports = class SpotController{
     
     async saveSpot(req, res){
         const {spotName, x, y, picture, spotType, userId, comment, score} = req.body;
-        debug(fileLabel,"Save spot information:" + spotName);
+        info(fileLabel,"Save spot information:" + util.inspect(spotName,{showHidden: false, depth: null}));
         const spot = new Spot(uuidv4(), spotName, x, y, picture, spotType, userId, uuidv4(), comment, score);
         return SpotSQL.saveSpot(spot).then((result)=>{
             if(result.success){
-                debug(fileLabel, "Successful Registration for " + spotName);
+                info(fileLabel, "Successful Registration for " + util.inspect(spotName,{showHidden: false, depth: null}));
                 return res.status(200).json({"success": true, "spotId": spot.spotId, "spotName": spot.spotName});
             }else{
-                info(fileLabel, "Unsuccessful Registration for " + spotName +": " + JSON.stringify(result));
+                info(fileLabel, "Unsuccessful Registration for " + util.inspect(spotName,{showHidden: false, depth: null}) +": " + JSON.stringify(result));
                 return res.status(400).json({"success": false, "error": result.data});
             }
         }).catch((exception)=>{
+            info(fileLabel, "ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}) +": " + JSON.stringify(exception));
             error(fileLabel,"Error in attempt to saveSpot "+ spotName + ": " + exception);
             return res.status(400).json({"success": false, "error": exception});
         });
@@ -32,13 +34,14 @@ module.exports = class SpotController{
         const keywords = req.body;
         return SpotSQL.getSpot(keywords).then((results)=>{
             if(results.success){
-                debug(fileLabel, "Loaded Successfully");
+                info(fileLabel, "Loaded Successfully");
                 return res.status(200).json({"success": true, "data": results.data, "review": results.review});
             }else{
                 info(fileLabel, "Loaded Unsuccessfully: " + JSON.stringify(results));
                 return res.status(400).json({"success": false, "error": results.data});
             }
         }).catch((exception)=>{
+            info(fileLabel, "ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}) +": " + JSON.stringify(result));
             error(fileLabel, "Error in attempt to load: " + exception )
             return res.status(400).json({"success": false, "error": exception});
         })

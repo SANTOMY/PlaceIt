@@ -27,7 +27,7 @@ module.exports.saveReview = async function(newReview){
         return client.query(query)
         .then(() =>{
             client.release();
-            debug(fileLabel,"saved review: " + newReview);
+            info(fileLabel,"saved review: " + util.inspect(newReview,{showHidden: false, depth: null}));
             return {"success":true,"data":newReview};
         })
         .catch((err)=>{
