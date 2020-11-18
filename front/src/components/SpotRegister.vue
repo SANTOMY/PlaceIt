@@ -22,11 +22,22 @@
                             :rules="typeRules"
                             v-model="spot_data.types"
                             :items="all_spot_types"
-                            chips
                             label="スポットの種類"
                             multiple
                             solo
-                        ></v-select>
+                            height="80px"
+                        >
+                            <template v-slot:selection="{ item }">
+                                <v-chip
+                                    large
+                                    label
+                                    color="grey lighten-4"
+                                >
+                                    <spot-type-icon :type="item" />
+                                    <h3>{{ item }}</h3>
+                                </v-chip>
+                            </template>
+                        </v-select>
 
                         <!-- スポットの説明 -->
                         <v-textarea
@@ -81,8 +92,12 @@
 </template>
 
 <script>
-export default {
+import SpotTypeIcon from "./SpotTypeIcon.vue"
 
+export default {
+    components: {
+        SpotTypeIcon
+    },
     data: function() {
         return {
             spot_data: {
