@@ -21,20 +21,16 @@
                 </v-col>
 
                 <v-col>
+                    ユーザー名
+                    <h1>{{ user.name }}</h1>
                     
-                        ユーザー名
-                        <h1>{{ user.name }}</h1>
-                        
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                v-model="editer"
-                                @click="editProfile"
-                            >
-                            edit
-                            </v-btn>
-                        
-                        
-                    
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            v-model="editer"
+                            @click="editProfile"
+                        >
+                        edit
+                        </v-btn> 
                 </v-col>
             </v-row>
         </v-container>
@@ -67,16 +63,15 @@ export default {
     data() {
         return {
             editer: false,
-
             dialog: false,
-            user: {
+            user: { // ユーザー仮データ
                 name: 'タカタ',
                 user_id: '000000',
                 mail: 'takata@takata.com',
                 password: 'takata',
                 src: require('@/assets/pose_kuyashii_man.png')
             },
-            spot: [
+            spot: [ // spot仮データ
                 {
                     name: 'マクドナルド',
                     id: '000000',
@@ -125,6 +120,7 @@ export default {
             this.$refs.child.$emit('initialState')
         },
         FromUserEdit: function(value){
+            // UserEdit.vueが起動する関数（修正完了時or修正キャンセル時）
             console.log(this.editer)
             console.log(value)
           
