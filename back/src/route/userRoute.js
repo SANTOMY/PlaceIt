@@ -23,20 +23,33 @@ const authMiddleware = (req, res, next) => {
     if(req.isAuthenticated()) {
         next();
     } else {
-        res.redirect(301, '/login');
+        res.redirect(301, '/user/fail');
     }
 };
 
+/*
+router.get('/login', (req, res) => {
+    const errorMessage = req.flash('error').join('<br>');
+    res.render('index', {
+        errorMessage: errorMessage
+    });
+});
+*/
+
 router.post("/login",
     passport.authenticate('local', {
-        successRedirect: '/userpage',
-        failureRedirect: '/login',
+        successRedirect: '/user/userpage',
+        failureRedirect: '/user/fail',
         failureFlash: true,
     })
 );
 
 router.get('/userpage', authMiddleware, (req, res) => {
-    res.send('login');
+    res.send('login successful');
+});
+
+router.get('/fail', (req, res) => {
+    res.send('login fail');
 });
 
 router.post('/logout', (req, res) => {
