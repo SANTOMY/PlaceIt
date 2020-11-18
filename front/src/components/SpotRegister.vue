@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-form>
+        <v-form ref="spotRegisterForm">
             <v-container>
                 <v-row>
                     <v-col>
@@ -135,8 +135,14 @@ export default {
 
     methods: {
         onClickedRegisterButton: function() {
+            if (!this.$refs.spotRegisterForm.validate()) {
+                console.log("failed to register")   // Debug
+                return
+            }
+
             //TODO: スポットをデータベースに登録する処理
-            console.log(this.spot_data);
+            console.log(this.spot_data)     // Debug
+            this.$router.push('/map')
         }
     },
 
