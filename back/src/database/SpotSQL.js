@@ -22,18 +22,21 @@ async function saveSpot(newSpot){
     };
     const client = await pool.connect();
     //TODO: NULL CHECK
-    if(newSpot.spotName == null){
+    if(typeof newSpot.spotName == 'undefined'){
+        client.release();
+        info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
+        error(fileLabel,"Spot Name is Undefined!!!!");
+        return {"success":false,"data":"Spot Name is Undefined!!!!"};
+    }else if(newSpot.spotName == null){
         client.release();
         info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
         error(fileLabel,"Spot Name cannot be null!!!!");
         return {"success":false,"data":"Spot Name cannot be null!!!!"};
-    }else if(typeof newSpot.spotName === 'undefined' || !newSpot.spotName){
-        if(!(newSpot.spotName.trim())){
-            client.release();
-            info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
-            error(fileLabel,"Spot Name is Empty!!!!");
-            return {"success":false,"data":"Spot Name is Empty!!!!"};
-        }
+    }else if(!newSpot.spotName){
+        client.release();
+        info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
+        error(fileLabel,"Spot Name is Empty!!!!");
+        return {"success":false,"data":"Spot Name is Empty!!!!"};
     }else if(!(newSpot.spotName.trim())){
         client.release();
         info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
