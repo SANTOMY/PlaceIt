@@ -21,6 +21,7 @@ module.exports.saveReview = async function(newReview){
     .then( nullchecker =>{
         if(nullchecker.rowCount == 0){
             client.release();
+            info(fileLabel,"ERROR OBJECT:" + util.inspect(newReview.spotId,{showHidden: false, depth: null}));
             error(fileLabel,"There is no spot at: " + newReview.spotId);
             return {"success":false,"data":newReview.spotId};
         }

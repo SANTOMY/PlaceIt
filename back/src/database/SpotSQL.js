@@ -24,16 +24,19 @@ async function saveSpot(newSpot){
     //TODO: NULL CHECK
     if(newSpot.spotName == null){
         client.release();
+        info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
         error(fileLabel,"Spot Name cannot be null!!!!");
         return {"success":false,"data":"Spot Name cannot be null!!!!"};
     }else if(typeof newSpot.spotName === 'undefined' || !newSpot.spotName){
         if(!(newSpot.spotName.trim())){
             client.release();
+            info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
             error(fileLabel,"Spot Name is Empty!!!!");
             return {"success":false,"data":"Spot Name is Empty!!!!"};
         }
     }else if(!(newSpot.spotName.trim())){
         client.release();
+        info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
         error(fileLabel,"Spot Name cannot be Spaces!!!!");
         return {"success":false,"data":"Spot Name cannot be Spaces!!!!"};
     }
