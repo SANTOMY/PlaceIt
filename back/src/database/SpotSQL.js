@@ -24,6 +24,10 @@ async function saveSpot(newSpot){
     const client = await pool.connect();
     //TODO: NULL CHECK
     return client.query(query1).then(()=>{
+        if(isEmpty(newSpot.spotName)){
+            error(fileLabel,"Spot Name is Empty!!!!")
+            return {"success":false,"data":"Spot Name is Empty!!!!"};
+        }
         return client.query(query2).then(()=>{
             client.release();
             info(fileLabel,"saved spot: " + newSpot);
@@ -85,6 +89,13 @@ async function getSpot(keywords){
         error(fileLabel,"Error while getting spot " + exception);
         return {"success":false, "data":exception};
     });
+}
+async function isEmpty(object){
+    const tmp = object.replace(/ /g, "");
+    if(tmp.length==0){
+        return true;
+    }
+    return false
 }
 
 module.exports = {saveSpot:saveSpot, getSpot:getSpot}

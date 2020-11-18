@@ -7,13 +7,13 @@ const SpotSQL = require("../database/SpotSQL");
 
 module.exports = class SpotController{
     constructor(){
-        this.register.bind(this);
+        this.saveSpot.bind(this);
         this.search.bind(this);
     }
     
-    async register(req, res){
+    async saveSpot(req, res){
         const {spotName, x, y, picture, spotType, userId, comment, score} = req.body;
-        debug(fileLabel,"Register spot information:" + spotName);
+        debug(fileLabel,"Save spot information:" + spotName);
         const spot = new Spot(uuidv4(), spotName, x, y, picture, spotType, userId, uuidv4(), comment, score);
         return SpotSQL.saveSpot(spot).then((result)=>{
             if(result.success){
@@ -24,7 +24,7 @@ module.exports = class SpotController{
                 return res.status(400).json({"success": false, "error": result.data});
             }
         }).catch((exception)=>{
-            error(fileLabel,"Error in attempt to register "+ spotName + ": " + exception);
+            error(fileLabel,"Error in attempt to saveSpot "+ spotName + ": " + exception);
             return res.status(400).json({"success": false, "error": exception});
         });
     }

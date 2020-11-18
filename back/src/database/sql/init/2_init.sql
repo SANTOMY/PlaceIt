@@ -1,17 +1,17 @@
 create table spots.spots
 (
-  spot_id bigint primary key,
-  spot_name text,
-  geom GEOMETRY,
-  spot_type text,
-  picture text,
-  user_id text
+  spot_id text primary key not null,
+  spot_name text not null,
+  geom GEOMETRY not null,
+  spot_type text not null,
+  picture text not null,
+  user_id text not null
 );
 create table spots.review
 (
-  review_id bigint primary key,
-  spot_id bigint,
-  comment text,
-  score bigint,
-  user_id text
+  review_id text primary key not null,
+  spot_id text not null,
+  comment text not null,
+  score bigint not null,
+  user_id text not null
 );
