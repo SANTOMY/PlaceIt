@@ -8,7 +8,7 @@ const SpotSQL = require("../database/SpotSQL");
 module.exports = class SpotController{
     constructor(){
         this.saveSpot.bind(this);
-        this.search.bind(this);
+        this.getSpot.bind(this);
     }
     
     async saveSpot(req, res){
@@ -29,7 +29,7 @@ module.exports = class SpotController{
         });
     }
 
-    async search(req, res){
+    async getSpot(req, res){
         const keywords = req.body;
         return SpotSQL.getSpot(keywords).then((results)=>{
             if(results.success){

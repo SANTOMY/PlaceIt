@@ -23,11 +23,11 @@ async function saveSpot(newSpot){
     };
     const client = await pool.connect();
     //TODO: NULL CHECK
+    if((isEmpty(newSpot.spotName))){
+        error(fileLabel,"Spot Name is Empty!!!!")
+        return {"success":false,"data":"Spot Name is Empty!!!!"};
+    }
     return client.query(query1).then(()=>{
-        if(isEmpty(newSpot.spotName)){
-            error(fileLabel,"Spot Name is Empty!!!!")
-            return {"success":false,"data":"Spot Name is Empty!!!!"};
-        }
         return client.query(query2).then(()=>{
             client.release();
             info(fileLabel,"saved spot: " + newSpot);
@@ -55,22 +55,26 @@ async function saveSpot(newSpot){
 }
 
 async function getSpot(keywords){
+    //init Query
     const query1 = {
         text: 'SELECT * FROM spots.spots',
         values: []
     }
     var spotIds = [];
     if( keywords != null ){
-        query1.text = makeSQL.makeSQLforSpot("spots.spots", keywords);
+        query1.text = makeSQL.makeSQLforSpot(keywords);
     }
     const client = await pool.connect();
     return client.query(query1)
     .then((results1)=>{
         info(fileLabel, "Load spots")
+        if (results1.rowCount == 0)
+            return {"success":false, "data":"spot does not exist"};
         for(var i=0; i<results1.rows.length; i++){
             const spot = results1.rows[i];
             spotIds.push(spot.spot_id);
         }
+
         const query2 = makeSQL.makeSQLforReview(spotIds);
         return client.query(query2)
         .then( (results2) => {
@@ -90,7 +94,7 @@ async function getSpot(keywords){
         return {"success":false, "data":exception};
     });
 }
-async function isEmpty(object){
+    function isEmpty(object){
     const tmp = object.replace(/ /g, "");
     if(tmp.length==0){
         return true;
@@ -98,4 +102,4 @@ async function isEmpty(object){
     return false
 }
 
-module.exports = {saveSpot:saveSpot, getSpot:getSpot}
+module.exports = {saveSpot:saveSpot, getSpot:getSpot, isEmpty:isEmpty}
