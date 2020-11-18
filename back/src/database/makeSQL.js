@@ -1,5 +1,4 @@
 'use strict';
-const SearchWords = require("../objects/SearchWords");
 
 module.exports.getSpotQueryBuilder = function(keywords){
     //input : keyword is Json
@@ -28,7 +27,7 @@ module.exports.getSpotQueryBuilder = function(keywords){
 
 module.exports.getReviewsQueryBuilder = function(spotIds){
     var query = `SELECT * FROM spots.review where `;
-    if(spotIds == null){
+    if(spotIds == null || spotIds == undefined || spotIds.length == 0){
         return null;
     }
     else{

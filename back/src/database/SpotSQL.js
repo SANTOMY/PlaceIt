@@ -44,7 +44,6 @@ async function saveSpot(newSpot){
             return {"success":true,"data":newSpot};
         })
         .catch(err=>{
-            client.release();
             info(fileLabel,"Error while saving review: " + util.inspect(err,{showHidden: false, depth: null}));
             return client.query(deleteSpotQuery).then(()=>{
                 client.release();
@@ -52,6 +51,7 @@ async function saveSpot(newSpot){
                 return {"success":false,"data":err};
             })
             .catch(err=>{
+                client.release();
                 info(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
                 error(fileLabel,"Error while deleting spot: " + err);
                 return {"success":false,"data":err};
@@ -67,15 +67,8 @@ async function saveSpot(newSpot){
 }
 
 async function getSpotByKeywords(keywords){
-    //init Query
-    const query1 = {
-        text: 'SELECT * FROM spots.spots',
-        values: []
-    }
     var spotIds = [];
-    if( keywords != null ){
-        query1.text = makeSQL.getSpotQueryBuilder(keywords);
-    }
+    const query1 = makeSQL.getSpotQueryBuilder(keywords);
     const client = await pool.connect();
     return client.query(query1)
     .then((results1)=>{
