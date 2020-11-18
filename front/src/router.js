@@ -1,12 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Signup from './components/Signup.vue'
-import Login from './components/Login.vue'
-import UserProfile from './components/UserProfile.vue'
-import Map from './components/Map.vue'
-import SpotDetail from './components/SpotDetail.vue'
-import SpotRegister from './components/SpotRegister.vue'
-import UserEdit from './components/UserEdit.vue'
+import Signup from './components/Signup/Signup.vue'
+import Login from './components/Login/Login.vue'
+import UserProfile from './components/UserProfile/UserProfile.vue'
+import Map from './components/Map/Map.vue'
+import SpotDetail from './components/SpotDetail/SpotDetail.vue'
+import SpotRegister from './components/SpotRegister/SpotRegister.vue'
 
 
 Vue.use(Router)
@@ -44,11 +43,5 @@ export default new Router({
         name: 'register',
         component: SpotRegister
     },
-    {
-      path: '/user/edit',
-      name: 'user_edit',
-      component: UserEdit
-  },    
-
   ]
 })
