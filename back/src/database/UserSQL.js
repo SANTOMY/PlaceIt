@@ -34,23 +34,57 @@ async function getUserByEmail(email) {
     const query = {
         text: `SELECT * FROM users.users WHERE email='${email}'`
     };
-    return connection.connect().then(()=>{
-        return connection.query(query).then( result => {
-            connection.end();
-            if (result.rowCount == 0)
-                return {"success":false, "data":"User does not exist"};
-            info(fileLabel,"get user by email: " + util.inspect(email,{showHidden: false, depth: null}));
-            return {"success":true, "data":result.rows};
-        }).catch((exception)=>{
-            connection.end();
-            error(fileLabel,"Error while getting user. " + exception);
-            return {"success":false, "data":exception};      
-        });
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+       client.release();
+        if (result.rowCount == 0)
+            return {"success":false, "data":"User does not exist"};
+        info(fileLabel,"get user by email: " + email);
+        return {"success":true, "data":result.rows};
     }).catch((exception)=>{
-        connection.end();
-        error(fileLabel,"Error trying to connect to database: " + exception);
-        return {"success":false, "data":exception};
+        client.release();
+        error(fileLabel,"Error while getting user. " + exception);
+        return {"success":false, "data":exception};      
     });
 }
 
-module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail};
+async function editUser(currentEmail, newEmail, newPassword, newUserName) {
+    var setQuery = "";
+    var emailStatus = "not updated";
+    var passwordStatus = "not updated";
+    var usernameStatus = "not updated";
+    if (typeof newEmail !== 'undefined') {
+        setQuery = setQuery + ` email='${newEmail}',`
+        emailStatus = `updated to ${newEmail}`
+    }
+    if (typeof newPassword !== 'undefined') {
+        setQuery = setQuery + ` password='${newPassword}',`
+        passwordStatus = `updated to ${newPassword}`
+    }
+    if (typeof newUserName !== 'undefined') {
+        setQuery = setQuery + ` username='${newUserName}',`
+        usernameStatus = `updated to ${newUserName}`
+    }
+    if (!setQuery) {
+        return {"success":false, "data":"no changes"};
+    }
+    setQuery = setQuery.slice(0, -1)
+
+    const query = {
+        text: `UPDATE users.users SET ${setQuery} WHERE email='${currentEmail}'`
+    };
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+        client.release();
+        if (result.rowCount == 0)
+            return {"success":false, "data":"User does not exist"};
+        info(fileLabel,"edit user: " + currentEmail);
+        return {"success":true, "email":emailStatus, "password":passwordStatus, "username":usernameStatus};
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while editing information. " + exception);
+        return {"success":false, "data":exception};      
+    });
+}
+
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser};
