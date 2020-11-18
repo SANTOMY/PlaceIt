@@ -142,7 +142,12 @@ export default {
                 }
             ],
             review_num_per_page: 3, //1ページあたりの表示するレビュー数
-            now_review_page: 0
+            now_review_page: 0,
+
+            pos: {
+                lat: 0,
+                lon: 0
+            }
         }
     },
 
@@ -163,7 +168,6 @@ export default {
             return this.reviews.slice(start, end)
         }
     }
-    
 
 }
 </script>

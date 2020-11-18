@@ -4,17 +4,15 @@
     <!-- spot種別検索メニュー -->
     <v-menu
       id='feature-menu'
-      class="mx-4 my-15"
-      open-on-hover
+      class="mx-15 my-5"
       bottom
       offset-x
     >
-    <!-- マウスを載せるとメニューが表示する -->
+    <!-- クリックするとメニューが表示する -->
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         id='feature-button'
-        class="mx-10 my-15"
-        small
+        class="mx-15 my-5"
         left
         fab
         v-bind="attrs"
@@ -24,8 +22,9 @@
       <!-- 現在の検索種別のアイコンを表示 -->
       <v-icon
       class="px-5"
+      large
       >
-      {{featureIcons[type]}}
+      {{featureIcons[nowType]}}
      </v-icon>
       </v-btn>
       <!-- 検索メニュー -->
@@ -33,14 +32,14 @@
         <v-list 
         id='feature-list' 
         absolute
-        small>
+        >
         <v-list-item
           v-for="(type,index) in types"
           :key="index"
           link
         >
           <v-list-item-title
-          v-on:click="searchType(type.title)"
+          v-on:click="changeSearchType(type.title)"
           >{{ type.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
@@ -49,9 +48,8 @@
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
     <v-btn 
       id='map-reg'
-      class="mx-4 my-15"
+      class="mx-4 my-5"
       absolute
-      small
       right
       fab
       v-on:click="changeMode()"
@@ -59,18 +57,19 @@
     <!-- 通常モードアイコン -->
      <v-icon
       v-if="!regFlag"
-      color="#CC1651"
       class="px-5"
+      color="#CC1651"
+      large
       >
-        mdi-map-marker
+        mdi-map-marker-plus
      </v-icon>
       <!-- 登録モードアイコン -->
      <v-icon
       v-if="regFlag"
-      color="#16A6CC"
       class="px-5"
+      large
       >
-        mdi-map-marker
+        mdi-earth
      </v-icon>
     </v-btn>
 
@@ -79,7 +78,6 @@
     id='now-loc'
     absolute
     class="mx-4 my-15"
-    small
     right
     bottom
     fab
@@ -87,7 +85,9 @@
     >
     <v-icon
       color="#5D8C99"
-      class="px-5">
+      class="px-5"
+      large 
+      >
         mdi-crosshairs-gps
     </v-icon>
     </v-btn>
@@ -122,7 +122,7 @@ export default {
         regFlag:false,//スポット登録モードのフラグ
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト     
-        type:'reset',//スポット検索の種別
+        nowType:'reset',//スポット検索の種別
         types: [  {title:"reset"},
                   {title:"restaurant"},
                   {title:"travel"},
@@ -153,6 +153,8 @@ export default {
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
         console.log(event.latlng);//debug
+        console.log(this.nowType)//debug
+
       },
       //現在地アイコンを更新する関数(予定)
       locationMarker(){
@@ -180,11 +182,11 @@ export default {
         //現在地マーカーを設置
         //this.map.on("locationfound",this.locationMarker);
       },
-      searchType: function(type){
-      this.type = type;
+      changeSearchType: async function(type){
+      this.nowType = type;
       },
     },
-    mounted: async function() {
+    mounted: function() {
       //Mapオブジェクトの生成
       this.map = L.map('map',{zoom: this.zoom})
       .addLayer(
