@@ -58,18 +58,18 @@
      <v-icon
       v-if="!regFlag"
       class="px-5"
-      color="#CC1651"
       large
       >
-        mdi-map-marker-plus
+        mdi-earth
      </v-icon>
       <!-- 登録モードアイコン -->
      <v-icon
       v-if="regFlag"
       class="px-5"
+      color="#CC1651"
       large
       >
-        mdi-earth
+        mdi-map-marker-plus
      </v-icon>
     </v-btn>
 
