@@ -1,43 +1,55 @@
 <template>
 <!-- mapレイヤのような形で生成される -->
   <div id='map'>
-    <v-container>
-      <v-row>
-    <v-btn
-    id='feature'
-    absolute
-    class="mx-10 my-5"
-    small
-    fab
+    <!-- spot種別検索メニュー -->
+    <v-menu
+      id='feature-menu'
+      class="mx-4 my-15"
+      open-on-hover
+      bottom
+      offset-x
     >
-    aaa
-    </v-btn>
+    <!-- マウスを載せるとメニューが表示する -->
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn
+        id='feature-button'
+        class="mx-10 my-15"
+        small
+        left
+        fab
+        v-bind="attrs"
+        v-on="on"
+      >
 
-    <v-btn
-    id='feature'
-    absolute
-    class="mx-10 my-5"
-    small
-    fab
-    >
-    bbb
-    </v-btn>
-
-    <v-btn
-    id='feature'
-    absolute
-    class="mx-10 my-5"
-    small
-    fab
-    >
-    ccc
-    </v-btn>
-    </v-row>
-    </v-container>
+      <!-- 現在の検索種別のアイコンを表示 -->
+      <v-icon
+      class="px-5"
+      >
+      {{featureIcons[type]}}
+     </v-icon>
+      </v-btn>
+      <!-- 検索メニュー -->
+      </template>
+        <v-list 
+        id='feature-list' 
+        absolute
+        small>
+        <v-list-item
+          v-for="(type,index) in types"
+          :key="index"
+          link
+        >
+          <v-list-item-title
+          v-on:click="searchType(type.title)"
+          >{{ type.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
 
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
     <v-btn 
       id='map-reg'
+      class="mx-4 my-15"
       absolute
       small
       right
@@ -89,7 +101,6 @@ import  L from 'leaflet'
 
 delete  L.Icon.Default.prototype._getIconUrl
 
-
 L.Icon.Default.mergeOptions(
     {   iconUrl         : require( 'leaflet/dist/images/marker-icon.png' )
     ,   iconRetinaUrl   : require( 'leaflet/dist/images/marker-icon-2x.png' )
@@ -110,7 +121,19 @@ export default {
         myplace:null,//現在地オブジェクト
         regFlag:false,//スポット登録モードのフラグ
         flag :false,//実装上の都合で導入したフラグ
-        locMarker:false,//現在地のマーカーオブジェクト
+        locMarker:null,//現在地のマーカーオブジェクト     
+        type:'reset',//スポット検索の種別
+        types: [  {title:"reset"},
+                  {title:"restaurant"},
+                  {title:"travel"},
+                  {title:"shopping"},
+                ],//spot種別一覧
+        featureIcons: {
+          restaurant: "mdi-silverware-fork-knife",
+          travel: "mdi-bag-suitcase",
+          shopping: "mdi-cart",
+          reset:"mdi-map-marker-circle"
+        },//iconたち
       };
     },
     methods: {
@@ -131,9 +154,16 @@ export default {
       markerClickEvent(event){
         console.log(event.latlng);//debug
       },
+      //現在地アイコンを更新する関数(予定)
+      locationMarker(){
+        //this.locMarker = L.marker(location.latlng,{icon:this.currentLocationIcon}).addTo(this.map)//debug
+      },
+      //スポット登録関数
+      //SATD:経緯度をリンクで渡しているが、propsで渡す
       regSpot: function(){
         this.$router.push({ name: 'register', query: { "lat": this.lat,"lon":this.lon}});
       },
+      //通常モードと登録モードの切り替え関数
       changeMode: function(){
         this.regFlag = !this.regFlag;
         if(this.regFlag){
@@ -144,10 +174,15 @@ export default {
         this.map.off('click')
         }
       },
+      //マップの中心を現在地に更新する関数
       nowLocation: function(){
         this.map.locate({ setView: true,maxZoom: 18});
+        //現在地マーカーを設置
+        //this.map.on("locationfound",this.locationMarker);
       },
-
+      searchType: function(type){
+      this.type = type;
+      },
     },
     mounted: async function() {
       //Mapオブジェクトの生成
@@ -158,18 +193,20 @@ export default {
             'Map data &copy <a href="https://openstreetmap.org">OpenStreetMap</a>'
         })
       );
-      //Map上のある地点がクリックされた時に起動する関数の登録
-        //this.map.on('click', this.mapClickEvent);
-        //this.map.off('click');//debug
 
       //初期位置を現在地に
       this.map.locate({ setView: true,maxZoom: 18});
 
+      //現在地マーカーを設置(予定)
+        //this.map.on("locationfound",this.locationMarker);
+
       //マーカーの登録とマーカークリック時に起動する関数の登録
       this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
         'click', this.markerClickEvent);
-
     }, 
+    //現在地追跡のために利用(予定)
+    watch: {
+    }
 }
 </script>
 
@@ -186,18 +223,14 @@ body {
   margin: 0;
   height: 100%;
 }
-#aaa {
-  z-index:1000;
-}
-#map-reg{
   /* 各オブジェクトのstyleでz-indexを0以上に設定する 
   基本は1000でOK*/
-  z-index: 1000;
-}
-#now-loc{
-  z-index: 1000;
-}
-#feature{
+#map-reg,
+#now-loc,
+#v-list-item,
+#feature-menu,
+#feature-button,
+#feature-list{
   z-index: 1000;
 }
 </style>
