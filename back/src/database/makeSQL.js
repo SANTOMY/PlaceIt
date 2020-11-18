@@ -4,7 +4,6 @@ module.exports.getSpotQueryBuilder = function(keywords){
     //input : keyword is Json
     //{"spotId" : "sample"} 
     var query = 'SELECT * FROM spots.spots';
-    var andFlag = false;//for only one keyword
     var where = []
     if( keywords.spotId != null )
         where.push(` spot_id='${keywords.spotId}'`);
@@ -27,7 +26,7 @@ module.exports.getSpotQueryBuilder = function(keywords){
 
 module.exports.getReviewsQueryBuilder = function(spotIds){
     var query = `SELECT * FROM spots.review where `;
-    if(spotIds == null || spotIds == undefined || spotIds.length == 0){
+    if(spotIds == null || typeof spotIds == 'undefined' || spotIds.length == 0){
         return null;
     }
     else{
