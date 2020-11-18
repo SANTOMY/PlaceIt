@@ -104,12 +104,5 @@ async function getSpotByKeywords(keywords){
         return {"success":false, "data":exception};
     });
 }
-    function isEmpty(object){
-    const tmp = object.replace(/ /g, "");
-    if(tmp.length==0){
-        return true;
-    }
-    return false
-}
 
-module.exports = {saveSpot:saveSpot, getSpotByKeywords:getSpotByKeywords, isEmpty:isEmpty}
+module.exports = {saveSpot:saveSpot, getSpotByKeywords:getSpotByKeywords}
