@@ -1,6 +1,7 @@
 <template>
     <v-container>
         <h1>ユーザープロファイル</h1>
+<!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
         <v-dialog v-model="dialog" width=500>
             <UserEdit 
                 @close="FromUserEdit"
@@ -9,43 +10,36 @@
             >
             </UserEdit>
         </v-dialog>
-
-        <v-container width=50 class="px-16">
-            <v-row>
-                <v-col>
-                    <v-layout justify-center>
-                        <v-avatar size="200">
-                            <img v-bind:src="user.src">
-                        </v-avatar>
-                    </v-layout>
-                </v-col>
-
-                <v-col>
-                    ユーザー名
-                    <h1>{{ user.name }}</h1>
-                    
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            v-model="editer"
-                            @click="editProfile"
-                        >
-                        edit
-                        </v-btn> 
-                </v-col>
-            </v-row>
-        </v-container>
-    
-    <v-container fluid class="px-20">
+<!-----------------------ユーザー写真------------------------------------------------->        
+        <v-row>
+            <v-col>
+                <v-layout justify-center>
+                    <v-avatar size="200">
+                        <img v-bind:src="user.src">
+                    </v-avatar>
+                </v-layout>
+            </v-col>
+<!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
+            <v-col>
+                ユーザー名
+                <h1>{{ user.name }}</h1>
+                
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        v-model="editer"
+                        @click="editProfile"
+                    ><!-------editerのtrue/false変更され、editProfile()が起動するボタン----->
+                    edit
+                    </v-btn> 
+            </v-col>
+        </v-row>
+<!----------------------スポットリストカード------------------------------------------------->
         <SpotListCard 
             v-bind:spot_list="spot"
             v-bind:user_list="user"
             color="green"
         ></SpotListCard>
     </v-container>
-
-    </v-container>
-
-
 </template>
 
 <script>
