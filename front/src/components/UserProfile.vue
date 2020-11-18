@@ -2,7 +2,7 @@
     <v-container>
         <h1>ユーザープロファイル</h1>
 <!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
-        <v-dialog v-model="dialog" width=500>
+        <v-dialog v-model="dialogEdit" width=500>
             <UserEdit 
                 @close="FromUserEdit"
                 v-bind:user="user"
@@ -57,7 +57,7 @@ export default {
     data() {
         return {
             editer: false,
-            dialog: false,
+            dialogEdit: false,
             user: { // ユーザー仮データ
                 name: 'タカタ',
                 user_id: '000000',
@@ -110,14 +110,11 @@ export default {
     },
     methods:  {
         editProfile: function() {
-            this.dialog = true
+            this.dialogEdit = true
             this.$refs.child.$emit('initialState')
         },
         FromUserEdit: function(value){
             // UserEdit.vueが起動する関数（修正完了時or修正キャンセル時）
-            console.log(this.editer)
-            console.log(value)
-          
             if(value.edit_email==true){
                 this.user.mail=value.email_edit
             }
@@ -129,7 +126,7 @@ export default {
             }      
             console.log(this.user.name,this.user.mail,this.user.password)
             
-            this.dialog = false
+            this.dialogEdit = false
 
         }
     }

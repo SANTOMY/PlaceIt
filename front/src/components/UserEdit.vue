@@ -5,76 +5,31 @@
         <v-stepper 
             v-model="state"
         >
-<!-----------------------ヘッダー(step1)------------------------------------------------->
-<!-- 同様処理を複数回行っているところが複数箇所あるため、今後プログラムを短くする予定です。。。 -->
+<!-----------------------ヘッダー------------------------------------------------->
             <v-stepper-header>
-                <v-stepper-step
-                    editable
-                    :rules="[() => false]"
-                    step="1"
-                    v-if="!editUserName"
+                <!-- templateでループさせてます -->
+                <template
+                    v-for="(value,index) in stepData"
                 >
-                    User Name
-                </v-stepper-step>
-                <v-stepper-step
-                    complete
-                    :rules="[() => true]"
-                    step="1"
-                    v-if="editUserName"
-                >
-                    User Name
-                </v-stepper-step>
+                    <!-- 3つの項目のヘッダーをループさせています -->
+                    <v-stepper-step
+                        :key="value"
+                        :step="index+1"
+                        :complete="value.edit"
+                    >
+                        {{ value.name }}
+                    </v-stepper-step>
 
-                <v-divider></v-divider>
-<!-----------------------ヘッダー(step2)------------------------------------------------->
+                    <v-divider :key="index"/>
+                </template>
 
-                <v-stepper-step
-                    v-if="!editEmail"
-                    editable
-                    :rules="[() => false]"
-                    step="2"
-                >
-                    Email
-                </v-stepper-step>
-
-                <v-stepper-step
-                    v-if="editEmail"
-                    complete
-                    :rules="[() => true]"
-                    step="2"
-                >
-                    Email
-                </v-stepper-step>
-
-                <v-divider></v-divider>
-<!-----------------------ヘッダー(step3)------------------------------------------------->
-                <v-stepper-step 
-                    editable
-                    :rules="[() => false]"
-                    v-if="!editpassword"
-                    step="3">
-                    
-                    Password
-                </v-stepper-step>
-
-                <v-stepper-step 
-                    complete
-                    :rules="[() => true]"
-                    v-if="editpassword"
-                    step="3">
-                    
-                    Password
-                </v-stepper-step>
-
-                <v-divider></v-divider>
-<!-----------------------ヘッダー(step4)------------------------------------------------->
                 <v-stepper-step 
                     step="4">
-                    
                     Edit Finish
                 </v-stepper-step>
             </v-stepper-header>
-<!--------------------------------メイン(step1)--------------------------------------------->
+<!--------------------------------ステップ1--------------------------------------------->
+<!-- 同様処理を複数回行っているところが複数箇所あるため、今後プログラムを短くする予定です。。。 -->
             <v-stepper-items>
                 <v-stepper-content step="1">
                     <v-card
@@ -82,7 +37,7 @@
                         class="mx-auto mt-5"
                     ></v-card>
                     <v-card-text>
-                        <v-form ref="loginForm1">
+                        <v-form ref="loginFormName">
 
                             <!-- ユーザー名変更 -->
                             <v-text>
@@ -112,7 +67,7 @@
                     Skip
                     </v-btn>
                 </v-stepper-content>
-<!--------------------------------メイン(step2)--------------------------------------------->
+<!--------------------------------ステップ2--------------------------------------------->
                 <v-stepper-content step="2">
                     <v-card
                         width="400px" 
@@ -120,7 +75,7 @@
                     ></v-card>
 
                     <v-card-text>
-                        <v-form ref="loginForm2">
+                        <v-form ref="loginFormEmail">
 
                             <!-- メールアドレス変更 -->
                             <v-text>
@@ -163,7 +118,7 @@
                     Back
                     </v-btn>
                 </v-stepper-content>
-<!--------------------------------メイン(step3)--------------------------------------------->
+<!--------------------------------ステップ3--------------------------------------------->
                 <v-stepper-content step="3">
                     <v-card
                         width="400px" 
@@ -226,7 +181,7 @@
                         </v-btn> 
                     </v-card-actions>   
                 </v-stepper-content>
-<!--------------------------------メイン(step4)--------------------------------------------->
+<!--------------------------------ステップ4--------------------------------------------->
                 <v-stepper-content step="4">
                     <v-card
                         width="400px" 
@@ -279,13 +234,15 @@ export default {
         return {
             state: null, // 修正UIの状態(1~4で遷移)
             showDialog: true, // trueで修正UIを表示
-            editUserName: false, // trueでユーザー名修正 
-            editEmail: false, // trueでEmail修正 
-            editpassword: false, // trueでパスワード修正 
             model: {}, // UserProfile.vueに送る関数
             showPassword : false, // trueで修正前パスワード表示
             showPasswordEdit : false, // trueで修正後パスワード表示
-            
+            stepData: [ // 各ステップで使用する変数を格納する配列
+                { name: "Username", edit: false},
+                { name: "Email", edit: false},
+                { name: "Password", edit: false},
+            ],
+
             // 以下、修正入力上のルール設定
             usernameRules: [
                 v => !!v || "ユーザ名は必須項目です。",
@@ -316,9 +273,9 @@ export default {
         initialState: function() {
             // 初期化関数
             this.showDialog= true
-            this.editUserName= false,
-            this.editEmail= false
-            this.editpassword= false
+            this.stepData[0].edit= false,
+            this.stepData[1].edit= false
+            this.stepData[2].edit= false
             this.model= {
                 username : "",
                 username_edit : "",
@@ -333,14 +290,13 @@ export default {
             // 修正情報を登録する関数
             if(this.check_database()) {
                 this.edit_account()
-                this.model.edit_username = this.editUserName
-                this.model.edit_email = this.editEmail
-                this.model.edit_password = this.editpassword
+                this.model.edit_username = this.stepData[0].edit
+                this.model.edit_email = this.stepData[1].edit
+                this.model.edit_password = this.stepData[2].edit
                 this.$emit('close',this.model) // 親コンポーネントへ変数を渡す処理
             }
             else {
                 console.log("failed to send database")
-                
             }
         },
 
@@ -351,46 +307,34 @@ export default {
 
         edit_account: function() {
             //TODO: アカウントを修正する処理
-            console.log("send_edit_information")
+            console.log("edit_account_")
             
         },
 
         closeCard: function(){
             // 修正UIを閉じる関数
-            console.log('close') 
             this.$emit('close',this.model)
         },
 
         NotChange: function(value){
             // 修正をスキップする関数
-            if(value==1){
-                this.state = 2
-                this.editUserName = false
-            }
-            else if(value==2){
-                this.state = 3
-                this.editEmail = false
-            }            
-            else if(value==3){
-                this.state = 4
-                this.editpassword = false
-            }        
+            this.state = value+1
+            this.stepData[value-1].edit = false
         },
 
         nextPage: function(value){
             // 修正項目を入力した後に次のステップに遷移する関数
-            if(value==1 && this.$refs.loginForm1.validate()){
-                this.editUserName = true
-                console.log(this.editUserName)
-                this.state = 2
+            if(value==1 && this.$refs.loginFormName.validate()){
+                this.stepData[value-1].edit = true
+                this.state = value+1
             }
-            else if(value==2 && this.$refs.loginForm2.validate()){
-                this.editEmail = true
-                this.state = 3
+            if(value==2 && this.$refs.loginFormEmail.validate()){
+                this.stepData[value-1].edit = true
+                this.state = value+1
             }
-            else if(value==3 && this.$refs.loginForm.validate()){
-                this.editpassword = true
-                this.state = 4
+            if(value==3 && this.$refs.loginForm.validate()){
+                this.stepData[value-1].edit = true
+                this.state = value+1
             }
             else {
                 // Debag
@@ -400,15 +344,7 @@ export default {
 
         backPage: function(value){
             // 前のステップに遷移する関数
-            if(value==2){
-                this.state = 1
-            }
-            else if(value==3){
-                this.state = 2
-            }
-            else if(value==4){
-                this.state = 3
-            }
+            this.state = value-1
         }
         
     }
