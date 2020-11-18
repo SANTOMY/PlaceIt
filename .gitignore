@@ -5,6 +5,7 @@
 .vscode
 .classpath
 
+#　環境ファイル
 .env
 
 

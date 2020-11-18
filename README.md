@@ -17,7 +17,7 @@ $ docker-compose build
 ```
 - 3.Run container
 ```
-$ docker run -it "container_name"
+$ docker run -it -p 3000:3000 pbl2-back
 ```
 ## Connect to DB from console
 - 1.Connect
