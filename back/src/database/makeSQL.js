@@ -1,7 +1,7 @@
 'use strict';
 const SearchWords = require("../objects/SearchWords");
 
-module.exports.makeSQLforSpot = function(keywords){
+module.exports.getSpotQueryBuilder = function(keywords){
     //input : keyword is Json
     //{"spotId" : "sample"} 
     var query = 'SELECT * FROM spots.spots';
@@ -26,7 +26,7 @@ module.exports.makeSQLforSpot = function(keywords){
     return query;
 }
 
-module.exports.makeSQLforReview = function(spotIds){
+module.exports.getReviewsQueryBuilder = function(spotIds){
     var query = `SELECT * FROM spots.review where `;
     if(spotIds == null){
         return null;
