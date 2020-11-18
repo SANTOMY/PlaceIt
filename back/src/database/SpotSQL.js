@@ -56,7 +56,7 @@ async function saveSpot(newSpot){
     });
 }
 
-async function getSpot(keywords){
+async function getSpotByKeywords(keywords){
     //init Query
     const query1 = {
         text: 'SELECT * FROM spots.spots',
@@ -64,7 +64,7 @@ async function getSpot(keywords){
     }
     var spotIds = [];
     if( keywords != null ){
-        query1.text = makeSQL.makeSQLforSpot(keywords);
+        query1.text = makeSQL.getSpotQueryBuilder(keywords);
     }
     const client = await pool.connect();
     return client.query(query1)
@@ -77,7 +77,7 @@ async function getSpot(keywords){
             spotIds.push(spot.spot_id);
         }
 
-        const query2 = makeSQL.makeSQLforReview(spotIds);
+        const query2 = makeSQL.getReviewsQueryBuilder(spotIds);
         return client.query(query2)
         .then( (results2) => {
             client.release();
@@ -106,4 +106,4 @@ async function getSpot(keywords){
     return false
 }
 
-module.exports = {saveSpot:saveSpot, getSpot:getSpot, isEmpty:isEmpty}
+module.exports = {saveSpot:saveSpot, getSpotByKeywords:getSpotByKeywords, isEmpty:isEmpty}
