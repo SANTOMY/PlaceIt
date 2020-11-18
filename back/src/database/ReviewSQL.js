@@ -19,7 +19,12 @@ module.exports.saveReview = async function(newReview){
     const client = await pool.connect();
     return client.query(checkQuery)
     .then( nullchecker =>{
-        if(nullchecker.rowCount == 0){
+        if(typeof newReview.spotName === 'undefined'){
+            client.release();
+            info(fileLabel,"ERROR OBJECT:" + util.inspect(newReview.spotId,{showHidden: false, depth: null}));
+            error(fileLabel,"Spot Id is Undefined" + newReview.spotId);
+            return {"success":false,"data":"Spot Id is Undefined"};
+        }else if(nullchecker.rowCount == 0){
             client.release();
             info(fileLabel,"ERROR OBJECT:" + util.inspect(newReview.spotId,{showHidden: false, depth: null}));
             error(fileLabel,"There is no spot at: " + newReview.spotId);
