@@ -99,6 +99,7 @@
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
 
 export default {
+
     components: {
         SpotTypeIcon
     },
