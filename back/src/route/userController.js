@@ -73,7 +73,7 @@ module.exports = class UserController{
             debug(fileLabel,"Password is not updated"); 
         } else if (newPassword.trim()) {
             let salt = bcrypt.genSaltSync(10);
-            encryptedNewPassword = bcrypt.hashSync(newPassword ,salt);
+            encryptedNewPassword = bcrypt.hashSync(newPassword.trim() ,salt);
             debug(fileLabel,"New hashed password is valid: " + encryptedNewPassword);
         } else {
             return res.status(400).json({"success": false, "error": "newPassword is not valid"});
@@ -86,7 +86,7 @@ module.exports = class UserController{
             return res.status(400).json({"success": false, "error": "newUsername is not valid"});
         }
 
-        return userSQL.editUser(currentEmail, newEmail, encryptedNewPassword, newUserName).then((result)=>{
+        return userSQL.editUser(currentEmail.trim(), newEmail.trim(), encryptedNewPassword, newUserName.trim()).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Edit Information " + currentEmail);
                 return res.status(200).json({"success": true,  "email":result.email, "password":result.password, "username":result.username});
