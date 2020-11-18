@@ -1,6 +1,5 @@
 'use strict';
 const con = require('./DBHandler.js');
-const connection = con.connection;
 const {info, debug, warning, error}  = require('../winston');
 const pool = con.pool;
 const fileLabel = "SpotSQL"
@@ -23,9 +22,20 @@ async function saveSpot(newSpot){
     };
     const client = await pool.connect();
     //TODO: NULL CHECK
-    if((isEmpty(newSpot.spotName))){
-        error(fileLabel,"Spot Name is Empty!!!!")
-        return {"success":false,"data":"Spot Name is Empty!!!!"};
+    if(newSpot.spotName == null){
+        client.release();
+        error(fileLabel,"Spot Name cannot be null!!!!");
+        return {"success":false,"data":"Spot Name cannot be null!!!!"};
+    }else if(typeof newSpot.spotName === 'undefined' || !newSpot.spotName){
+        if(!(newSpot.spotName.trim())){
+            client.release();
+            error(fileLabel,"Spot Name is Empty!!!!");
+            return {"success":false,"data":"Spot Name is Empty!!!!"};
+        }
+    }else if(!(newSpot.spotName.trim())){
+        client.release();
+        error(fileLabel,"Spot Name cannot be Spaces!!!!");
+        return {"success":false,"data":"Spot Name cannot be Spaces!!!!"};
     }
     return client.query(query1).then(()=>{
         return client.query(query2).then(()=>{
