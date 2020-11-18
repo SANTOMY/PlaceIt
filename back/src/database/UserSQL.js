@@ -7,6 +7,8 @@ const fileLabel = "UserSQL"
 const User = require('../objects/user');
 const util = require('util');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 
 /**
