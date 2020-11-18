@@ -111,7 +111,6 @@ export default {
     methods:  {
         editProfile: function() {
             this.dialogEdit = true
-            this.$refs.child.$emit('initialState')
         },
         FromUserEdit: function(value){
             // UserEdit.vueが起動する関数（修正完了時or修正キャンセル時）
