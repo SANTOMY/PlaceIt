@@ -81,7 +81,11 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-btn @click="onClickedRegisterButton">
+                        <!-- 登録ボタン -->
+                        <v-btn 
+                            @click="onClickedRegisterButton"
+                            x-large
+                        >
                             登録
                         </v-btn>
                     </v-col>
