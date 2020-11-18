@@ -10,7 +10,7 @@ const makeSQL = require('./makeSQL');
 
 async function saveSpot(newSpot){
     const query1 = {
-        text: `INSERT INTO spots.spots(spot_id, spot_name, geom, picture, spot_type, user_id) VALUES($1, $2, ST_GeomFromText('POINT(${newSpot.x} ${newSpot.y})', 4326), $3, $4, $5);`,
+        text: `INSERT INTO spots.spots(spot_id, spot_name, x, y, geom, picture, spot_type, user_id) VALUES($1, $2, ${newSpot.x}, ${newSpot.y}, ST_GeomFromText('POINT(${newSpot.x} ${newSpot.y})', 4326), $3, $4, $5);`,
         values: [newSpot.spotId, newSpot.spotName, newSpot.picture, newSpot.spotType, newSpot.userId]
     };
     const query2 = {
