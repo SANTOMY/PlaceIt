@@ -54,7 +54,7 @@ async function saveSpot(newSpot){
     });
 }
 
-async function getAllSpot(keywords){
+async function getSpotByKeywords(keywords){
     //init Query
     const query1 = {
         text: 'SELECT * FROM spots.spots',
@@ -102,4 +102,4 @@ async function getAllSpot(keywords){
     return false
 }
 
-module.exports = {saveSpot:saveSpot, getAllSpot:getAllSpot, isEmpty:isEmpty}
+module.exports = {saveSpot:saveSpot, getSpotByKeywords:getSpotByKeywords, isEmpty:isEmpty}
