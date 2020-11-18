@@ -8,13 +8,11 @@ const reviewSQL = require("../database/ReviewSQL");
 
 module.exports = class ReviewController{
     constructor(){
-        this.register.bind(this);
+        this.saveReview.bind(this);
     }
     
-    async register(req, res){
+    async saveReview(req, res){
         const {spotId, comment, score, userId} = req.body;
-        //encrypt password
-        let salt = bcrypt.genSaltSync(10);
         const review = new Review(uuidv4(), spotId, comment, score, userId);
         return reviewSQL.saveReview(review).then((result)=>{
             if(result.success){

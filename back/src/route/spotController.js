@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const {info, debug, warning, error} = require("../winston");
 const Spot = require("../objects/spot");
