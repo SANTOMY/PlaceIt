@@ -11,7 +11,6 @@ module.exports = class UserController{
         this.register.bind(this);
         this.getUserByEmail.bind(this);
         this.editUser.bind(this);
-        this.login.bind(this);
     }
     
     async register(req, res){
@@ -98,24 +97,6 @@ module.exports = class UserController{
 
         }).catch((exception)=>{
             error(fileLabel,"Error in attempt to edit "+ currentEmail + ": " + exception);
-            return res.status(400).json({"success": false, "error": exception});
-        });
-    }
-
-    async login(req, res){
-        const email = req.body.email;
-        const password = req.body.password;
-        return userSQL.login(email, password).then((result)=>{
-            if(result.success){
-                debug(fileLabel, "Successful Authentication " + email);
-                return res.status(200).json({"success": true, "status": result.data});
-            }else{
-                info(fileLabel, "Unsuccessful Authentication " + email +": " + JSON.stringify(result));
-                return res.status(400).json({"success": false, "error": result.data});
-            }
-
-        }).catch((exception)=>{
-            error(fileLabel,"Error in attempt to login "+ email + ": " + exception);
             return res.status(400).json({"success": false, "error": exception});
         });
     }
