@@ -97,6 +97,7 @@
 
 <script>
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
+import {saveSpot} from '../../routes/spotRequest'
 
 export default {
 
@@ -107,9 +108,14 @@ export default {
         return {
             spot_data: {
                 name: "",
+                x: 135,
+                y: 36,
+                photos: [],
                 types: [],
                 discription: "",
-                photos: []
+                userId: "aaa",
+                comment: "iine",
+                score: 80
             },
             //ここの記述があんまり良くない
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
@@ -144,6 +150,33 @@ export default {
             //TODO: スポットをデータベースに登録する処理
             console.log(this.spot_data)     // Debug
             this.$router.push('/map')
+        },
+        createSpot: function() {
+            if (this.$refs.spotRegisterForm.validate()) {
+                if(this.check_database()) {
+                    console.log("Front spotName" + this.spotname)
+                    saveSpot(this.spot_data.name, this.x, this.y, this.photos, this.spot_data.types, this.userId, this.comment, this.score)
+                    //console.log(resp.success)
+                    this.create_account()
+                    //this.$router.push('/map')
+                }
+                else {
+                    console.log("failed to send database")
+                    
+                }
+            }
+            else {
+                console.log("failed to register")
+            }
+
+        },
+        check_database: function() {
+            //TODO: アカウントを作成できるか確認
+            return true
+        },
+
+        create_spot: function() {
+            console.log("create_spot")
         }
     },
 

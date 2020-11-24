@@ -1,6 +1,6 @@
 import {serverIP} from './requestConfig';
 
-async function register(spotName, x, y, picture, spotType, userId, comment, score){
+async function saveSpot(spotName, x, y, picture, spotType, userId, comment, score){
     const url = serverIP + '/spot/saveSpot';
     try{
         let reponse = await fetch(url,{
@@ -19,3 +19,5 @@ async function register(spotName, x, y, picture, spotType, userId, comment, scor
         return{success:false, data:exception};
     }
 }
+
+export {saveSpot};

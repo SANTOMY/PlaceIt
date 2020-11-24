@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {register} from '../routes/userRequest'
+import {register} from '../../routes/userRequest'
 export default {
 
     data: function() {

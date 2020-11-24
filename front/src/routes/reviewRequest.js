@@ -1,6 +1,6 @@
 import {serverIP} from './requestConfig';
 
-async function register(spotId, comment, score, userId){
+async function saveReview(spotId, comment, score, userId){
     const url = serverIP + '/spot/saveReview';
     try{
         let reponse = await fetch(url,{
