@@ -69,6 +69,7 @@ export default {
             register(this.username,this.email,this.password)
                 .then(res => {
                     console.log(res)
+                    this.$store.commit("login", res)
                     this.$router.push('/map')
                 });
         }

@@ -65,7 +65,7 @@ export default {
     
     computed: {
         isLoggedIn() {
-            return this.$store.state.isLoginState
+            return this.$store.state.userData != null
         }
     }
 
