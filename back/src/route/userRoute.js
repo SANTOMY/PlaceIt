@@ -19,7 +19,7 @@ const authMiddleware = (req, res, next) => {
     if(req.isAuthenticated()) {
         next();
     } else {
-        res.redirect(301, '/user/fail');
+        res.redirect(301, '/user/notLogin');
     }
 };
 
@@ -29,7 +29,7 @@ router.put("/editUser",userController.editUser);
 router.post("/login",
     passport.authenticate('local', {
         successRedirect: '/user/userpage',
-        failureRedirect: '/user/fail',
+        failureRedirect: '/user/loginFail',
         failureFlash: true,
     })
 );
@@ -37,13 +37,17 @@ router.post('/logout', (req, res) => {
     req.session.passport.user = undefined;
     res.redirect('/');
 });
-// login page test
+// login succeccful test page
 router.get('/userpage', authMiddleware, (req, res) => {
     res.send('login successful');
 });
-// login fail test
-router.get('/fail', (req, res) => {
+// login fail in test page
+router.get('/loginFail', (req, res) => {
     res.send('login fail');
+});
+// not logged in test page
+router.get('/notLogin', (req, res) => {
+    res.send('not logged in');
 });
 
 module.exports = router;
