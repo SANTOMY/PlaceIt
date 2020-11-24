@@ -18,7 +18,6 @@ module.exports = class UserController{
         if (utility.isEmpty(userName) || utility.isEmpty(email) || utility.isEmpty(password)){
             return res.status(400).json({"success": false, "error": "Received undefined credentials"});
         }
-        debug(fileLabel,"Username: " + userName + " Email: " + email + " Password: " + password);
         //encrypt password
         let salt = bcrypt.genSaltSync(10);
         const encryptedPassword = bcrypt.hashSync(password ,salt);
