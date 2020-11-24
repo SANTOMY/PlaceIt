@@ -31,7 +31,7 @@ export default {
         myplace:null,//現在地オブジェクト
         regFlag:false,//スポット登録モードのフラグ
         flag :false,//実装上の都合で導入したフラグ
-        locMarker:null,//現在地のマーカーオブジェクト     
+        locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別
       };
     },
