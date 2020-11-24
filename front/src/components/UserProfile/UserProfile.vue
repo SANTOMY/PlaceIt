@@ -44,7 +44,7 @@
 
 <script>
 
-import SpotListCard from "./molecules/SpotListCard.vue";
+import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 
 

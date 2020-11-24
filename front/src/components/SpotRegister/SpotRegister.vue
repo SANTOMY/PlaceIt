@@ -96,9 +96,10 @@
 </template>
 
 <script>
-import SpotTypeIcon from "./SpotTypeIcon.vue"
+import SpotTypeIcon from "../share/SpotTypeIcon.vue"
 
 export default {
+
     components: {
         SpotTypeIcon
     },

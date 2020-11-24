@@ -90,7 +90,7 @@
 <script>
 import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
-import spotTypeIcon from './SpotTypeIcon.vue'
+import spotTypeIcon from '../share/SpotTypeIcon.vue'
 
 export default {
     components: {
