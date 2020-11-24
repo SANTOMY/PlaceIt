@@ -110,7 +110,7 @@ export default {
                 name: "",
                 x: 135,
                 y: 36,
-                photos: [],
+                photos: "dir",
                 types: [],
                 discription: "",
                 userId: "aaa",
@@ -146,29 +146,20 @@ export default {
                 console.log("failed to register")   // Debug
                 return
             }
-
-            //TODO: スポットをデータベースに登録する処理
-            console.log(this.spot_data)     // Debug
-            this.$router.push('/map')
-        },
-        createSpot: function() {
-            if (this.$refs.spotRegisterForm.validate()) {
-                if(this.check_database()) {
-                    console.log("Front spotName" + this.spotname)
-                    saveSpot(this.spot_data.name, this.x, this.y, this.photos, this.spot_data.types, this.userId, this.comment, this.score)
-                    //console.log(resp.success)
-                    this.create_account()
-                    //this.$router.push('/map')
+            if(this.check_database()) {
+                console.log("Front spotName" + this.spot_data.name)
+                console.log(this.spot_data.x, this.spot_data.y, this.spot_data.photos)
+                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score)
+                //console.log(resp.success)
+                this.create_spot()
+                //this.$router.push('/map')
                 }
                 else {
                     console.log("failed to send database")
-                    
                 }
-            }
-            else {
-                console.log("failed to register")
-            }
-
+            //TODO: スポットをデータベースに登録する処理
+            console.log(this.spot_data)     // Debug
+            this.$router.push('/map')
         },
         check_database: function() {
             //TODO: アカウントを作成できるか確認
