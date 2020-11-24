@@ -23,7 +23,6 @@
                             v-model="spot_data.types"
                             :items="all_spot_types"
                             label="スポットの種類"
-                            multiple
                             solo
                             height="80px"
                         >
@@ -38,6 +37,15 @@
                                 </v-chip>
                             </template>
                         </v-select>
+
+                        <!-- スポットの評価 -->
+                        <p>スポットの評価</p>
+                        <star-rating
+                        class="mb-5"
+                            v-model="spot_data.rating"
+                            :increment=0.5
+                        >
+                        </star-rating>
 
                         <!-- スポットの説明 -->
                         <v-textarea
@@ -97,17 +105,20 @@
 
 <script>
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
+import starRating from 'vue-star-rating'
 
 export default {
 
     components: {
-        SpotTypeIcon
+        SpotTypeIcon,
+        starRating
     },
     data: function() {
         return {
             spot_data: {
                 name: "",
                 types: [],
+                rating: 2.5,
                 discription: "",
                 photos: []
             },
@@ -159,6 +170,5 @@ export default {
             })
         }
     }
-    
 }
 </script>
