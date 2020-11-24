@@ -66,7 +66,7 @@ export default {
       regSpot: function(){
         this.$router.push({ name: 'register', query: { "lat": this.lat,"lon":this.lon}});
       },
-      
+
       //通常モードと登録モードの切り替え関数
       changeMode: function(){
         this.regFlag = !this.regFlag;
@@ -80,7 +80,7 @@ export default {
       },
 
       //マップの中心を現在地に更新する関数
-      nowLocation: function(){
+      setNowLocation: function(){
         this.map.locate({ setView: true,maxZoom: 18});
         //現在地マーカーを設置
         //this.map.on("locationfound",this.locationMarker);

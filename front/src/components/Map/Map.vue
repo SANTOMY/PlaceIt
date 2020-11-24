@@ -6,7 +6,7 @@
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
     <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()"/>
     <!-- 現在地ボタン -->
-    <now-loc-button v-on:click.native="nowLocation()"/>
+    <now-loc-button v-on:click.native="setNowLocation()"/>
   </div>
 </template>
 
