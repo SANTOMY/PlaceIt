@@ -13,7 +13,6 @@ L.Icon.Default.mergeOptions(
     }
 )
 
-
 export default {
     name: "Map",
     components:{
@@ -32,7 +31,7 @@ export default {
         regFlag:false,//スポット登録モードのフラグ
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト 
-        nowType:'reset',//スポット検索の種別
+        nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
       };
     },
     methods: {
@@ -44,26 +43,30 @@ export default {
           this.regSpot(event);
         }else{this.flag=true;}
       },
+
     //Map上のクリックされた箇所の経緯度を取得する関数
       getPoint: function(event){
         this.lat = event.latlng.lat;
         this.lon = event.latlng.lng;
       },
+
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
         console.log(event.latlng);//debug
         console.log(this.nowType)//debug
-
       },
+
       //現在地アイコンを更新する関数(予定)
       locationMarker(){
         //this.locMarker = L.marker(location.latlng,{icon:this.currentLocationIcon}).addTo(this.map)//debug
       },
+
       //スポット登録関数
       //SATD:経緯度をリンクで渡しているが、propsで渡す
       regSpot: function(){
         this.$router.push({ name: 'register', query: { "lat": this.lat,"lon":this.lon}});
       },
+      
       //通常モードと登録モードの切り替え関数
       changeMode: function(){
         this.regFlag = !this.regFlag;
@@ -75,18 +78,21 @@ export default {
         this.map.off('click')
         }
       },
+
       //マップの中心を現在地に更新する関数
       nowLocation: function(){
         this.map.locate({ setView: true,maxZoom: 18});
         //現在地マーカーを設置
         //this.map.on("locationfound",this.locationMarker);
       },
-      //検索ジャンルを更新するメソッド
+
+      //検索ジャンルを更新するメソッド(TypeButton.vueから呼ばれる)
       updateType(type){
         this.nowType = type
         console.log(this.nowType)//debug
       },
     },
+
     mounted: function() {
       //Mapオブジェクトの生成
       this.map = L.map('map',{zoom: this.zoom})

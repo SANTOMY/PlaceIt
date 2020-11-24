@@ -1,7 +1,7 @@
 <template>
         
-<!-- 現在地ボタン -->
-<v-btn
+  <!-- 現在地ボタン -->
+  <v-btn
     id='now-loc'
     absolute
     class="mx-4 my-15"
@@ -13,10 +13,10 @@
       color="#5D8C99"
       class="px-5"
       large 
-        >
-        mdi-crosshairs-gps
+      >
+      mdi-crosshairs-gps
     </v-icon>
-</v-btn>
+  </v-btn>
 
 </template>
 

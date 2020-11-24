@@ -1,47 +1,48 @@
 <template>
 <!-- spot種別検索メニュー -->
-<v-menu
-      id='feature-menu'
-      class="mx-15 my-5"
-      bottom
-      offset-x
-    >
-    <!-- クリックするとメニューが表示する -->
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        id='feature-button'
+    <v-menu
+        id='feature-menu'
         class="mx-15 my-5"
-        left
-        fab
-        v-bind="attrs"
-        v-on="on"
-      >
+        bottom
+        offset-x
+        >
+        <!-- クリックするとメニューが表示する -->
+        <template v-slot:activator="{ on, attrs }">
+        <v-btn
+            id='feature-button'
+            class="mx-15 my-5"
+            left
+            fab
+            v-bind="attrs"
+            v-on="on"
+            >
 
-      <!-- 現在の検索種別のアイコンを表示 -->
-      <v-icon
-      class="px-5"
-      large
-      >
-      {{featureIcons[nowType]}}
-     </v-icon>
-      </v-btn>
-      <!-- 検索メニュー -->
-      </template>
+            <!-- 現在の検索種別のアイコンを表示 -->
+            <v-icon
+                class="px-5"
+                large
+                >
+                {{featureIcons[nowType]}}
+            </v-icon>
+        </v-btn>
+        </template>
+
+        <!-- 検索メニュー -->
         <v-list 
-        id='feature-list' 
-        absolute
-        >
-        <v-list-item
-          v-for="(type,index) in types"
-          :key="index"
-          link
-        >
-          <v-list-item-title
-          v-on:click="changeSearchType(type.title)"
-          >{{ type.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-</v-menu>
+            id='feature-list' 
+            absolute
+            >
+            <v-list-item
+                v-for="(type,index) in types"
+                :key="index"
+                link
+                >
+                <v-list-item-title
+                    v-on:click="changeSearchType(type.title)"
+                    >{{ type.title }}</v-list-item-title>
+            </v-list-item>
+        </v-list>
+    </v-menu>
 </template>
 
 <script>
@@ -66,6 +67,7 @@ export default {
         this.changeSearchType
     },
     methods:{
+        //選ばれたジャンルタイプをMapに送信
         changeSearchType(type){
             this.nowType = type;
             this.$emit('update-type',this.nowType);
