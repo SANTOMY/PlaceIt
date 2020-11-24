@@ -62,9 +62,13 @@ export default {
         },//iconたち
         }
     },
+    created(){
+        this.changeSearchType
+    },
     methods:{
-        changeSearchType: async function(type){
+        changeSearchType(type){
             this.nowType = type;
+            this.$emit('update-type',this.nowType);
         },
     }
 }
