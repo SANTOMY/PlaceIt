@@ -2,102 +2,20 @@
 <!-- mapレイヤのような形で生成される -->
   <div id='map'>
     <!-- spot種別検索メニュー -->
-    <v-menu
-      id='feature-menu'
-      class="mx-15 my-5"
-      bottom
-      offset-x
-    >
-    <!-- クリックするとメニューが表示する -->
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        id='feature-button'
-        class="mx-15 my-5"
-        left
-        fab
-        v-bind="attrs"
-        v-on="on"
-      >
-
-      <!-- 現在の検索種別のアイコンを表示 -->
-      <v-icon
-      class="px-5"
-      large
-      >
-      {{featureIcons[nowType]}}
-     </v-icon>
-      </v-btn>
-      <!-- 検索メニュー -->
-      </template>
-        <v-list 
-        id='feature-list' 
-        absolute
-        >
-        <v-list-item
-          v-for="(type,index) in types"
-          :key="index"
-          link
-        >
-          <v-list-item-title
-          v-on:click="changeSearchType(type.title)"
-          >{{ type.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-
+    <type-button/>
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
-    <v-btn 
-      id='map-reg'
-      class="mx-4 my-5"
-      absolute
-      right
-      fab
-      v-on:click="changeMode()"
-    >
-    <!-- 通常モードアイコン -->
-     <v-icon
-      v-if="!regFlag"
-      class="px-5"
-      large
-      >
-        mdi-earth
-     </v-icon>
-      <!-- 登録モードアイコン -->
-     <v-icon
-      v-if="regFlag"
-      class="px-5"
-      color="#CC1651"
-      large
-      >
-        mdi-map-marker-plus
-     </v-icon>
-    </v-btn>
-
+    <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()"/>
     <!-- 現在地ボタン -->
-    <v-btn
-    id='now-loc'
-    absolute
-    class="mx-4 my-15"
-    right
-    bottom
-    fab
-    v-on:click="nowLocation()"
-    >
-    <v-icon
-      color="#5D8C99"
-      class="px-5"
-      large 
-      >
-        mdi-crosshairs-gps
-    </v-icon>
-    </v-btn>
-
+    <now-loc-button v-on:click.native="nowLocation()"/>
   </div>
 </template>
 
 <script>
 import  'leaflet/dist/leaflet.css'
 import  L from 'leaflet'
+import spotRegButton from './MapButtons/SpotRegButton.vue'
+import nowLocButton from './MapButtons/NowLocButton.vue'
+import typeButton from './MapButtons/TypeButton.vue'
 
 delete  L.Icon.Default.prototype._getIconUrl
 
@@ -111,6 +29,11 @@ L.Icon.Default.mergeOptions(
 
 export default {
     name: "Map",
+    components:{
+      spotRegButton,
+      nowLocButton,
+      typeButton,
+    },
     data: function(){
       return {
         lat:0,//緯度
@@ -123,17 +46,6 @@ export default {
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト     
         nowType:'reset',//スポット検索の種別
-        types: [  {title:"reset"},
-                  {title:"restaurant"},
-                  {title:"travel"},
-                  {title:"shopping"},
-                ],//spot種別一覧
-        featureIcons: {
-          restaurant: "mdi-silverware-fork-knife",
-          travel: "mdi-bag-suitcase",
-          shopping: "mdi-cart",
-          reset:"mdi-map-marker-circle"
-        },//iconたち
       };
     },
     methods: {
@@ -182,9 +94,6 @@ export default {
         //現在地マーカーを設置
         //this.map.on("locationfound",this.locationMarker);
       },
-      changeSearchType: async function(type){
-      this.nowType = type;
-      },
     },
     mounted: function() {
       //Mapオブジェクトの生成
@@ -227,8 +136,6 @@ body {
 }
   /* 各オブジェクトのstyleでz-indexを0以上に設定する 
   基本は1000でOK*/
-#map-reg,
-#now-loc,
 #v-list-item,
 #feature-menu,
 #feature-button,
