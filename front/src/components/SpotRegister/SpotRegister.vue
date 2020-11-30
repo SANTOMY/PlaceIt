@@ -23,7 +23,6 @@
                             v-model="spot_data.types"
                             :items="all_spot_types"
                             label="スポットの種類"
-                            multiple
                             solo
                             height="80px"
                         >
@@ -41,18 +40,25 @@
 
                         <!-- スポットの説明 -->
                         <v-textarea
-                            v-model="spot_data.discription"
+                            v-model="spot_data.comment"
                             solo
                             name="input-7-4"
-                            label="説明"
+                            label="コメント"
                         ></v-textarea>
+
+                        <!-- スポットの点数 -->
+                        <v-text-field
+                            v-model="spot_data.score"
+                            solo
+                            name="input-7-4"
+                            label="スコア"
+                        ></v-text-field>
 
                         <!-- スポットの画像ファイル -->
                         <v-file-input
                             v-model="uploadedFiles"
                             placeholder=""
                             label="写真ファイルを追加"
-                            multiple
                             prepend-icon="mdi-paperclip"
                         >
                             <template v-slot:selection="{ text }">
@@ -108,14 +114,13 @@ export default {
         return {
             spot_data: {
                 name: "",
-                x: 135,
-                y: 36,
+                x:   this.$route.query.lon,
+                y: this.$route.query.lat,
                 photos: "dir",
-                types: [],
-                discription: "",
+                types: "",
                 userId: "aaa",
-                comment: "iine",
-                score: 80
+                comment: "",
+                score: null
             },
             //ここの記述があんまり良くない
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
