@@ -50,20 +50,27 @@
                             
                         </v-form>
                     </v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                        color="primary"
+                        @click="nextPage(1)"
+                        >
+                        Continue
+                        </v-btn>
 
-                    <v-btn
-                    color="primary"
-                    @click="nextPage(1)"
-                    >
-                    Continue
-                    </v-btn>
-
-                    <v-btn 
-                    text
-                    @click="NotChange(1)"
-                    >
-                    Skip
-                    </v-btn>
+                        <v-btn 
+                        text
+                        @click="NotChange(1)"
+                        >
+                        Skip
+                        </v-btn>
+                        <v-spacer/>
+                        <v-btn>
+                            <v-icon red @click='closeCard'>
+                                mdi-close-circle-outline
+                            </v-icon>
+                        </v-btn>
+                    </v-card-actions>
                 </v-stepper-content>
 <!--------------------------------ステップ2--------------------------------------------->
                 <v-stepper-content step="2">
@@ -91,26 +98,33 @@
 
                         </v-form>
                     </v-card-text>
-                    <v-spacer/>
-                    <v-btn
-                    color="primary"
-                    @click="nextPage(2)"
-                    >
-                    Continue
-                    </v-btn>
+                    <v-card-actions>
+                        <v-btn
+                        color="primary"
+                        @click="nextPage(2)"
+                        >
+                        Continue
+                        </v-btn>
 
-                    <v-btn 
-                    text
-                    @click="NotChange(2)"
-                    >
-                    Skip
-                    </v-btn>
-                    <v-btn 
-                    text
-                    @click="backPage(2)"
-                    >
-                    Back
-                    </v-btn>
+                        <v-btn 
+                        text
+                        @click="NotChange(2)"
+                        >
+                        Skip
+                        </v-btn>
+                        <v-btn 
+                        text
+                        @click="backPage(2)"
+                        >
+                        Back
+                        </v-btn>
+                        <v-spacer/>
+                        <v-btn>
+                            <v-icon red @click='closeCard'>
+                                mdi-close-circle-outline
+                            </v-icon>
+                        </v-btn>
+                    </v-card-actions>
                 </v-stepper-content>
 <!--------------------------------ステップ3--------------------------------------------->
                 <v-stepper-content step="3">
@@ -287,7 +301,7 @@ export default {
                 this.$emit('close',this.model) // 親コンポーネントへ変数を渡す処理
             }
             else {
-                console.log("failed to send database")
+                console.log("(Debag)failed to send database")
             }
         },
 
@@ -298,13 +312,15 @@ export default {
 
         edit_account: function() {
             //TODO: アカウントを修正する処理
-            console.log("edit_account_")
+            console.log("(Debag)edit_account")
             
         },
 
         closeCard: function(){
             // 修正UIを閉じる関数
-            this.$emit('close',this.model)
+            this.reLoad()
+            // this.$emit('close',this.model)
+
         },
 
         NotChange: function(value){
@@ -329,13 +345,16 @@ export default {
             }
             else {
                 // Debag
-                console.log("failed to continue")
+                console.log("(Debag)failed to continue")
             }       
         },
 
         backPage: function(value){
             // 前のステップに遷移する関数
             this.state = value-1
+        },
+        reLoad: function () {
+        this.$router.go({path: this.$router.currentRoute.path, force: true})
         }
         
     }
