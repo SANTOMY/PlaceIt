@@ -194,12 +194,7 @@
                     ></v-card>
                     <v-card-text>
                         <v-form ref="loginForm1">
-
-                            <!-- ユーザー名変更 -->
-                    
-                                本当に修正しますか？
-                            
-                            
+                            本当に修正しますか？
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
@@ -302,7 +297,7 @@ export default {
                 this.$emit('close',this.model) // 親コンポーネントへ変数を渡す処理
             }
             else {
-                console.log("(Debag)failed to send database")
+                console.log("(Debug)failed to send database")
             }
         },
 
@@ -313,7 +308,7 @@ export default {
 
         edit_account: function() {
             //TODO: アカウントを修正する処理
-            console.log("(Debag)edit_account")
+            console.log("(Debug)edit_account")
             
         },
 
@@ -346,7 +341,7 @@ export default {
             }
             else {
                 // Debag
-                console.log("(Debag)failed to continue")
+                console.log("(Debug)failed to continue")
             }       
         },
 
