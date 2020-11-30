@@ -10,14 +10,15 @@ services:
     container_name: pbl2-back
     volumes:
       - ./back/src:/app/src
-    working_dir: /app
+    working_dir: /app/src
     depends_on:
       - db
     ports:
       - "5000:5000"
+
   db:
     image: postgres:11-alpine
-    container_name: dbforpbl
+    container_name: db-container
     environment:
       PGUSER: ${POSTGRES_USER}
       PGHOST: ${POSTGRES_HOST}
