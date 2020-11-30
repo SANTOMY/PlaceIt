@@ -16,6 +16,15 @@ module.exports.getSpotQueryBuilder = function(keywords){
     if( keywords.userId != null )
         where.push(` user_id='${keywords.userId}'`);
 
+    if( keywords.xMax != null )
+        where.push(` x<='${keywords.xMax}'`);
+    if( keywords.xMin != null )
+        where.push(` x>='${keywords.xMin}'`);
+    if( keywords.yMax != null )
+        where.push(` y<='${keywords.yMax}'`);
+    if( keywords.yMin != null )
+        where.push(` y>='${keywords.xMin}'`);
+
     if(where.length!=0){
         query += ' where';
         query += where.join(' and ');
