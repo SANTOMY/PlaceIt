@@ -28,7 +28,7 @@
                     :rules="passwordRules" />
                     
                 <v-card-actions>
-                    <v-btn @click="createUser">ログイン</v-btn>
+                    <v-btn @click="createUser">登録</v-btn>
                 </v-card-actions>
             </v-form>
         </v-card-text>
@@ -37,16 +37,14 @@
 </template>
 
 <script>
-import {register} from '../routes/userRequest'
+import {register} from '../../routes/userRequest'
 export default {
 
     data: function() {
         return {
-            model: {
-                username : '',
-                email : '',
-                password : '',
-            },
+            username : '',
+            email : '',
+            password : '',
 
             showPassword : false,
             usernameRules: [
@@ -67,32 +65,13 @@ export default {
 
     methods: {
         createUser: function() {
-            if (this.$refs.loginForm.validate()) {
-                if(this.check_database()) {
-                    console.log("Front username" + this.username)
-                    register(this.username,this.email,this.password)
-                    //console.log(resp.success)
-                    this.create_account()
-                    //this.$router.push('/map')
-                }
-                else {
-                    console.log("failed to send database")
-                    
-                }
-            }
-            else {
-                console.log("failed to register")
-            }
-
-        },
-
-        check_database: function() {
-            //TODO: アカウントを作成できるか確認
-            return true
-        },
-
-        create_account: function() {
-            console.log("create_account")
+            if (!this.$refs.loginForm.validate()) return;
+            register(this.username,this.email,this.password)
+                .then(res => {
+                    console.log(res)
+                    this.$store.commit("login", res)
+                    this.$router.push('/map')
+                });
         }
     }
     
