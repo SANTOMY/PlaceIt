@@ -23,7 +23,6 @@
                             v-model="spot_data.types"
                             :items="all_spot_types"
                             label="スポットの種類"
-                            multiple
                             solo
                             height="80px"
                         >
@@ -41,18 +40,25 @@
 
                         <!-- スポットの説明 -->
                         <v-textarea
-                            v-model="spot_data.discription"
+                            v-model="spot_data.comment"
                             solo
                             name="input-7-4"
-                            label="説明"
+                            label="コメント"
                         ></v-textarea>
+
+                        <!-- スポットの点数 -->
+                        <v-text-field
+                            v-model="spot_data.score"
+                            solo
+                            name="input-7-4"
+                            label="スコア"
+                        ></v-text-field>
 
                         <!-- スポットの画像ファイル -->
                         <v-file-input
                             v-model="uploadedFiles"
                             placeholder=""
                             label="写真ファイルを追加"
-                            multiple
                             prepend-icon="mdi-paperclip"
                         >
                             <template v-slot:selection="{ text }">
@@ -97,6 +103,7 @@
 
 <script>
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
+import {saveSpot} from '../../routes/spotRequest'
 
 export default {
 
@@ -107,9 +114,13 @@ export default {
         return {
             spot_data: {
                 name: "",
-                types: [],
-                discription: "",
-                photos: []
+                x:   this.$route.query.lon,
+                y: this.$route.query.lat,
+                photos: "dir",
+                types: "",
+                userId: this.$store.state.userId,
+                comment: "",
+                score: null
             },
             //ここの記述があんまり良くない
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
@@ -140,10 +151,28 @@ export default {
                 console.log("failed to register")   // Debug
                 return
             }
-
+            if(this.check_database()) {
+                console.log("Front spotName" + this.spot_data.name)
+                console.log(this.spot_data.x, this.spot_data.y, this.spot_data.photos)
+                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score)
+                //console.log(resp.success)
+                this.create_spot()
+                //this.$router.push('/map')
+                }
+                else {
+                    console.log("failed to send database")
+                }
             //TODO: スポットをデータベースに登録する処理
             console.log(this.spot_data)     // Debug
             this.$router.push('/map')
+        },
+        check_database: function() {
+            //TODO: アカウントを作成できるか確認
+            return true
+        },
+
+        create_spot: function() {
+            console.log("create_spot")
         }
     },
 
