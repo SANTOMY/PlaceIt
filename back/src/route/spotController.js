@@ -31,7 +31,8 @@ module.exports = class SpotController{
     }
 
     async getSpot(req, res){
-        const keywords = req.body; //spotId,spotName,geom,spotType,userId
+        const ret = req.params.ret; //spotId,spotName,geom,spotType,userId
+        const keywords = decodeURI(ret);
         return SpotSQL.getSpotByKeywords(keywords).then((results)=>{
             if(results.success){
                 info(fileLabel, "Loaded Successfully");

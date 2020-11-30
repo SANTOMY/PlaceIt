@@ -4,6 +4,6 @@ const SpotController = require('./spotController');
 const spotController = new SpotController();
 
 router.post("/saveSpot",spotController.saveSpot);
-router.get("/getSpot",spotController.getSpot);
+router.get("/getSpot/:ret",spotController.getSpot);
 
 module.exports = router;

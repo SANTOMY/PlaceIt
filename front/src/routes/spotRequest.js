@@ -20,4 +20,23 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
     }
 }
 
-export {saveSpot};
+async function getSpot(keywords){
+    const ret = encodeURI(keywords)
+    const url = serverIP + '/user/getSpot/' + ret;
+    try{
+        let response = await fetch(url,);
+        let responseJson = await response.json();
+        //Should probably use status code instead of this
+        if (responseJson.success){
+            return responseJson.data;
+        } else{
+            return responseJson.error;
+        }
+
+    } catch(exception){
+        console.log(exception);
+        return {success:false, data:exception};
+    }
+}
+
+export {saveSpot, getSpot};
