@@ -21,19 +21,17 @@ async function register(userName,email,password){
 }
 
 async function getUser(email){
-    const url = serverIP + '/user/getUserByEmail';
-    console.log(email);
+    const url = serverIP + '/user/getUserByEmail/' + email;
 
     try{
-        let response = await fetch(url,{
-            mode: 'cors',
-            method: 'GET',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({email: email})
-        });
-        return await response.json();
+        let response = await fetch(url,);
+        let responseJson = await response.json();
+        //Should probably use status code instead of this
+        if (responseJson.success){
+            return responseJson.data;
+        } else{
+            return responseJson.error;
+        }
 
     } catch(exception){
         console.log(exception);
