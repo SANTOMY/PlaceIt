@@ -2,7 +2,6 @@ import {serverIP} from './requestConfig';
 
 async function register(userName,email,password){
     const url = serverIP + '/user/register';
-    console.log(userName,email,password);
     try{
         let reponse = await fetch(url,{
             mode: 'cors',
