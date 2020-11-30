@@ -118,7 +118,7 @@ export default {
                 y: this.$route.query.lat,
                 photos: "dir",
                 types: "",
-                userId: "aaa",
+                userId: this.$store.state.userId,
                 comment: "",
                 score: null
             },
