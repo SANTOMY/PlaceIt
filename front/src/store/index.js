@@ -6,15 +6,15 @@ Vue.use(Vuex);
 
 
 const state = {
-    isLoginState: false
+    userData: null
 }
 
 const mutations =  {
-    login(state) {
-        state.isLoginState = true
+    login(state, userData) {
+        state.userData = userData
     },
     logout(state) {
-        state.isLoginState = false
+        state.userData = null
     }
 }
 

@@ -35,4 +35,4 @@ services:
     volumes: 
       - ./front:/app/front
     ports: 
-      - "8080:8080"
+      - "8080:8081"
