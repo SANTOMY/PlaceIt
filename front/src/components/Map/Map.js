@@ -32,9 +32,18 @@ export default {
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
+        sample:null//debug
       };
     },
     methods: {
+    //Map上に検索条件にあったスポットを表示する関数
+      showSpot: function(){
+
+      },
+      //画面の枠組みの経緯度を取得する関数
+      getWindow: function(){
+
+      },
     //Map上のどこかををクリックした時に起動する関数
       mapClickEvent(event){
         if(this.flag){
@@ -54,6 +63,11 @@ export default {
       markerClickEvent(event){
         console.log(event.latlng);//debug
         console.log(this.nowType)//debug
+        var sample = this.map.getBounds()//debug
+        var southwest = sample.getSouthWest();//debug
+        var northeast = sample.getNorthEast();//debug
+        console.log(southwest)//debug
+        console.log(northeast)//debug
       },
 
       //現在地アイコンを更新する関数(予定)
