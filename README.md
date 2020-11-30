@@ -4,9 +4,11 @@
 - スプリント1
 - スケジュール:10/19-10/27
 
-# 議事録Format
+# PMメモ
 - https://docs.google.com/document/d/148lP1wZMw-8HKG6Fl9SislHI9NlvjODZYrUFlQNJ9YQ/edit?usp=sharing
 
+# PMスライド
+- https://docs.google.com/presentation/d/1nzYtNJTBaXkg81kN8nTYZNzAEGqQDV3AtMrZ3RBoRbk/edit?usp=sharing
 
 # How To Run
 ## For Docker
