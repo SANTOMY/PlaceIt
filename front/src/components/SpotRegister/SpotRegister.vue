@@ -47,12 +47,16 @@
                         ></v-textarea>
 
                         <!-- スポットの点数 -->
-                        <v-text-field
+                        <v-chip 
+                            class = "mb-5"
+                            label text-color="brack">
+                            <h3>スコア</h3>
+                        </v-chip>
+                        <star-rating
                             v-model="spot_data.score"
-                            solo
-                            name="input-7-4"
-                            label="スコア"
-                        ></v-text-field>
+                            @rating-selected="ratingSelected"
+                            @current-rating="currentRating"
+                        ></star-rating>
 
                         <!-- スポットの画像ファイル -->
                         <v-file-input
@@ -104,11 +108,13 @@
 <script>
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
 import {saveSpot} from '../../routes/spotRequest'
+import StarRating from 'vue-star-rating'
 
 export default {
 
     components: {
-        SpotTypeIcon
+        SpotTypeIcon,
+        StarRating
     },
     data: function() {
         return {
@@ -173,7 +179,13 @@ export default {
 
         create_spot: function() {
             console.log("create_spot")
-        }
+        },
+
+        ratingSelected: function (val) {
+        this.$emit('rating-selected',val)
+        },
+    currentRating: function (val) {
+        this.$emit('current-rating',val)}
     },
 
     watch: {
