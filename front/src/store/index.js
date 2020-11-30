@@ -11,11 +11,11 @@ const state = {
 }
 
 const mutations =  {
-    login(state) {
-        state.isLoginState = true
+    login(state, userData) {
+        state.userData = userData
     },
     logout(state) {
-        state.isLoginState = false
+        state.userData = null
     }
 }
 
