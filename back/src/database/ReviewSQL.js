@@ -21,8 +21,8 @@ module.exports.saveReview = async function(newReview){
 
     if(utility.isEmpty(newReview.spotName)){
         error(fileLabel,"ERROR OBJECT:" + util.inspect(newReview.spotId,{showHidden: false, depth: null}));
-        error(fileLabel,"Spot name is Undefined" + newReview.spotName);
-        return {"success":false,"data":"Spot Id is Undefined"};
+        error(fileLabel,"Spot name is empty or undefined" + newReview.spotName);
+        return {"success":false,"data":"Spot Id is empty or undefined"};
     }
     const client = await pool.connect();
     return client.query(checkQuery)
