@@ -202,27 +202,28 @@
                             
                         </v-form>
                     </v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                        color="primary"
+                        @click="register"
+                        >
+                        Edit
+                        </v-btn>
 
-                    <v-btn
-                    color="primary"
-                    @click="register"
-                    >
-                    Edit
-                    </v-btn>
+                        <v-btn 
+                        text
+                        @click="backPage(4)"
+                        >
+                        Back
+                        </v-btn>
 
-                    <v-btn 
-                    text
-                    @click="backPage(4)"
-                    >
-                    Back
-                    </v-btn>
-
-                    <v-btn 
-                    text
-                    @click="closeCard()"
-                    >
-                    Cancel
-                    </v-btn>
+                        <v-spacer/>
+                        <v-btn>
+                            <v-icon red @click='closeCard'>
+                                mdi-close-circle-outline
+                            </v-icon>
+                        </v-btn> 
+                    </v-card-actions>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
