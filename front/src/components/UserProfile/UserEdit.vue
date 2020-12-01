@@ -44,7 +44,7 @@
                             <!-- ユーザー名変更 -->
                             <v-text-field label="変更後のユーザー名"
                                 prepend-icon="mdi-human"
-                                v-model="model.username"
+                                v-model="model.edit_username"
                                 :rules="usernameRules"
                                 :counter="128"/>
                             
@@ -91,7 +91,7 @@
                                 />
                             <v-text-field label="変更後のメールアドレス"
                                 prepend-icon="mdi-email"
-                                v-model="model.email_edit" 
+                                v-model="model.edit_email" 
                                 :counter="128"
                                 :rules="emailRulesEdit"
                                 />
@@ -152,7 +152,7 @@
                                 v-bind:append-icon="showPasswordEdit ? 'mdi-eye' : 'mdi-eye-off'" 
                                 v-bind:type="showPasswordEdit ? 'text' : 'password'" 
                                 @click:append="showPasswordEdit = !showPasswordEdit"
-                                v-model="model.password_edit"
+                                v-model="model.edit_password"
                                 :counter="32"
                                 :rules="passwordRulesEdit"
                                 />
@@ -227,6 +227,7 @@
 </template>
 
 <script>
+import {editUser} from '../../routes/userRequest'
 export default {
     props: {
         user: null
@@ -279,26 +280,34 @@ export default {
             this.stepData[2].edit= false
             this.model= {
                 username : "",
-                username_edit : "",
+                edit_username : "",
                 email : "",
-                email_edit: "",
+                edit_email: "",
                 password : "",
-                password_edit : "",
+                edit_password : "",
                 edit: false,
             }
         },
         register: function() {
-            // 修正情報を登録する関数
-            if(this.check_database()) {
-                this.edit_account()
-                this.model.edit_username = this.stepData[0].edit
-                this.model.edit_email = this.stepData[1].edit
-                this.model.edit_password = this.stepData[2].edit
-                this.$emit('close',this.model) // 親コンポーネントへ変数を渡す処理
-            }
-            else {
-                console.log("(Debug)failed to send database")
-            }
+            // // 修正情報を登録する関数
+            // if(this.check_database()) {
+            //     this.edit_account()
+            //     this.model.edit_username = this.stepData[0].edit
+            //     this.model.edit_email = this.stepData[1].edit
+            //     this.model.edit_password = this.stepData[2].edit
+            //     this.$emit('close',this.model) // 親コンポーネントへ変数を渡す処理
+            // }
+            // else {
+            //     console.log("(Debug)failed to send database")
+            // }
+            console.log(this.model.email);
+            console.log(this.model.edit_email);
+            console.log(this.model.edit_password);
+            console.log(this.model.edit_username);
+            editUser(this.model.email,this.model.edit_email,this.model.edit_password,this.model.edit_username)
+                .then(res => {
+                    console.log(res)
+                });
         },
 
         check_database: function() {
