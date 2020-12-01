@@ -42,7 +42,7 @@ app.use('/review',reviewRoute)
 app.post('/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
         if (err) { return next(err); }
-        if (!user) {return res.status(400).json({"success": false, "error": err})};
+        if (!user) {return res.status(400).json({"success": false})};
         req.logIn(user, function(err) {
             if (err) { return next(err); }
             return res.status(200).json({"success": true});
