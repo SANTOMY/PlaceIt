@@ -33,7 +33,7 @@ const authMiddleware = (req, res, next) => {
 app.use(cors())
 
 app.use(bodyParser.json())
-app.use('/user',authMiddleware, userRoute)
+app.use('/user',userRoute)
 app.use('/spot',spotRoute)
 app.use('/review',reviewRoute)
 
@@ -47,16 +47,26 @@ app.post('/login', function(req, res, next) {
             if (err) { return next(err); }
             return res.status(200).json({"success": true});
         });
-       })(req, res, next);
+    })(req, res, next);
 });
 
 app.post('/logout', (req, res) => {
-    req.logout();
+    try {
+        req.logout();
+        return res.status(200).json({"success": true}); 
+    } catch {
+        return res.status(400).json({"success": false}); 
+    }
 });
 
 app.get('/', (req, res) => {
   console.log(req);
   res.send('Hello World!');
+})
+
+app.get('/logintest', authMiddleware, (req, res) => {
+    console.log(req);
+    res.send('logged in');
 })
 
 app.listen(port, () => {
