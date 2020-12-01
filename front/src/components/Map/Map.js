@@ -3,6 +3,8 @@ import  L from 'leaflet'
 import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
+//import {getSpot} from '../../routes/spotRequest'
+
 
 delete  L.Icon.Default.prototype._getIconUrl
 
@@ -32,17 +34,30 @@ export default {
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
-        sample:null//debug
+        sample:null,//debug
+        time:0//タイマー用変数
       };
     },
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
       showSpot: function(){
-
+        //var spotList = getSpot()
+        //console.log(spotList)//debug
+        //for(step=0;step<len(spotList);step++){
+          //var spot = spotList[step]
+          //L.marker(,],{ title: }).addTo(this.map).on(
+        //'click', this.markerClickEvent);
+        //}
       },
       //画面の枠組みの経緯度を取得する関数
       getWindow: function(){
-
+        var mapframe = this.map.getBounds()
+        var west = mapframe.getWest()
+        var east = mapframe.getEast()
+        var north = mapframe.getNorth()
+        var south = mapframe.getSouth()
+        console.log([west,east,north,south])
+        
       },
     //Map上のどこかををクリックした時に起動する関数
       mapClickEvent(event){
@@ -63,11 +78,7 @@ export default {
       markerClickEvent(event){
         console.log(event.latlng);//debug
         console.log(this.nowType)//debug
-        var sample = this.map.getBounds()//debug
-        var southwest = sample.getSouthWest();//debug
-        var northeast = sample.getNorthEast();//debug
-        console.log(southwest)//debug
-        console.log(northeast)//debug
+        this.getWindow()
       },
 
       //現在地アイコンを更新する関数(予定)
