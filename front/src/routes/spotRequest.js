@@ -20,9 +20,9 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
     }
 }
 
-async function getSpot(keywords){
-    const ret = encodeURI(keywords)
-    const url = serverIP + '/user/getSpot/' + ret;
+async function getSpot(spotId, spotName, spotType, userId){//xMax, xMin, yMax, yMin
+    // const encode = encodeURI(userId)
+    const url = serverIP + '/spot/getSpot?' + "spotId=" + spotId + "&spotName=" + spotName +  + "&spotType=" + spotType + "&userId" + userId;//encode //"&xMax=" + xMax + "&xMin=" + xMin + "&yMax" + yMax + "&yMin" + yMin
     try{
         let response = await fetch(url,);
         let responseJson = await response.json();

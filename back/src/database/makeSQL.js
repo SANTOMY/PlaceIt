@@ -5,15 +5,15 @@ module.exports.getSpotQueryBuilder = function(keywords){
     //{"spotId" : "sample"} 
     var query = 'SELECT * FROM spots.spots';
     var where = []
-    if( keywords.spotId != null )
+    if( keywords.spotId != null && keywords.spotId.length!=0)
         where.push(` spot_id='${keywords.spotId}'`);
-    if( keywords.spotName != null )
+    if( keywords.spotName != null && keywords.spotName.length!=0)
         where.push(` spot_name='${keywords.spotName}'`);
-    if( keywords.geom != null )
+    if( keywords.geom != null)
         where.push(` geom='${keywords.geom}'`);
-    if( keywords.spotType != null )
+    if( keywords.spotType != null && keywords.spotType.length!=0)
         where.push(` spot_type='${keywords.spotType}'`);
-    if( keywords.userId != null )
+    if( keywords.userId != null && keywords.userId.length!=0)
         where.push(` user_id='${keywords.userId}'`);
 
     if(where.length!=0){
