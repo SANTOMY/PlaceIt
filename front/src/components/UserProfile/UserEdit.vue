@@ -13,7 +13,9 @@
                 >
                     <!-- 3つの項目のヘッダーをループさせています -->
                     <v-stepper-step
-                        :key="value"
+                        editable
+                        edit-icon="$complete"
+                        :key="`first-${index}`"
                         :step="index+1"
                         :complete="value.edit"
                     >
@@ -40,10 +42,6 @@
                         <v-form ref="loginFormName">
 
                             <!-- ユーザー名変更 -->
-                            <v-text>
-                                ユーザー名
-                            </v-text>
-
                             <v-text-field label="変更後のユーザー名"
                                 prepend-icon="mdi-human"
                                 v-model="model.username"
@@ -52,20 +50,27 @@
                             
                         </v-form>
                     </v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                        color="primary"
+                        @click="nextPage(1)"
+                        >
+                        Continue
+                        </v-btn>
 
-                    <v-btn
-                    color="primary"
-                    @click="nextPage(1)"
-                    >
-                    Continue
-                    </v-btn>
-
-                    <v-btn 
-                    text
-                    @click="NotChange(1)"
-                    >
-                    Skip
-                    </v-btn>
+                        <v-btn 
+                        text
+                        @click="NotChange(1)"
+                        >
+                        Skip
+                        </v-btn>
+                        <v-spacer/>
+                        <v-btn>
+                            <v-icon red @click='closeCard'>
+                                mdi-close-circle-outline
+                            </v-icon>
+                        </v-btn>
+                    </v-card-actions>
                 </v-stepper-content>
 <!--------------------------------ステップ2--------------------------------------------->
                 <v-stepper-content step="2">
@@ -78,10 +83,6 @@
                         <v-form ref="loginFormEmail">
 
                             <!-- メールアドレス変更 -->
-                            <v-text>
-                                メールアドレス
-                            </v-text>
-
                             <v-text-field label="現在のメールアドレスを入力"
                                 prepend-icon="mdi-email"
                                 v-model="model.email" 
@@ -97,26 +98,33 @@
 
                         </v-form>
                     </v-card-text>
-                    <v-spacer/>
-                    <v-btn
-                    color="primary"
-                    @click="nextPage(2)"
-                    >
-                    Continue
-                    </v-btn>
+                    <v-card-actions>
+                        <v-btn
+                        color="primary"
+                        @click="nextPage(2)"
+                        >
+                        Continue
+                        </v-btn>
 
-                    <v-btn 
-                    text
-                    @click="NotChange(2)"
-                    >
-                    Skip
-                    </v-btn>
-                    <v-btn 
-                    text
-                    @click="backPage(2)"
-                    >
-                    Back
-                    </v-btn>
+                        <v-btn 
+                        text
+                        @click="NotChange(2)"
+                        >
+                        Skip
+                        </v-btn>
+                        <v-btn 
+                        text
+                        @click="backPage(2)"
+                        >
+                        Back
+                        </v-btn>
+                        <v-spacer/>
+                        <v-btn>
+                            <v-icon red @click='closeCard'>
+                                mdi-close-circle-outline
+                            </v-icon>
+                        </v-btn>
+                    </v-card-actions>
                 </v-stepper-content>
 <!--------------------------------ステップ3--------------------------------------------->
                 <v-stepper-content step="3">
@@ -129,9 +137,6 @@
                         <v-form ref="loginForm">
 
                             <!-- パスワード変更-->
-                            <v-text>
-                                パスワード
-                            </v-text>
                             <v-text-field label="現在のパスワードを入力"
                                 prepend-icon="mdi-lock" 
                                 v-bind:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
@@ -189,35 +194,31 @@
                     ></v-card>
                     <v-card-text>
                         <v-form ref="loginForm1">
-
-                            <!-- ユーザー名変更 -->
-                            <v-text>
-                                本当に修正しますか？
-                            </v-text>
-                            
+                            本当に修正しますか？
                         </v-form>
                     </v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                        color="primary"
+                        @click="register"
+                        >
+                        Edit
+                        </v-btn>
 
-                    <v-btn
-                    color="primary"
-                    @click="register"
-                    >
-                    Edit
-                    </v-btn>
+                        <v-btn 
+                        text
+                        @click="backPage(4)"
+                        >
+                        Back
+                        </v-btn>
 
-                    <v-btn 
-                    text
-                    @click="backPage(4)"
-                    >
-                    Back
-                    </v-btn>
-
-                    <v-btn 
-                    text
-                    @click="backPage(4)"
-                    >
-                    Cancel
-                    </v-btn>
+                        <v-spacer/>
+                        <v-btn>
+                            <v-icon red @click='closeCard'>
+                                mdi-close-circle-outline
+                            </v-icon>
+                        </v-btn> 
+                    </v-card-actions>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
@@ -238,9 +239,9 @@ export default {
             showPassword : false, // trueで修正前パスワード表示
             showPasswordEdit : false, // trueで修正後パスワード表示
             stepData: [ // 各ステップで使用する変数を格納する配列
-                { name: "Username", edit: false},
-                { name: "Email", edit: false},
-                { name: "Password", edit: false},
+                { name: "Username", edit: false, form: "loginFormName"},
+                { name: "Email", edit: false, form: "loginFormEmail"},
+                { name: "Password", edit: false, form: "loginFormPassword"},
             ],
 
             // 以下、修正入力上のルール設定
@@ -263,7 +264,7 @@ export default {
             ],
             passwordRulesEdit: [
                 v => !!v || "パスワードは必須項目です。",
-                v => v.length >= 8 || "パスワードは8文字以上で入力してください。",
+                v => (v && v.length >= 8) || "パスワードは8文字以上で入力してください。",
                 v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
             ],
         }
@@ -296,7 +297,7 @@ export default {
                 this.$emit('close',this.model) // 親コンポーネントへ変数を渡す処理
             }
             else {
-                console.log("failed to send database")
+                console.log("(Debug)failed to send database")
             }
         },
 
@@ -307,13 +308,15 @@ export default {
 
         edit_account: function() {
             //TODO: アカウントを修正する処理
-            console.log("edit_account_")
+            console.log("(Debug)edit_account")
             
         },
 
         closeCard: function(){
             // 修正UIを閉じる関数
-            this.$emit('close',this.model)
+            this.reLoad()
+            // this.$emit('close',this.model)
+
         },
 
         NotChange: function(value){
@@ -328,23 +331,26 @@ export default {
                 this.stepData[value-1].edit = true
                 this.state = value+1
             }
-            if(value==2 && this.$refs.loginFormEmail.validate()){
+            else if(value==2 && this.$refs.loginFormEmail.validate()){
                 this.stepData[value-1].edit = true
                 this.state = value+1
             }
-            if(value==3 && this.$refs.loginForm.validate()){
+            else if(value==3 && this.$refs.loginForm.validate()){
                 this.stepData[value-1].edit = true
                 this.state = value+1
             }
             else {
                 // Debag
-                console.log("failed to continue")
+                console.log("(Debug)failed to continue")
             }       
         },
 
         backPage: function(value){
             // 前のステップに遷移する関数
             this.state = value-1
+        },
+        reLoad: function () {
+        this.$router.go({path: this.$router.currentRoute.path, force: true})
         }
         
     }
