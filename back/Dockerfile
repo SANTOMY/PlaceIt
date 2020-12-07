@@ -12,8 +12,6 @@ RUN apk add postgresql
 
 COPY ./src /app/src
 COPY ./.env /app/.env
-COPY ./cert.pem /app/cert.pem
-COPY ./key.pem /app/key.pem
 
 EXPOSE 5000
 
