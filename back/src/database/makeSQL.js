@@ -1,19 +1,20 @@
 'use strict';
+const utility = require('../utility');
 
 module.exports.getSpotQueryBuilder = function(keywords){
     //input : keyword is Json
     //{"spotId" : "sample"} 
     var query = 'SELECT * FROM spots.spots';
     var where = []
-    if( keywords.spotId != null )
+    if( !utility.isEmpty(keywords.spotId) )
         where.push(` spot_id='${keywords.spotId}'`);
-    if( keywords.spotName != null )
+    if( !utility.isEmpty(keywords.spotName) )
         where.push(` spot_name='${keywords.spotName}'`);
-    if( keywords.geom != null )
+    if( !utility.isEmpty(keywords.geom) )
         where.push(` geom='${keywords.geom}'`);
-    if( keywords.spotType != null )
+    if( !utility.isEmpty(keywords.spotType) )
         where.push(` spot_type='${keywords.spotType}'`);
-    if( keywords.userId != null )
+    if( !utility.isEmpty(keywords.userId) )
         where.push(` user_id='${keywords.userId}'`);
 
     if(where.length!=0){
