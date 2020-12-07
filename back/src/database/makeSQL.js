@@ -20,32 +20,32 @@ module.exports.getSpotQueryBuilder = function(keywords){
         where.push(` user_id='${keywords.userId}'`);
 
     // confirm that -180 < xMax, xMin < 180 and that -90 < yMax, yMin < 90
-    if( !utility.isEmpty(keywords.xMax) || keywords.xMax == 0 ){
+    if( !utility.isEmpty(keywords.xMax) ){
         var xMax = Math.min( keywords.xMax, 180 );
         xMax = Math.max( xMax, -180 );
     }
-    if( !utility.isEmpty(keywords.xMin) || keywords.xMin == 0 ){
+    if( !utility.isEmpty(keywords.xMin) ){
         var xMin = Math.max( keywords.xMin, -180 );
         xMin = Math.min( xMin, 180 );
     }
-    if( !utility.isEmpty(keywords.yMax) || keywords.yMax == 0 ){
+    if( !utility.isEmpty(keywords.yMax) ){
         var yMax = Math.min( keywords.yMax, 90 );
         yMax = Math.max( yMax, -90 );
     }
-    if( !utility.isEmpty(keywords.yMin) || keywords.yMin == 0 ){
+    if( !utility.isEmpty(keywords.yMin) ){
         var yMin = Math.max( keywords.yMin, -90 );
         yMin = Math.min( yMin, 90 );
     }
 
     // confirm that xMax >= xMin and that yMax >= yMin
-    if( ( !utility.isEmpty(keywords.xMax) || keywords.xMax == 0 ) && ( !utility.isEmpty(keywords.xMin) || keywords.xMin == 0 ) ){
+    if( !utility.isEmpty(keywords.xMax) && !utility.isEmpty(keywords.xMin) ){
         if( xMax < xMin ){
             xMax = 180;
             xMin = -180;
             error(fileLabel,"xMin is bigger than xMax");
         }
     }
-    if( ( !utility.isEmpty(keywords.yMax) || keywords.yMax == 0 ) && ( !utility.isEmpty(keywords.yMin) || keywords.yMin == 0 ) ){
+    if( !utility.isEmpty(keywords.yMax) && !utility.isEmpty(keywords.yMin) ){
         if( yMax < yMin ){
             yMax = 90;
             yMin = -90;
@@ -53,16 +53,16 @@ module.exports.getSpotQueryBuilder = function(keywords){
         }
     }
 
-    if( !utility.isEmpty(keywords.xMax) || keywords.xMax == 0 ){
+    if( !utility.isEmpty(keywords.xMax) ){
         where.push(` x<='${xMax}'`);
     }
-    if( !utility.isEmpty(keywords.xMin) || keywords.xMin == 0 ){
+    if( !utility.isEmpty(keywords.xMin) ){
         where.push(` x>='${xMin}'`);
     }
-    if( !utility.isEmpty(keywords.yMax) || keywords.yMax == 0 ){
+    if( !utility.isEmpty(keywords.yMax) ){
         where.push(` y<='${yMax}'`);
     }
-    if( !utility.isEmpty(keywords.yMin) || keywords.yMin == 0 ){
+    if( !utility.isEmpty(keywords.yMin) ){
         where.push(` y>='${yMin}'`);
     }
 
