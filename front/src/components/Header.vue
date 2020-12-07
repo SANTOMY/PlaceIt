@@ -3,7 +3,7 @@
         <v-toolbar-title
             class="px-5"
         >
-            Appication
+            <h2>Place it</h2>
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
@@ -65,7 +65,7 @@ export default {
     
     computed: {
         isLoggedIn() {
-            return this.$store.state.isLoginState
+            return this.$store.state.userData != null
         }
     }
 

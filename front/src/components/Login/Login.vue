@@ -60,20 +60,15 @@ export default {
 
     methods: {
         login: function() {
-            if (this.$refs.loginForm.validate()) {
-                if(this.check_database()) {
-                    this.$store.commit("login")
-                    this.$router.push('/map')
-                }
-                else {
-                    console.log("failed to login")
-                    
-                }
+            if (!this.$refs.loginForm.validate()) return;
+            if(this.check_database()) {
+                const userDataMock = {success: true, userId: "mock", userName: "mock"};
+                this.$store.commit("login", userDataMock);
+                this.$router.push('/map')
             }
             else {
                 console.log("failed to login")
             }
-
         },
 
         check_database: function() {
