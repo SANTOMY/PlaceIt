@@ -67,7 +67,7 @@ export default {
             spot: [ // spot仮データ
                 {
                     name: 'マクドナルド',
-                    id: '000000',
+                    spotId: '000000',
                     type: 'restaurant',
                     user_id: '000000',
                     username: 'asada',
@@ -80,7 +80,7 @@ export default {
                 },
                 {
                     name: 'モスバーガー',
-                    id: '000001',
+                    spotId: '000001',
                     type: 'restaurant',
                     username: 'takata',
                     user_id: '000001',
@@ -93,7 +93,7 @@ export default {
                 },      
                 {
                     name: 'KFC',
-                    id: '000002',
+                    spotId: '000002',
                     type: 'restaurant',
                     user_id: '000002',
                     username: 'matsuo',

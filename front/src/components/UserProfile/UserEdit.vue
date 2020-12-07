@@ -260,12 +260,15 @@ export default {
         editUserInformation: function() { // edit user information関数
             if (this.model.edit_email == ""){
                 this.model.edit_email=this.user.email
+                // this.model.edit_email=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
             }
             if (this.model.edit_username == ""){
                 this.model.edit_username=this.user.username
+                // this.model.edit_username=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
             }
             if (this.model.edit_password == ""){
                 this.model.edit_password=this.user.password
+                // this.model.edit_password=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
             }
             // Debug //
             console.log(this.user.email); // 変更前のemail
