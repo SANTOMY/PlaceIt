@@ -1,5 +1,7 @@
 'use strict';
 const utility = require('../utility');
+const {info, debug, warning, error}  = require('../winston');
+const fileLabel = "makeSQL";
 
 module.exports.getSpotQueryBuilder = function(keywords){
     //input : keyword is Json
@@ -18,49 +20,49 @@ module.exports.getSpotQueryBuilder = function(keywords){
         where.push(` user_id='${keywords.userId}'`);
 
     // confirm that -180 < xMax, xMin < 180 and that -90 < yMax, yMin < 90
-    if( !utility.isEmpty(keywords.xMax) ){
+    if( !utility.isEmpty(keywords.xMax) || keywords.xMax == 0 ){
         var xMax = Math.min( keywords.xMax, 180 );
         xMax = Math.max( xMax, -180 );
     }
-    if( !utility.isEmpty(keywords.xMin) ){
+    if( !utility.isEmpty(keywords.xMin) || keywords.xMin == 0 ){
         var xMin = Math.max( keywords.xMin, -180 );
         xMin = Math.min( xMin, 180 );
     }
-    if( !utility.isEmpty(keywords.yMax) ){
+    if( !utility.isEmpty(keywords.yMax) || keywords.yMax == 0 ){
         var yMax = Math.min( keywords.yMax, 90 );
         yMax = Math.max( yMax, -90 );
     }
-    if( !utility.isEmpty(keywords.yMin) ){
+    if( !utility.isEmpty(keywords.yMin) || keywords.yMin == 0 ){
         var yMin = Math.max( keywords.yMin, -90 );
         yMin = Math.min( yMin, 90 );
     }
 
     // confirm that xMax >= xMin and that yMax >= yMin
-    if( !utility.isEmpty(keywords.xMax) && !utility.isEmpty(keywords.xMin) ){
+    if( ( !utility.isEmpty(keywords.xMax) || keywords.xMax == 0 ) && ( !utility.isEmpty(keywords.xMin) || keywords.xMin == 0 ) ){
         if( xMax < xMin ){
-            console.log("xMin is bigger than xMax.");
             xMax = 180;
             xMin = -180;
+            error(fileLabel,"xMin is bigger than xMax");
         }
     }
-    if( !utility.isEmpty(keywords.yMax) && !utility.isEmpty(keywords.yMin) ){
+    if( ( !utility.isEmpty(keywords.yMax) || keywords.yMax == 0 ) && ( !utility.isEmpty(keywords.yMin) || keywords.yMin == 0 ) ){
         if( yMax < yMin ){
-            console.log("yMin is bigger than yMax.");
             yMax = 90;
             yMin = -90;
+            error(fileLabel,"yMin is bigger than yMax");
         }
     }
 
-    if( !utility.isEmpty(keywords.xMax) ){
+    if( !utility.isEmpty(keywords.xMax) || keywords.xMax == 0 ){
         where.push(` x<='${xMax}'`);
     }
-    if( !utility.isEmpty(keywords.xMin) ){
+    if( !utility.isEmpty(keywords.xMin) || keywords.xMin == 0 ){
         where.push(` x>='${xMin}'`);
     }
-    if( !utility.isEmpty(keywords.yMax) ){
+    if( !utility.isEmpty(keywords.yMax) || keywords.yMax == 0 ){
         where.push(` y<='${yMax}'`);
     }
-    if( !utility.isEmpty(keywords.yMin) ){
+    if( !utility.isEmpty(keywords.yMin) || keywords.yMin == 0 ){
         where.push(` y>='${yMin}'`);
     }
 
