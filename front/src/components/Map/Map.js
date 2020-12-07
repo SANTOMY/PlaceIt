@@ -50,9 +50,11 @@ export default {
         const data = await getSpot("","","","")
         const spots = data.spots;
         spots.forEach(spot => {
-          this.marker = L.marker([spot.y, spot.x],{ title: spot.spot_id}).addTo(this.map).on(
+          this.marker = L.marker([spot.y, spot.x]).addTo(this.map).on(
             'click', this.markerClickEvent);
-      });
+            this.marker.title= spot.spot_id;
+          });
+          
       },
       //画面の枠組みの経緯度を取得する関数
       getWindow: function(){
@@ -81,6 +83,7 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
+        alert(event.target.title);
         console.log(event)//debug
         this.getWindow()
       },
