@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import {login1} from '../../routes/userRequest'
 export default {
 
     data: function() {
@@ -61,18 +62,23 @@ export default {
     methods: {
         login: function() {
             if (!this.$refs.loginForm.validate()) return;
-            if(this.check_database()) {
-                const userDataMock = {success: true, userId: "mock", userName: "mock"};
-                this.$store.commit("login", userDataMock);
-                this.$router.push('/map')
-            }
-            else {
-                console.log("failed to login")
-            }
+            login1(this.model.email, this.model.password)
+                .then(res => {
+                    console.log(res)
+                    const userData = {"email":res.data.email, "password":res.data.password}
+                    this.$store.commit("login", userData)
+                    this.$router.push('/map')
+                })
         },
 
         check_database: function() {
             //TODO: ログインできるか確認
+            login1(this.email, this.password)
+                .then(res => {
+                    console.log(res)
+                    this.$store.commit("login", res)
+                    this.$router.push('/map')
+                });
             return true
         },
 
