@@ -20,10 +20,9 @@ async function register(userName,email,password){
     }
 }
 
-async function login1(email,password){
+async function login(email,password){
     const url = serverIP + '/login';
     try{
-        console.log(email, password);
         let reponse = await fetch(url,{
             mode: 'cors',
             method: 'POST',
@@ -41,4 +40,4 @@ async function login1(email,password){
     }
 }
 
-export {register, login1};
+export {register, login};

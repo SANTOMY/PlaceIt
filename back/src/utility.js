@@ -24,10 +24,6 @@ function isEmpty(v) {
         if (Object.keys(v).length < 1) {
             return true;
         }
-    } else if (type === 'number') {
-        if (v === 0) {
-            return true;
-        }
     }
     return false;
 }
