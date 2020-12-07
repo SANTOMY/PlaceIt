@@ -10,14 +10,14 @@
                 v-bind="attrs"
                 v-on="on"
             >
-                <h2>Add Review</h2>
+                <h2>レビューを追加する</h2>
             </v-btn>
         </template>
 
         <v-card class="px-5">
             <v-container>
                 <v-card-title>
-                    <h2>レビューを追加</h2>
+                    <h2>新規レビュー</h2>
                 </v-card-title>
                 <v-form class="mt-5">
                     <v-textarea
@@ -41,7 +41,7 @@
                             height="50"
                             @click="onClickedRegisterButton"
                         >
-                            <h3>追加</h3>
+                            <h2>投稿</h2>
                         </v-btn>
                     </v-col>
                 </v-row>               
