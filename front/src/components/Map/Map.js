@@ -39,7 +39,7 @@ export default {
     },
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
-      showSpot: function(){
+      showSpot: async function(){
         //var spotList = getSpot()
         //console.log(spotList)//debug
         //for(step=0;step<len(spotList);step++){
@@ -47,6 +47,12 @@ export default {
           //L.marker(,],{ title: }).addTo(this.map).on(
         //'click', this.markerClickEvent);
         //}
+        const data = await getSpot("","","","")
+        const spots = data.spots;
+        spots.forEach(spot => {
+          this.marker = L.marker([spot.y, spot.x],{ title: spot.spot_id}).addTo(this.map).on(
+            'click', this.markerClickEvent);
+      });
       },
       //画面の枠組みの経緯度を取得する関数
       getWindow: function(){
@@ -133,13 +139,9 @@ export default {
 
       //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
-
+      this.showSpot()
       //マーカーの登録とマーカークリック時に起動する関数の登録
-      this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
-        'click', this.markerClickEvent);
       //L.marker([33,130],{ icon: L.divIcon( { className: 'red marker', iconSize: [16,16]})}).addTo(this.map);
-      var spot = await getSpot("","","","")
-      console.log(spot)
     }, 
     //現在地追跡のために利用(予定)
     watch: {
