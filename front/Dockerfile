@@ -12,4 +12,4 @@ RUN apk update && \
     apk add --no-cache nodejs npm && \
     npm install
 
-CMD ["npm","run", "serve"]
+
