@@ -3,7 +3,7 @@ import  L from 'leaflet'
 import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
-//import {getSpot} from '../../routes/spotRequest'
+import {getSpot} from '../../routes/spotRequest'
 
 
 delete  L.Icon.Default.prototype._getIconUrl
@@ -117,7 +117,7 @@ export default {
       },
     },
 
-    mounted: function() {
+    mounted:async function() {
       //Mapオブジェクトの生成
       this.map = L.map('map',{maxZoom: 15})
       .addLayer(
@@ -138,6 +138,8 @@ export default {
       this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
         'click', this.markerClickEvent);
       //L.marker([33,130],{ icon: L.divIcon( { className: 'red marker', iconSize: [16,16]})}).addTo(this.map);
+      var spot = await getSpot("","","","")
+      console.log(spot)
     }, 
     //現在地追跡のために利用(予定)
     watch: {
