@@ -4,7 +4,7 @@ const {info, debug, warning, error} = require("../winston");
 const User = require("../objects/user");
 const fileLabel = "userController"
 const userSQL = require("../database/UserSQL");
-
+const utility = require("../utility");
 
 module.exports = class UserController{
     constructor(){
@@ -15,10 +15,9 @@ module.exports = class UserController{
     
     async register(req, res){
         const {userName, email, password} = req.body;
-        if (userName == undefined || email == undefined || password == undefined){
+        if (utility.isEmpty(userName) || utility.isEmpty(email) || utility.isEmpty(password)){
             return res.status(400).json({"success": false, "error": "Received undefined credentials"});
         }
-        debug(fileLabel,"Username: " + userName + " Email: " + email + " Password: " + password);
         //encrypt password
         let salt = bcrypt.genSaltSync(10);
         const encryptedPassword = bcrypt.hashSync(password ,salt);
@@ -62,28 +61,24 @@ module.exports = class UserController{
         const newUserName = req.body.newUserName;
         let encryptedNewPassword;
         const reg = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
-        if (typeof newEmail == 'undefined') {
+        if (utility.isEmpty(newEmail)) {
             debug(fileLabel,"Email is not updated"); 
         } else if (reg.test(newEmail)) {
             debug(fileLabel,"New Email is valid: " + newEmail);
         } else {
             return res.status(400).json({"success": false, "error": "newEmail is not valid"});  
         }
-        if (typeof newPassword == 'undefined') {
+        if (utility.isEmpty(newPassword)) {
             debug(fileLabel,"Password is not updated"); 
-        } else if (newPassword.trim()) {
+        } else {
             let salt = bcrypt.genSaltSync(10);
             encryptedNewPassword = bcrypt.hashSync(newPassword.trim() ,salt);
             debug(fileLabel,"New hashed password is valid: " + encryptedNewPassword);
-        } else {
-            return res.status(400).json({"success": false, "error": "newPassword is not valid"});
         }
-        if (typeof newUserName == 'undefined') {
+        if (utility.isEmpty(newUserName)) {
             debug(fileLabel,"User name is not updated"); 
-        } else if (newUserName.trim()) {
-            debug(fileLabel,"New user name is valid: " + newUserName);
         } else {
-            return res.status(400).json({"success": false, "error": "newUsername is not valid"});
+            debug(fileLabel,"New user name is valid: " + newUserName);
         }
 
         return userSQL.editUser(currentEmail.trim(), newEmail.trim(), encryptedNewPassword, newUserName.trim()).then((result)=>{
