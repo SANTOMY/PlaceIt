@@ -59,7 +59,7 @@ export default {
     },
     data: function() {
         return {
-            showDialog: Boolean,
+            showDialog: false,
 
             review_data: {
                 comment: "",
