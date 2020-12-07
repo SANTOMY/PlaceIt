@@ -56,9 +56,9 @@ module.exports = class UserController{
 
     async editUser(req, res){
         const currentEmail = req.body.currentEmail;
-        const newEmail = req.body.newEmail;
+        const newEmail = utility.isEmpty(req.body.newEmail) ? '' : req.body.newEmail;
         const newPassword = req.body.newPassword;
-        const newUserName = req.body.newUserName;
+        const newUserName = utility.isEmpty(req.body.newUserName) ? '' : req.body.newUserName;
         let encryptedNewPassword;
         const reg = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
         if (utility.isEmpty(newEmail)) {
