@@ -101,7 +101,7 @@ async function editUser(currentEmail, newEmail, newPassword, newUserName) {
 
 async function login(email, password) {
     const query = {
-        text: `SELECT password FROM users.users WHERE email='${email}'`
+        text: `SELECT * FROM users.users WHERE email='${email}'`
     };
     const client = await pool.connect();
     return client.query(query).then( result => {
@@ -112,7 +112,7 @@ async function login(email, password) {
         const isCorrectPassword = bcrypt.compareSync(password, hash);
         info(fileLabel,"authentication by email: " + email);
         if (isCorrectPassword) {
-            return {"success":true, "data":"Password is correct"};
+            return {"success":true, "data":"Password is correct", "email":result.rows[0].email, "id":result.rows[0].id, "username":result.rows[0].username, "password":result.rows[0].password};
         } else {
             return {"success":false, "data":"Password is incorrect"};
         }
