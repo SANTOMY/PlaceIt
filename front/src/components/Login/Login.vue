@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {login1} from '../../routes/userRequest'
+import {login} from '../../routes/userRequest'
 export default {
 
     data: function() {
@@ -62,7 +62,7 @@ export default {
     methods: {
         login: function() {
             if (!this.$refs.loginForm.validate()) return;
-            login1(this.model.email, this.model.password)
+            login(this.model.email, this.model.password)
                 .then(res => {
                     console.log(res)
                     const userData = {"email":res.data.email, "password":res.data.password}
@@ -73,7 +73,7 @@ export default {
 
         check_database: function() {
             //TODO: ログインできるか確認
-            login1(this.email, this.password)
+            login(this.email, this.password)
                 .then(res => {
                     console.log(res)
                     this.$store.commit("login", res)
