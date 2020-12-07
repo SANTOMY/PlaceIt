@@ -44,7 +44,7 @@
                             <!-- ユーザー名変更 -->
                             <v-text-field label="変更後のユーザー名"
                                 prepend-icon="mdi-human"
-                                v-model="model.username"
+                                v-model="model.edit_username"
                                 :rules="usernameRules"
                                 :counter="128"/>
                             
@@ -53,14 +53,14 @@
                     <v-card-actions>
                         <v-btn
                         color="primary"
-                        @click="nextPage(1)"
+                        @click="continuePage(1)"
                         >
                         Continue
                         </v-btn>
 
                         <v-btn 
                         text
-                        @click="NotChange(1)"
+                        @click="skipPage(1)"
                         >
                         Skip
                         </v-btn>
@@ -83,15 +83,10 @@
                         <v-form ref="loginFormEmail">
 
                             <!-- メールアドレス変更 -->
-                            <v-text-field label="現在のメールアドレスを入力"
-                                prepend-icon="mdi-email"
-                                v-model="model.email" 
-                                :counter="128"
-                                :rules="emailRules"
-                                />
+
                             <v-text-field label="変更後のメールアドレス"
                                 prepend-icon="mdi-email"
-                                v-model="model.email_edit" 
+                                v-model="model.edit_email" 
                                 :counter="128"
                                 :rules="emailRulesEdit"
                                 />
@@ -101,14 +96,14 @@
                     <v-card-actions>
                         <v-btn
                         color="primary"
-                        @click="nextPage(2)"
+                        @click="continuePage(2)"
                         >
                         Continue
                         </v-btn>
 
                         <v-btn 
                         text
-                        @click="NotChange(2)"
+                        @click="skipPage(2)"
                         >
                         Skip
                         </v-btn>
@@ -137,22 +132,13 @@
                         <v-form ref="loginForm">
 
                             <!-- パスワード変更-->
-                            <v-text-field label="現在のパスワードを入力"
-                                prepend-icon="mdi-lock" 
-                                v-bind:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
-                                v-bind:type="showPassword ? 'text' : 'password'" 
-                                @click:append="showPassword = !showPassword"
-                                v-model="model.password"
-                                :counter="32"
-                                :rules="passwordRules"
-                                />
 
                             <v-text-field label="変更後のパスワード"
                                 prepend-icon="mdi-lock" 
                                 v-bind:append-icon="showPasswordEdit ? 'mdi-eye' : 'mdi-eye-off'" 
                                 v-bind:type="showPasswordEdit ? 'text' : 'password'" 
                                 @click:append="showPasswordEdit = !showPasswordEdit"
-                                v-model="model.password_edit"
+                                v-model="model.edit_password"
                                 :counter="32"
                                 :rules="passwordRulesEdit"
                                 />
@@ -161,14 +147,14 @@
                     <v-card-actions>
                         <v-btn
                         color="primary"
-                        @click="nextPage(3)"
+                        @click="continuePage(3)"
                         >
                         Continue
                         </v-btn>
 
                         <v-btn 
                         text
-                        @click="NotChange(3)"
+                        @click="skipPage(3)"
                         >
                         Skip
                         </v-btn>
@@ -200,7 +186,7 @@
                     <v-card-actions>
                         <v-btn
                         color="primary"
-                        @click="register"
+                        @click="editUserInformation"
                         >
                         Edit
                         </v-btn>
@@ -227,6 +213,7 @@
 </template>
 
 <script>
+import {editUser} from '../../routes/userRequest'
 export default {
     props: {
         user: null
@@ -235,34 +222,33 @@ export default {
         return {
             state: null, // 修正UIの状態(1~4で遷移)
             showDialog: true, // trueで修正UIを表示
-            model: {}, // UserProfile.vueに送る関数
-            showPassword : false, // trueで修正前パスワード表示
+            model: { // edit後の情報を書き込むclassです。
+                username : "",
+                edit_username : "",
+                email : "",
+                edit_email: "",
+                password : "",
+                edit_password : "",
+                edit: false,
+            },
+
             showPasswordEdit : false, // trueで修正後パスワード表示
             stepData: [ // 各ステップで使用する変数を格納する配列
                 { name: "Username", edit: false, form: "loginFormName"},
                 { name: "Email", edit: false, form: "loginFormEmail"},
                 { name: "Password", edit: false, form: "loginFormPassword"},
             ],
-
             // 以下、修正入力上のルール設定
-            usernameRules: [
+            usernameRules: [ // usernameの入力ルール
                 v => !!v || "ユーザ名は必須項目です。",
                 v => (v && v.length <= 32) || "ユーザ名は32文字以内で入力してください。",
             ],
-            emailRules: [
-                v => !!v || "メールアドレスは必須項目です。",
-                v => (v && v == this.user.mail) || "メールアドレスが違います。"
-            ],
-            emailRulesEdit: [
+            emailRulesEdit: [ // emailの入力ルール
                 v => !!v || "メールアドレスは必須項目です。",
                 v => (v && v.length <= 128) || "メールアドレスは128文字以内で入力してください。",
                 v => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || "メールアドレスの形式が正しくありません。"
             ],
-            passwordRules: [
-                v => !!v || "パスワードは必須項目です。",
-                v => (v && v == this.user.password) || "パスワードが違います。"
-            ],
-            passwordRulesEdit: [
+            passwordRulesEdit: [ // password の入力ルール
                 v => !!v || "パスワードは必須項目です。",
                 v => (v && v.length >= 8) || "パスワードは8文字以上で入力してください。",
                 v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
@@ -271,61 +257,48 @@ export default {
     },
 
     methods: {
-        initialState: function() {
-            // 初期化関数
-            this.showDialog= true
-            this.stepData[0].edit= false,
-            this.stepData[1].edit= false
-            this.stepData[2].edit= false
-            this.model= {
-                username : "",
-                username_edit : "",
-                email : "",
-                email_edit: "",
-                password : "",
-                password_edit : "",
-                edit: false,
+        editUserInformation: function() { // edit user information関数
+            if (this.model.edit_email == ""){
+                this.model.edit_email=this.user.email
+                // this.model.edit_email=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
             }
-        },
-        register: function() {
-            // 修正情報を登録する関数
-            if(this.check_database()) {
-                this.edit_account()
-                this.model.edit_username = this.stepData[0].edit
-                this.model.edit_email = this.stepData[1].edit
-                this.model.edit_password = this.stepData[2].edit
-                this.$emit('close',this.model) // 親コンポーネントへ変数を渡す処理
+            if (this.model.edit_username == ""){
+                this.model.edit_username=this.user.username
+                // this.model.edit_username=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
             }
-            else {
-                console.log("(Debug)failed to send database")
+            if (this.model.edit_password == ""){
+                this.model.edit_password=this.user.password
+                // this.model.edit_password=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
             }
-        },
+            // Debug //
+            console.log(this.user.email); // 変更前のemail
+            console.log(this.model.edit_email); // 変更後のemail
+            console.log(this.model.edit_password); // 変更後のpassword
+            console.log(this.model.edit_username); // 変更後のusername
 
-        check_database: function() {
-            //TODO: アカウントを修正できるか確認
-            return true
-        },
-
-        edit_account: function() {
-            //TODO: アカウントを修正する処理
-            console.log("(Debug)edit_account")
-            
+            // backendのデータの修正処理
+            editUser(this.user.email,this.model.edit_email,this.model.edit_password,this.model.edit_username)
+                .then(res => {
+                    console.log(res)
+                    this.reLoad()
+                });
         },
 
         closeCard: function(){
             // 修正UIを閉じる関数
-            this.reLoad()
-            // this.$emit('close',this.model)
+            // this.reLoad()
+            this.showDialog = false
+            this.$emit('close')
 
         },
 
-        NotChange: function(value){
+        skipPage: function(value){
             // 修正をスキップする関数
             this.state = value+1
             this.stepData[value-1].edit = false
         },
 
-        nextPage: function(value){
+        continuePage: function(value){
             // 修正項目を入力した後に次のステップに遷移する関数
             if(value==1 && this.$refs.loginFormName.validate()){
                 this.stepData[value-1].edit = true
@@ -350,7 +323,7 @@ export default {
             this.state = value-1
         },
         reLoad: function () {
-        this.$router.go({path: this.$router.currentRoute.path, force: true})
+            this.$router.go({path: this.$router.currentRoute.path, force: true})
         }
         
     }
