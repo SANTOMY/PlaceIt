@@ -3,6 +3,7 @@
       v-model="showDialog"
       width="800"
     >
+        <!-- ダイアログを開くボタン -->
         <template v-slot:activator="{ on, attrs }">
             <v-btn 
                 class="px-10 py-6"
@@ -14,12 +15,14 @@
             </v-btn>
         </template>
 
+        <!-- レビュー投稿画 -->
         <v-card class="px-5">
             <v-container>
                 <v-card-title>
                     <h2>新規レビュー</h2>
                 </v-card-title>
                 <v-form class="mt-5">
+                <!-- コメント入力フォーム -->
                     <v-textarea
                         v-model="review_data.comment"
                         solo
@@ -28,6 +31,7 @@
                     ></v-textarea>
                 </v-form>
 
+                <!-- 評価ボタン -->
                 <v-row justify="space-between">
                     <v-col cols="5">
                         <star-rating
@@ -36,6 +40,7 @@
                         />
                     </v-col>
                     <v-col cols="5">
+                    <!-- 投稿ボタン -->
                         <v-btn 
                             block
                             height="50"
