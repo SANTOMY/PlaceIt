@@ -25,7 +25,21 @@ body {
   margin: 0;
   height: 100%;
 }
+
+.marker {
+    text-align      : center
+;   color           : white
+;   font-size       : 16
+;   border-radius   : 8px
+;   box-shadow      : 8px 8px 8px rgba( 0, 0, 0, 0.4 )
+}
+.red {
+    background      : red
+}
   /* 各オブジェクトのstyleでz-indexを0以上に設定する 
   基本は1000でOK*/
+#form {
+  z-index: 1000;
+}
 
 </style>

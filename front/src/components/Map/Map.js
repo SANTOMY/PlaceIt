@@ -27,14 +27,13 @@ export default {
         lat:0,//緯度
         lon:0,//経度
         map: L.map,//Mapオブジェクト
-        zoom:15,//zoomのサイズ まだうまく制御できてない(SATD)
+        zoom:10,//zoomのサイズ まだうまく制御できてない(SATD)
         spot:null,//spot用のオブジェクト
         myplace:null,//現在地オブジェクト
         regFlag:false,//スポット登録モードのフラグ
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
-        sample:null,//debug
         time:0//タイマー用変数
       };
     },
@@ -76,8 +75,7 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
-        console.log(event.latlng);//debug
-        console.log(this.nowType)//debug
+        console.log(event)//debug
         this.getWindow()
       },
 
@@ -106,7 +104,8 @@ export default {
 
       //マップの中心を現在地に更新する関数
       setNowLocation: function(){
-        this.map.locate({ setView: true,maxZoom: 18});
+        this.map.locate({ setView: true});
+        this.map.setZoom(this.zoom);
         //現在地マーカーを設置
         //this.map.on("locationfound",this.locationMarker);
       },
@@ -120,7 +119,7 @@ export default {
 
     mounted: function() {
       //Mapオブジェクトの生成
-      this.map = L.map('map',{zoom: this.zoom})
+      this.map = L.map('map',{maxZoom: 15})
       .addLayer(
         L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
           attribution:
@@ -129,7 +128,8 @@ export default {
       );
 
       //初期位置を現在地に
-      this.map.locate({ setView: true,maxZoom: 18});
+      this.map.locate({ setView: true});
+      this.map.setZoom({zoom: this.zoom});//働いてなさそう...(SATD)
 
       //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
@@ -137,6 +137,7 @@ export default {
       //マーカーの登録とマーカークリック時に起動する関数の登録
       this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
         'click', this.markerClickEvent);
+      //L.marker([33,130],{ icon: L.divIcon( { className: 'red marker', iconSize: [16,16]})}).addTo(this.map);
     }, 
     //現在地追跡のために利用(予定)
     watch: {
