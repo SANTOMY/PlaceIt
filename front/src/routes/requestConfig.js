@@ -1,1 +1,1 @@
-export const serverIP = 'http://0.0.0.0:5000';
+export const serverIP = 'https://0.0.0.0:5000';
