@@ -1,14 +1,10 @@
 'use strict';
 const con = require('./DBHandler.js');
 const {info, debug, warning, error}  = require('../winston');
-const { connect } = require('../route/userRoute.js');
 const pool = con.pool;
 const fileLabel = "UserSQL"
-const User = require('../objects/user');
 const util = require('util');
 const bcrypt = require('bcryptjs');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const utility = require('../utility');
 
 
