@@ -8,8 +8,6 @@
 #　環境ファイル
 .env
 
-cert.pem
-key.pem
 
 #for front
 front/node_modules

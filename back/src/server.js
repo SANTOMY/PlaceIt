@@ -1,10 +1,5 @@
 const express = require('express')
-const fs = require('fs')
-const https = require('https')
-const dotenv = require('dotenv');
-const env = dotenv.config();
 const cors = require('cors')
-const path = require('path')
 const app = express()
 let port = "5000"
 
@@ -28,11 +23,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 })
 
-
-https.createServer({
-  key: fs.readFileSync(path.join(__dirname, '..','key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, '..','cert.pem')),
-  passphrase: 'SuperStrongPassword'
-},app).listen(port, () =>{
+app.listen(port, () => {
   console.log(`Example app listening on port:${port}`)
 })
