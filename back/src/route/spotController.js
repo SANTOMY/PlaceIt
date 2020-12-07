@@ -31,12 +31,12 @@ module.exports = class SpotController{
     }
 
     async getSpot(req, res){
-        const keywords = req.query  //spotId,spotName,geom,spotType,userId
-        //const  keywords = decodeURI(ret)
+        const keywords_encoded = req.query  //spotId,spotName,geom,spotType,userId
+        const keywords = decodeURI(keywords_encoded)
         return SpotSQL.getSpotByKeywords(keywords).then((results)=>{
             if(results.success){
                 info(fileLabel, "Loaded Successfully");
-                return res.status(200).json({"success": true, "data": results.data, "review": results.review});
+                return res.status(200).json({"success": true, "spots": results.spots, "review": results.review});
             }else{
                 info(fileLabel, "Loaded Unsuccessfully: " + JSON.stringify(results));
                 return res.status(400).json({"success": false, "error": results.data});

@@ -20,15 +20,16 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
     }
 }
 
-async function getSpot(spotId, spotName, spotType, userId){//xMax, xMin, yMax, yMin
-    // const encode = encodeURI(userId)
-    const url = serverIP + '/spot/getSpot?' + "spotId=" + spotId + "&spotName=" + spotName  + "&spotType=" + spotType + "&userId" + userId;//encode //"&xMax=" + xMax + "&xMin=" + xMin + "&yMax" + yMax + "&yMin" + yMin
+async function getSpot(spotId, spotName, spotType, userId){
+    const url_row = serverIP + '/spot/getSpot?' + "spotId=" + spotId + "&spotName=" + spotName  + "&spotType=" + spotType + "&userId" + userId;
+    //TODO: "&xMax=" + xMax + "&xMin=" + xMin + "&yMax" + yMax + "&yMin" + yMin
+    const url = encodeURI(url_row)
     try{
         let response = await fetch(url,);
         let responseJson = await response.json();
         //Should probably use status code instead of this
         if (responseJson.success){
-            return [responseJson.data, responseJson.review];
+            return {spots:responseJson.spots, review:responseJson.review};
         } else{
             return responseJson.error;
         }
