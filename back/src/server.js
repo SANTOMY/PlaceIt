@@ -55,7 +55,7 @@ app.post('/login', function(req, res, next) {
     })(req, res, next);
 });
 
-app.post('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
     try {
         req.logout();
         return res.status(200).json({"success": true}); 
