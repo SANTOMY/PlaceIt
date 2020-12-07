@@ -61,7 +61,7 @@ export default {
             user: { // ユーザー仮データ
                 username: '',
                 email: 'takata@takata.com',
-                password: '',
+                password: 'takatakeisuke',
                 src: require('@/assets/pose_kuyashii_man.png')
             },
             spot: [ // spot仮データ
@@ -114,6 +114,7 @@ export default {
                 console.log(result[0])
                 console.log(result[0].username)
                 this.user.username = result[0].username
+                // this.user.password = result[0].password
         })  
     },
     methods:  {
