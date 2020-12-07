@@ -38,6 +38,15 @@
                             </template>
                         </v-select>
 
+                        <!-- スポットの評価 -->
+                        <p>スポットの評価</p>
+                        <star-rating
+                        class="mb-5"
+                            v-model="spot_data.rating"
+                            :increment=0.5
+                        >
+                        </star-rating>
+
                         <!-- スポットの説明 -->
                         <v-textarea
                             v-model="spot_data.comment"
@@ -200,6 +209,5 @@ export default {
             })
         }
     }
-    
 }
 </script>
