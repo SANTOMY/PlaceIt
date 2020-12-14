@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import {getSpotTypeData} from "./SpotTypeFunction"
 export default {
     props: {
         type: String
@@ -16,11 +17,7 @@ export default {
 
     data: function() {
         return {
-            type_dict: {
-                restaurant: "mdi-silverware-fork-knife",
-                travel: "mdi-bag-suitcase",
-                shopping: "mdi-cart"
-            }
+            type_dict: getSpotTypeData()
         }
     }    
 }
