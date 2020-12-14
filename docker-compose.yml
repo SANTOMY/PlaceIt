@@ -18,7 +18,7 @@ services:
 
   db:
     image: postgres:11-alpine
-    container_name: db-container
+    container_name: db-container4pbl
     environment:
       PGUSER: ${POSTGRES_USER}
       PGHOST: ${POSTGRES_HOST}
@@ -29,10 +29,12 @@ services:
       - "5432:5432"
 
   front:
-    build: front
+    build: 
+      context: ./front/
+      dockerfile: Dockerfile
     working_dir: /app
     tty: true
     volumes: 
       - ./front:/app/front
     ports: 
-      - "8080:8080"
+      - "8080:8081"
