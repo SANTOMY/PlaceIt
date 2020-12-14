@@ -45,11 +45,11 @@ export default {
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
       showSpot: async function(type){
-        if (type=="reset") type="";
-        console.log(type);//debug
-        var data = await getSpot("","",type,"")
+        if (type=="reset") type = "";
+        var data = await getSpot("","",type,"");
         var spots = data.spots;
-        console.log(data)
+        console.log(spots)
+        //console.log(data)
         spots.forEach(spot => {
           this.marker.unshift(L.marker([spot.y, spot.x]).on(
             'click', this.markerClickEvent));
@@ -57,9 +57,8 @@ export default {
             this.marker[0].spot_id = spot.spot_id;
             this.marker[0].spot_type = spot.spot_type;
             this.marker[0].picture = spot.picture;
-
           });
-          console.log(this.marker)
+          //console.log(this.marker)
           this.markers = L.layerGroup(this.marker).addTo(this.map)
       },
       //画面の枠組みの経緯度を取得する関数
@@ -89,10 +88,10 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
-        alert(event.target.spot_name);
+        alert(event.target.spot_type);
         //console.log(event)//debug
         //this.getWindow()
-        this.$router.push({ name: 'spot', query: { "spot_name": event.target.spot_name,"spot_type":event.target.spot_type,"picture":event.target.picture}})
+        //this.$router.push({ name: 'spot', query: { "spot_name": event.target.spot_name,"spot_type":event.target.spot_type,"picture":event.target.picture}})
       },
 
       //現在地アイコンを更新する関数(予定)
@@ -120,8 +119,7 @@ export default {
 
       //マップの中心を現在地に更新する関数
       setNowLocation: function(){
-        this.map.locate({ setView: true});
-        this.map.setZoom(this.zoom);
+        this.map.locate({ setView: true, zoom: this.zoom});
         //現在地マーカーを設置
         //this.map.on("locationfound",this.locationMarker);
       },
@@ -131,7 +129,7 @@ export default {
         this.markers.clearLayers();
         this.marker = [];
         this.nowType = type;
-        this.showSpot(type);
+        await this.showSpot(type);
       },
     },
 
@@ -147,13 +145,11 @@ export default {
 
       //初期位置を現在地に
       this.map.locate({ setView: true, zoom:this.zoom});
-      this.map.setZoom({zoom: this.zoom});//働いてなさそう...(SATD)
 
       //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
-      this.showSpot();
-      //マーカーの登録とマーカークリック時に起動する関数の登録
-      //L.marker([33,130],{ icon: L.divIcon( { className: 'red marker', iconSize: [16,16]})}).addTo(this.map);
+      //spot表示
+      this.showSpot(this.nowType);
     }, 
     //現在地追跡のために利用(予定)
     watch: {
