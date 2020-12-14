@@ -4,7 +4,7 @@
 <!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
         <v-dialog v-model="dialogEdit" width=500>
             <UserEdit 
-                @close="FromUserEdit"
+                @close="closeUserEdit"
                 v-bind:user="user"
                 ref="child"
             >
@@ -22,7 +22,7 @@
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
                 ユーザー名
-                <h1>{{ user.name }}</h1>
+                <h1>{{ user.username }}</h1>
                 
                     <v-spacer></v-spacer>
                     <v-btn
@@ -46,7 +46,7 @@
 
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
-
+import {getUser} from '../../routes/userRequest'
 
 export default {
 
@@ -59,16 +59,15 @@ export default {
             editer: false,
             dialogEdit: false,
             user: { // ユーザー仮データ
-                name: 'タカタ',
-                user_id: '000000',
-                mail: 'takata@takata.com',
-                password: 'takata',
+                username: '',
+                email: 'takata@takata.com',
+                password: 'takatakeisuke',
                 src: require('@/assets/pose_kuyashii_man.png')
             },
             spot: [ // spot仮データ
                 {
                     name: 'マクドナルド',
-                    id: '000000',
+                    spotId: '000000',
                     type: 'restaurant',
                     user_id: '000000',
                     username: 'asada',
@@ -81,7 +80,7 @@ export default {
                 },
                 {
                     name: 'モスバーガー',
-                    id: '000001',
+                    spotId: '000001',
                     type: 'restaurant',
                     username: 'takata',
                     user_id: '000001',
@@ -94,7 +93,7 @@ export default {
                 },      
                 {
                     name: 'KFC',
-                    id: '000002',
+                    spotId: '000002',
                     type: 'restaurant',
                     user_id: '000002',
                     username: 'matsuo',
@@ -108,27 +107,23 @@ export default {
             ]
         }
     },
+    mounted: function(){
+        // call getUser(email) from .vue file:
+        getUser(this.user.email)
+            .then(result => {
+                console.log(result[0])
+                console.log(result[0].username)
+                this.user.username = result[0].username
+                // this.user.password = result[0].password
+        })  
+    },
     methods:  {
         editProfile: function() {
             this.dialogEdit = true
-            this.$refs.child.$emit('initialState')
         },
-        FromUserEdit: function(value){
-            // UserEdit.vueが起動する関数（修正完了時or修正キャンセル時）
-            if(value.edit_email==true){
-                this.user.mail=value.email_edit
-            }
-            if(value.edit_password == true){
-                this.user.password=value.password_edit
-            }
-            if(value.edit_username == true){
-                this.user.name=value.username
-            }      
-            console.log(this.user.name,this.user.mail,this.user.password)
-            
+        closeUserEdit: function(){          
             this.dialogEdit = false
-
-        }
+        },
     }
 };
 </script>

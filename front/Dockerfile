@@ -10,4 +10,10 @@ COPY ./src /app/src
 
 RUN apk update && \
     apk add --no-cache nodejs npm && \
+<<<<<<< HEAD
     npm install
+=======
+    npm install
+
+
+>>>>>>> front
