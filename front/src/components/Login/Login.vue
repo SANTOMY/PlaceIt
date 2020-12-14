@@ -28,6 +28,15 @@
                 <v-card-actions>
                     <v-btn @click="logout">ログアウト</v-btn>
                 </v-card-actions>
+
+                <v-alert
+                    dense
+                    type="error"
+                    class="mt-7"
+                    v-if='errorMessage != ""'
+                >
+                    {{errorMessage}}
+                </v-alert>
             </v-form>
         </v-card-text>
     </v-card>
@@ -56,6 +65,8 @@ export default {
                 v => !!v || "パスワードは必須項目です。",
                 v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
             ],
+            
+            errorMessage: ""
         }
     },
 
@@ -71,6 +82,7 @@ export default {
                         this.$router.push('/map')
                     } else {
                         console.log(res.data)
+                        this.errorMessage = res.data 
                     }
                 })
         },
