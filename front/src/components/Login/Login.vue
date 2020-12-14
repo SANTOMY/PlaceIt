@@ -65,21 +65,14 @@ export default {
             login(this.model.email, this.model.password)
                 .then(res => {
                     console.log(res)
-                    const userData = {"email":res.data.email, "password":res.data.password}
-                    this.$store.commit("login", userData)
-                    this.$router.push('/map')
+                    if (res.success) {
+                        const userData = {"email":res.data.email, "password":res.data.password}
+                        this.$store.commit("login", userData)
+                        this.$router.push('/map')
+                    } else {
+                        console.log(res.data)
+                    }
                 })
-        },
-
-        check_database: function() {
-            //TODO: ログインできるか確認
-            login(this.email, this.password)
-                .then(res => {
-                    console.log(res)
-                    this.$store.commit("login", res)
-                    this.$router.push('/map')
-                });
-            return true
         },
 
         logout() { //ほんとはいらないけどデバッグ用として...

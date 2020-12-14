@@ -14,10 +14,10 @@ module.exports = class LoginController{
             const result = await userSQL.login(email, password);
             if (result.success) {
                 debug(fileLabel, "Successful Authentication " + email);
-                return res.status(200).json({"success": true, "data": result}); // ログイン成功
+                return res.status(200).json({"success": true, "data": result}); // success 
             } else {
                 info(fileLabel, "Unsuccessful Authentication " + email + ": " + JSON.stringify(result));
-                return { message: '認証情報と一致するレコードがありません。' };
+                return res.status(400).json({"success": false, "data": result.data}); // fail 
             }
         } catch (exception) {
             error(fileLabel, "Error in attempt to login " + email + ": " + exception);
