@@ -28,6 +28,15 @@
                 <v-card-actions>
                     <v-btn @click="logout">ログアウト</v-btn>
                 </v-card-actions>
+
+                <v-alert
+                    dense
+                    type="error"
+                    class="mt-7"
+                    v-if='errorMessage != ""'
+                >
+                    {{errorMessage}}
+                </v-alert>
             </v-form>
         </v-card-text>
     </v-card>
@@ -35,6 +44,7 @@
 </template>
 
 <script>
+import {login} from '../../routes/userRequest'
 export default {
 
     data: function() {
@@ -55,25 +65,26 @@ export default {
                 v => !!v || "パスワードは必須項目です。",
                 v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
             ],
+            
+            errorMessage: ""
         }
     },
 
     methods: {
         login: function() {
             if (!this.$refs.loginForm.validate()) return;
-            if(this.check_database()) {
-                const userDataMock = {success: true, userId: "mock", userName: "mock"};
-                this.$store.commit("login", userDataMock);
-                this.$router.push('/map')
-            }
-            else {
-                console.log("failed to login")
-            }
-        },
-
-        check_database: function() {
-            //TODO: ログインできるか確認
-            return true
+            login(this.model.email, this.model.password)
+                .then(res => {
+                    console.log(res)
+                    if (res.success) {
+                        const userData = {"email":res.data.email, "password":res.data.password}
+                        this.$store.commit("login", userData)
+                        this.$router.push('/map')
+                    } else {
+                        console.log(res.data)
+                        this.errorMessage = res.data 
+                    }
+                })
         },
 
         logout() { //ほんとはいらないけどデバッグ用として...

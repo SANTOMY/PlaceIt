@@ -10,7 +10,7 @@ module.exports = class UserController{
     constructor(){
         this.register.bind(this);
         this.getUserByEmail.bind(this);
-        this.editUser.bind(this)
+        this.editUser.bind(this);
     }
     
     async register(req, res){
