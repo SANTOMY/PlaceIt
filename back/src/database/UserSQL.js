@@ -6,6 +6,7 @@ const pool = con.pool;
 const fileLabel = "UserSQL"
 const User = require('../objects/user');
 const util = require('util');
+const utility = require('../utility');
 
 
 /**
@@ -16,18 +17,26 @@ async function saveUser(newUser) {
         text: 'INSERT INTO users.users(id, username, email, password) VALUES($1, $2, $3, $4)',
         values: [newUser.userId, newUser.userName, newUser.email, newUser.password]
     };
+
     const client = await pool.connect();
-    //await client.query(query);
-    return client.query(query).then(() =>{
-        client.release();
-        info(fileLabel,"saved user: " + util.inspect(newUser,{showHidden: false, depth: null}));
-        return {"success":true,"data":newUser};
-    }).catch(err=>{
-        client.release();
-        info(fileLabel,"ERROR OBJECT:" + util.inspect(err,{showHidden: false, depth: null}));
-        error(fileLabel,"Error while saving user. " + err);
-        return {"success":false,"data":err}; 
-    })
+    return getUserByEmail(newUser.email).then((result)=>{
+        //Check user doesn't exist
+        if (result.success){
+            error(fileLabel,"Error: This email is already in use ");
+            return {"success":false,"data": "This email is already in use"}; 
+        } else{
+            return client.query(query).then(() =>{
+                client.release();
+                info(fileLabel,"saved user: " + util.inspect(newUser,{showHidden: false, depth: null}));
+                return {"success":true,"data":newUser};
+            }).catch(err=>{
+                client.release();
+                error(fileLabel,"ERROR OBJECT:" + util.inspect(err,{showHidden: false, depth: null}));
+                error(fileLabel,"Error while saving user. " + err);
+                return {"success":false,"data":err}; 
+            })
+        }
+    });
 }
 
 async function getUserByEmail(email) {
@@ -53,15 +62,15 @@ async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     var emailStatus = "not updated";
     var passwordStatus = "not updated";
     var usernameStatus = "not updated";
-    if (typeof newEmail !== 'undefined') {
+    if (!utility.isEmpty(newEmail)) {
         setQuery = setQuery + ` email='${newEmail}',`
         emailStatus = `updated to ${newEmail}`
     }
-    if (typeof newPassword !== 'undefined') {
+    if (!utility.isEmpty(newPassword)) {
         setQuery = setQuery + ` password='${newPassword}',`
         passwordStatus = `updated to ${newPassword}`
     }
-    if (typeof newUserName !== 'undefined') {
+    if (!utility.isEmpty(newUserName)) {
         setQuery = setQuery + ` username='${newUserName}',`
         usernameStatus = `updated to ${newUserName}`
     }

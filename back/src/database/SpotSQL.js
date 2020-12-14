@@ -6,6 +6,7 @@ const fileLabel = "SpotSQL"
 const Spot = require('../objects/spot');
 const util = require('util');
 const makeSQL = require('./makeSQL');
+const utility = require('../utility');
 
 async function saveSpot(newSpot){
     const query1 = {
@@ -20,29 +21,20 @@ async function saveSpot(newSpot){
         text: 'DELETE from spots.spots where spot_id = $1;',
         values: [newSpot.spotId]
     };
+
+    if(utility.isEmpty(newSpot.spotName)){
+        error(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
+        error(fileLabel,"Spot Name is invalid");
+        return {"success":false,"data":"Spot Name is invalid"};
+    } else if(utility.isEmpty(newSpot.spotType)){
+        error(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
+        error(fileLabel,"Spot Type is invalid");
+        return {"success":false,"data":"Spot Type is invalid"};
+    }
+
     const client = await pool.connect();
     //TODO: NULL CHECK
-    if(typeof newSpot.spotName == 'undefined'){
-        client.release();
-        info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
-        error(fileLabel,"Spot Name is Undefined!!!!");
-        return {"success":false,"data":"Spot Name is Undefined!!!!"};
-    }else if(newSpot.spotName == null){
-        client.release();
-        info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
-        error(fileLabel,"Spot Name cannot be null!!!!");
-        return {"success":false,"data":"Spot Name cannot be null!!!!"};
-    }else if(!newSpot.spotName){
-        client.release();
-        info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
-        error(fileLabel,"Spot Name is Empty!!!!");
-        return {"success":false,"data":"Spot Name is Empty!!!!"};
-    }else if(!(newSpot.spotName.trim())){
-        client.release();
-        info(fileLabel,"ERROR OBJECT:" + util.inspect(newSpot.spotName,{showHidden: false, depth: null}));
-        error(fileLabel,"Spot Name cannot be Spaces!!!!");
-        return {"success":false,"data":"Spot Name cannot be Spaces!!!!"};
-    }
+    
     return client.query(query1).then(()=>{
         return client.query(query2).then(()=>{
             client.release();
@@ -50,15 +42,15 @@ async function saveSpot(newSpot){
             return {"success":true,"data":newSpot};
         })
         .catch(err=>{
-            info(fileLabel,"Error while saving review: " + util.inspect(err,{showHidden: false, depth: null}));
+            error(fileLabel,"Error while saving review: " + util.inspect(err,{showHidden: false, depth: null}));
             return client.query(deleteSpotQuery).then(()=>{
                 client.release();
-                info(fileLabel,"deleted spot: " + util.inspect(err,{showHidden: false, depth: null}));
+                error(fileLabel,"deleted spot: " + util.inspect(err,{showHidden: false, depth: null}));
                 return {"success":false,"data":err};
             })
             .catch(err=>{
                 client.release();
-                info(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
+                error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
                 error(fileLabel,"Error while deleting spot: " + err);
                 return {"success":false,"data":err};
             })
@@ -66,7 +58,7 @@ async function saveSpot(newSpot){
     })
     .catch(err=>{
         client.release();
-        info(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
+        error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
         error(fileLabel,"Error while saving spot: " + err);
         return {"success":false,"data":err};
     });
@@ -78,7 +70,6 @@ async function getSpotByKeywords(keywords){
     const client = await pool.connect();
     return client.query(query1)
     .then((results1)=>{
-        info(fileLabel, "Load spots")
         if (results1.rowCount == 0)
             return {"success":false, "data":"spot does not exist"};
         for(var i=0; i<results1.rows.length; i++){
@@ -93,16 +84,16 @@ async function getSpotByKeywords(keywords){
             if (results2.rowCount == 0)
                 return {"success":false, "data":"review does not exist"};
             info(fileLabel,"get review: " + util.inspect(spotIds,{showHidden: false, depth: null}));
-            return {"success":true, "data":results1.rows, "review":results2.rows};
+            return {"success":true, "spots":results1.rows, "review":results2.rows};
         }).catch((exception)=>{
             client.release();
-            info(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));
+            error(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));
             error(fileLabel,"Error while getting review. " + exception);
             return {"success":false, "data":exception};      
         });
     }).catch((exception)=>{
         client.release();
-        info(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));
+        error(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));
         error(fileLabel,"Error while getting spot " + exception);
         return {"success":false, "data":exception};
     });
