@@ -4,6 +4,7 @@ import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
+import spotDetail from '../SpotDetail/SpotDetail.vue'
 
 
 delete  L.Icon.Default.prototype._getIconUrl
@@ -21,6 +22,7 @@ export default {
       spotRegButton,
       nowLocButton,
       typeButton,
+      spotDetail
     },
     data: function(){
       return {
@@ -34,7 +36,8 @@ export default {
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
-        time:0//タイマー用変数
+        time:0,//タイマー用変数
+        showDialog:false
       };
     },
     methods: {
@@ -83,7 +86,7 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
-        alert(event.target.title);
+        this.showDialog = true;
         console.log(event)//debug
         this.getWindow()
       },
@@ -124,6 +127,10 @@ export default {
         this.nowType = type
         console.log(this.nowType)//debug
       },
+
+      closeDialog() {
+        this.showDialog = false;
+      }
     },
 
     mounted:async function() {

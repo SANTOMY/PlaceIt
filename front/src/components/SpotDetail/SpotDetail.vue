@@ -2,21 +2,10 @@
     <v-dialog
       v-model="showDialog"
       width="1200"
+      persistent=true
     >
-        <!-- ダイアログを開くボタン -->
-        <template v-slot:activator="{ on, attrs }">
-            <v-btn 
-                class="px-10 py-6"
-                block
-                v-bind="attrs"
-                v-on="on"
-            >
-                <h2>OPEN</h2>
-            </v-btn>
-        </template>
         <v-card>
             <v-container>
-
                 <!-- 写真 -->
                 <v-carousel
                     cycle
@@ -94,6 +83,13 @@
 
                     </v-col>
                 </v-row>
+                <v-row>
+                    <v-col>
+                        <v-btn block @click="closeDialog()">
+                            <h3>Close</h3>
+                        </v-btn>
+                    </v-col>
+                </v-row>
             </v-container>
         </v-card>
     </v-dialog>
@@ -165,12 +161,19 @@ export default {
         }
     },
 
+    props: {
+        showDialog: Boolean
+    },
+
     methods: {
         change_page: function(dir) {
             const next_page = this.now_review_page + dir
             const max_page = (this.reviews.length - 1) / this.review_num_per_page
             if(next_page < 0 || next_page > max_page) return
             else this.now_review_page = next_page
+        },
+        closeDialog: function() {
+            this.$emit("close");
         }
     },
 
