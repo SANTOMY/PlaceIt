@@ -31,15 +31,14 @@ export default {
         map: L.map,//Mapオブジェクト
         zoom:10,//zoomのサイズ まだうまく制御できてない(SATD)
         spot:null,//spot用のオブジェクト
-        reviews:null,//review用のオブジェクト
         myplace:null,//現在地オブジェクト
         regFlag:false,//スポット登録モードのフラグ
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
         time:0,//タイマー用変数
-        showDialog:false,
-        selectedSpotID: ""
+        showDialog:false, //ダイアログを表示するか
+        selectedSpotID: "" //クリックして選択しているspotのid
       };
     },
     methods: {

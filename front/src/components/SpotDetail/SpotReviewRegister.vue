@@ -81,7 +81,7 @@ export default {
             this.showDialog = false;
             saveReview(this.spot_id, this.review_data.comment, this.review_data.rating, this.$store.state.userData.userId)
                 .then(res => {
-                    console.log(res)
+                    console.log(res)        // Debug
                     this.$emit('submit')
                 })
         }

@@ -5,6 +5,7 @@
       persistent
     >
         <v-card>
+            <!-- ローディング画面 -->
             <v-skeleton-loader
                 v-if="isLoading"
                 type="image, article, article"
@@ -123,7 +124,7 @@ export default {
         return {
             spotData: {spot_name:"", spot_type:""},
             reviews: [],
-            rating: 5,      //仮
+            rating: 5,
             photo: require("@/assets/Hakataramen.jpg"),    //仮
 
             REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
@@ -153,9 +154,7 @@ export default {
             this.$emit("close");
         },
         updateDetail: function() {
-            this.spotData = {spot_name:"", spot_type:""}
-            this.reviews = []
-            this.isLoading = true;
+            this.isLoading = true;      // データを取得している間はローディング画面を表示する
             getSpot("", "", "", "") //TODO:spot_idでしぼる
                 .then(res => {
                     this.spotData = res.spots.find(s => s.spot_id == this.spot_id);
