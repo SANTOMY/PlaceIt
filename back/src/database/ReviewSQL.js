@@ -7,7 +7,6 @@ const fileLabel = "ReviewSQL"
 const Review = require('../objects/review');
 const util = require('util');
 const utility = require('../utility');
-const { isEmpty } = require('../utility');
 
 module.exports.saveReview = async function(newReview){
     const checkQuery = {
