@@ -142,7 +142,7 @@ export default {
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
             //スポットタイプ名のリストをどこかにまとめる方法はないか
             // =>解決
-            all_spot_types: {},
+            all_spot_types: {}, // mountedで取得
 
             // アップロードされたファイルを一時的に保管する変数
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要

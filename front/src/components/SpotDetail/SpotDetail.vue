@@ -22,11 +22,11 @@
                 <h1 class="mr-10"> {{ spot_data.name }} </h1>
 
                 <!-- スポットタイプ -->
-                <spot-type-icon v-for="type in spot_data.types" :key="type"
+                <spot-type-icon 
+                    v-for="type in spot_data.types" 
+                    :key="type"
                     :type="type"
-                    class="mr-5"
-                    large
-                    color="gray"
+                    iconColor="gray"
                 />
 
             </v-row>
