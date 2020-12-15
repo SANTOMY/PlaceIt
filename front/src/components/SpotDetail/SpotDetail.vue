@@ -5,7 +5,12 @@
       persistent
     >
         <v-card>
-            <v-container>
+            <v-skeleton-loader
+                v-if="isLoading"
+                type="image, article, article"
+                class="mx-auto"
+            ></v-skeleton-loader>
+            <v-container v-if="!isLoading">
                 <!-- 写真 -->
                 <v-carousel
                     cycle
@@ -121,13 +126,14 @@ export default {
             rating: 5,      //仮
             photo: require("@/assets/Hakataramen.jpg"),    //仮
 
-            review_num_per_page: 3, //1ページあたりの表示するレビュー数
+            REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
             now_review_page: 0,
 
             pos: {
                 lat: 0,
                 lon: 0
-            }
+            },
+            isLoading: false
         }
     },
 
@@ -139,7 +145,7 @@ export default {
     methods: {
         change_page: function(dir) {
             const next_page = this.now_review_page + dir
-            const max_page = (this.reviews.length - 1) / this.review_num_per_page
+            const max_page = (this.reviews.length - 1) / this.REVIEW_NUM_PER_PAGE
             if(next_page < 0 || next_page > max_page) return
             else this.now_review_page = next_page
         },
@@ -149,10 +155,12 @@ export default {
         updateDetail: function() {
             this.spotData = {spot_name:"", spot_type:""}
             this.reviews = []
-            getSpot("", "", "", "")
+            this.isLoading = true;
+            getSpot("", "", "", "") //TODO:spot_idでしぼる
                 .then(res => {
                     this.spotData = res.spots.find(s => s.spot_id == this.spot_id);
                     this.reviews = res.review.filter(r => r.spot_id == this.spot_id);
+                    this.isLoading = false;
                 }) 
         }
     },
@@ -160,8 +168,8 @@ export default {
     computed: {
         //現在のページに表示するレビューを返す
         sliced_reviews: function() {
-            const start = this.now_review_page * this.review_num_per_page;
-            const end = start + this.review_num_per_page;
+            const start = this.now_review_page * this.REVIEW_NUM_PER_PAGE;
+            const end = start + this.REVIEW_NUM_PER_PAGE;
             return this.reviews.slice(start, end)
         },
     },
