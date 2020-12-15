@@ -1,4 +1,24 @@
-# pbl2_group2
+# Place It! (SANTOMY)
+
+# Member 
+- Front
+  - 浅田
+  - 高田
+  - 松尾
+- Back 
+  - 清水
+  - 中村
+  - 山手
+  - Olivier
+- route
+  - Olivier
+
+# What is it?
+- It is Map application for college student.
+
+# version
+- now status:before release
+- version n.n.n (?/?)
 
 # スプリント情報
 - スプリント5
