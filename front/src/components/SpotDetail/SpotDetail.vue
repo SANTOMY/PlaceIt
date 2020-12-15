@@ -82,7 +82,7 @@
                         <v-row justify="center">
                             <v-col cols="5">
 
-                                <spot-review-register  :spot_id="spotData.spot_id"/>
+                                <spot-review-register  :spot_id="spotData.spot_id" @submit="updateDetail()"/>
                             </v-col>
                         </v-row>
 
@@ -105,6 +105,7 @@ import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
+import {getSpot} from '../../routes/spotRequest'
 
 export default {
     components: {
@@ -115,6 +116,8 @@ export default {
     },
     data: function() {
         return {
+            spotData: {spot_name:"", spot_type:""},
+            reviews: [],
             rating: 5,      //仮
             photo: require("@/assets/Hakataramen.jpg"),    //仮
 
@@ -129,8 +132,7 @@ export default {
     },
 
     props: {
-        spotData: null,
-        reviews: null,
+        spot_id: String,
         showDialog: Boolean
     },
 
@@ -143,6 +145,15 @@ export default {
         },
         closeDialog: function() {
             this.$emit("close");
+        },
+        updateDetail: function() {
+            this.spotData = {spot_name:"", spot_type:""}
+            this.reviews = []
+            getSpot("", "", "", "")
+                .then(res => {
+                    this.spotData = res.spots.find(s => s.spot_id == this.spot_id);
+                    this.reviews = res.review.filter(r => r.spot_id == this.spot_id);
+                }) 
         }
     },
 
@@ -157,6 +168,8 @@ export default {
 
     watch: {
         showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
+            if(!this.showDialog) return;
+            this.updateDetail()
         }
     }
 }

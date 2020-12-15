@@ -39,8 +39,7 @@ export default {
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
         time:0,//タイマー用変数
         showDialog:false,
-        selectedSpot:{spot_name:"", spot_type:""},
-        selectedReviews:[]
+        selectedSpotID: ""
       };
     },
     methods: {
@@ -90,14 +89,9 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
-        console.log(event.target.title)
         this.showDialog = true;
-        const targetSpot = this.spot.find(s => s.spot_id == event.target.title);
-        const targetReviews = this.reviews.filter(r => r.spot_id == event.target.title);
-        console.log(targetSpot)//debug
-        this.selectedSpot = targetSpot;
-        this.selectedReviews = targetReviews;
         this.getWindow()
+        this.selectedSpotID = event.target.title
       },
 
       //現在地アイコンを更新する関数(予定)

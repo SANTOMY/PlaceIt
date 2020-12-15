@@ -30,7 +30,7 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
  * @return {spots, review} - spots is list of spot, review is list of review which connect to spot
  */
 async function getSpot(spotId, spotName, spotType, userId){
-    const url_row = serverIP + '/spot/getSpot?' + "spotId=" + spotId + "&spotName=" + spotName  + "&spotType=" + spotType + "&userId" + userId;
+    const url_row = serverIP + '/spot/getSpot?' + "spotId=" + spotId + "&spotName=" + spotName  + "&spotType=" + spotType + "&userId=" + userId;
     //TODO: "&xMax=" + xMax + "&xMin=" + xMin + "&yMax" + yMax + "&yMin" + yMin
     const url = encodeURI(url_row)
     try{
