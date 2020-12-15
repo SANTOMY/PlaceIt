@@ -57,6 +57,24 @@
             </v-icon>
             Login
         </v-btn>
+
+
+        <v-btn
+            @click="logout"
+            class="px-10 mx-2"
+            text
+            v-if="isLoggedIn"
+        >
+            <v-icon
+                left
+                large
+                color="gray"
+                class="px-5"
+            >
+                mdi-login
+            </v-icon>
+            Logout
+        </v-btn>
     </v-app-bar>
 </template>
 
@@ -67,9 +85,15 @@ export default {
         isLoggedIn() {
             return this.$store.state.userData != null
         }
+    },
+    methods: {
+        logout() {
+            this.$store.commit("logout")
+            if (this.$route.path != '/map'){
+                this.$router.push('/map')
+            }
+        }
     }
-
-
 }
 </script>
 
