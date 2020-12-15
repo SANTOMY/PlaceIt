@@ -1,6 +1,9 @@
 <template>
   <!-- カードリストの大枠 -->
-  <v-card v-bind:class="color + ' lighten-4'" >
+  <v-card
+    :class="color + ' lighten-4'" 
+    height="1000px"
+  >
     
     <!-- カードのヘッダー部分 -->
     <v-toolbar
@@ -25,6 +28,7 @@
       v-model="drawer"
       absolute
       temporary
+      height="145px"
     >
       <v-list
         nav
@@ -104,6 +108,7 @@ export default {
   props: {
     color: String,
     spot_list: null,
+    my_spot_list: null,
     user_list: null
   },
 
@@ -142,6 +147,7 @@ export default {
           j++;
         }
       }
+      this.spot = this.my_spot_list
     },
     GoodSpotSort: function () { // いいね！したスポットを表示する関数
       let j = 0
