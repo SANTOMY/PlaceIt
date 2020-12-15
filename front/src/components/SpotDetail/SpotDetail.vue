@@ -53,7 +53,7 @@
                             <star-rating
                                 v-model="rating"
                                 read-only
-                                :increment=0.5
+                                :increment=0.1
                             >
                             </star-rating>
                         </v-row>
@@ -161,7 +161,15 @@ export default {
                     this.spotData = res.spots.find(s => s.spot_id == this.spot_id);
                     this.reviews = res.review.filter(r => r.spot_id == this.spot_id);
                     this.isLoading = false;
+                    this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)))
+                    
                 }) 
+        },
+        calcRating: function(scores) {
+            var average = 0;
+            scores.forEach(score => average += score);
+            average /= scores.length;
+            return average;
         }
     },
 
