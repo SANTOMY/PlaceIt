@@ -4,11 +4,9 @@ import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
-//import spotDetail from '../SpotDetail/SpotDetail.vue'
 
-
+//アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
-
 L.Icon.Default.mergeOptions(
     {   iconUrl         : require( 'leaflet/dist/images/marker-icon.png' )
     ,   iconRetinaUrl   : require( 'leaflet/dist/images/marker-icon-2x.png' )
@@ -22,7 +20,6 @@ export default {
       spotRegButton,
       nowLocButton,
       typeButton,
-      //spotDetail,
     },
     data: function(){
       return {
@@ -47,20 +44,23 @@ export default {
       showSpot: async function(type){
         if (type=="reset") type = "";
         var data = await getSpot("","",type,"");
-        var spots = data.spots;
-        console.log(spots)
-        //console.log(data)
-        spots.forEach(spot => {
-          this.marker.unshift(L.marker([spot.y, spot.x]).on(
-            'click', this.markerClickEvent));
-            this.marker[0].spot_name = spot.spot_name;
-            this.marker[0].spot_id = spot.spot_id;
-            this.marker[0].spot_type = spot.spot_type;
-            this.marker[0].picture = spot.picture;
-          });
-          //console.log(this.marker)
-          this.markers = L.layerGroup(this.marker).addTo(this.map)
+        if (data.success){
+          var spots = data.spots;
+          //console.log(data)
+          spots.forEach(spot => {
+            this.marker.unshift(L.marker([spot.y, spot.x]).on(
+              'click', this.markerClickEvent));
+              this.marker[0].spot_name = spot.spot_name;
+              this.marker[0].spot_id = spot.spot_id;
+              this.marker[0].spot_type = spot.spot_type;
+              this.marker[0].picture = spot.picture;
+            });
+            this.markers = L.layerGroup(this.marker).addTo(this.map)
+          } else {
+            alert('Spot cannot get.')
+          }
       },
+
       //画面の枠組みの経緯度を取得する関数
       getWindow: function(){
         var mapframe = this.map.getBounds()
@@ -89,14 +89,12 @@ export default {
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
         alert(event.target.spot_type);
-        //console.log(event)//debug
-        //this.getWindow()
-        //this.$router.push({ name: 'spot', query: { "spot_name": event.target.spot_name,"spot_type":event.target.spot_type,"picture":event.target.picture}})
+        //スポット詳細のダイアログを出す
       },
 
       //現在地アイコンを更新する関数(予定)
       locationMarker(){
-        //this.locMarker = L.marker(location.latlng,{icon:this.currentLocationIcon}).addTo(this.map)//debug
+        this.map.locate({ setView: true, zoom: this.zoom});
       },
 
       //スポット登録関数
@@ -121,7 +119,6 @@ export default {
       setNowLocation: function(){
         this.map.locate({ setView: true, zoom: this.zoom});
         //現在地マーカーを設置
-        //this.map.on("locationfound",this.locationMarker);
       },
 
       //検索ジャンルを更新するメソッド(TypeButton.vueから呼ばれる)
@@ -133,6 +130,7 @@ export default {
       },
     },
 
+    //画面読み込み時の関数
     mounted:async function() {
       //Mapオブジェクトの生成
       this.map = L.map('map',{zoom: 10,maxZoom: 15})
@@ -148,6 +146,7 @@ export default {
 
       //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
+
       //spot表示
       this.showSpot(this.nowType);
     }, 

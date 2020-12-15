@@ -38,7 +38,7 @@ async function getSpot(spotId, spotName, spotType, userId){
         let responseJson = await response.json();
         //Should probably use status code instead of this
         if (responseJson.success){
-            return {spots:responseJson.spots, review:responseJson.review};
+            return {spots:responseJson.spots, review:responseJson.review,success:true};
         } else{
             return responseJson.error;
         }
