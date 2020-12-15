@@ -280,7 +280,19 @@ export default {
             editUser(this.user.email,this.model.edit_email,this.model.edit_password,this.model.edit_username)
                 .then(res => {
                     console.log(res)
-                    this.reLoad()
+                    if (res.success) {
+                        // 修正成功時にvuexの中身を書き換える
+                        const userData = {  "id":this.$store.state.userData.id,
+                                            "email":!this.model.edit_email ? this.$store.state.userData.email : this.model.edit_email,
+                                            "password":!this.model.edit_password ? this.$store.state.userData.password : this.model.edit_password,
+                                            "username":!this.model.edit_username ? this.$store.state.userData.username : this.model.edit_username
+                                         }
+                        console.log(userData)
+                        this.$store.commit("login", userData)
+                        this.reLoad() 
+                    } else {
+                        this.closeCard()
+                    }
                 });
         },
 
