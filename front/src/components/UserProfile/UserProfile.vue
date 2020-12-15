@@ -19,6 +19,18 @@
                     </v-avatar>
                 </v-layout>
             </v-col>
+<!-----------------------特定のユーザーが投稿したスポットを取得するテスト------------->
+            <v-col>
+                スポットの取得テスト1
+                <h1>{{ user.username }}</h1>
+                
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        @click="getSpotByUserId( 'aaa' )"
+                    >
+                    スポットの取得テスト2
+                    </v-btn> 
+            </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
                 ユーザー名
@@ -47,6 +59,7 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
+import {getSpot} from '../../routes/spotRequest'
 
 export default {
 
@@ -59,8 +72,9 @@ export default {
             editer: false,
             dialogEdit: false,
             user: { // ユーザー仮データ
-                username: '',
-                email: 'takata@takata.com',
+                user_id: 'default_id',
+                username: 'takata',
+                email: 'p@p.com', // used to get user from database
                 password: 'takatakeisuke',
                 src: require('@/assets/pose_kuyashii_man.png')
             },
@@ -114,7 +128,7 @@ export default {
                 console.log(result[0])
                 console.log(result[0].username)
                 this.user.username = result[0].username
-                // this.user.password = result[0].password
+                this.user.user_id = result[0].id
         })  
     },
     methods:  {
@@ -124,6 +138,12 @@ export default {
         closeUserEdit: function(){          
             this.dialogEdit = false
         },
+        getSpotByUserId: function(user_id){
+            getSpot('', '', '', user_id)
+                .then(result => {
+                console.log(result)
+            })
+        }
     }
 };
 </script>
