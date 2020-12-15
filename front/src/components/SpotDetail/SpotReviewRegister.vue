@@ -36,7 +36,6 @@
                     <v-col cols="5">
                         <star-rating
                             v-model="review_data.rating"
-                            :increment=0.5
                         />
                     </v-col>
                     <v-col cols="5">
@@ -58,6 +57,7 @@
 
 <script>
 import starRating from 'vue-star-rating'
+import { saveReview } from '../../routes/reviewRequest';
 export default {
     components: {
         starRating
@@ -68,15 +68,19 @@ export default {
 
             review_data: {
                 comment: "",
-                rating: 2.5
+                rating: 3
             }
 
         }
     },
+    props: {
+        spot_id: String
+    },
     methods: {
         onClickedRegisterButton: function() {
             this.showDialog = false;
-            console.log(this.review_data)
+            saveReview(this.spot_id, this.review_data.comment, this.review_data.rating, this.$store.state.userData.userId)
+                .then(res => console.log(res))
         }
     }
     

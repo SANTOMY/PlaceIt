@@ -31,6 +31,7 @@ export default {
         map: L.map,//Mapオブジェクト
         zoom:10,//zoomのサイズ まだうまく制御できてない(SATD)
         spot:null,//spot用のオブジェクト
+        reviews:null,//review用のオブジェクト
         myplace:null,//現在地オブジェクト
         regFlag:false,//スポット登録モードのフラグ
         flag :false,//実装上の都合で導入したフラグ
@@ -39,6 +40,7 @@ export default {
         time:0,//タイマー用変数
         showDialog:false,
         selectedSpot:{spot_name:"", spot_type:""},
+        selectedReviews:[]
       };
     },
     methods: {
@@ -59,7 +61,7 @@ export default {
             this.marker.title= spot.spot_id;
           });
         this.spot = spots;
-          
+        this.reviews = data.review;
       },
       //画面の枠組みの経緯度を取得する関数
       getWindow: function(){
@@ -91,8 +93,10 @@ export default {
         console.log(event.target.title)
         this.showDialog = true;
         const targetSpot = this.spot.find(s => s.spot_id == event.target.title);
+        const targetReviews = this.reviews.filter(r => r.spot_id == event.target.title);
         console.log(targetSpot)//debug
         this.selectedSpot = targetSpot;
+        this.selectedReviews = targetReviews;
         this.getWindow()
       },
 

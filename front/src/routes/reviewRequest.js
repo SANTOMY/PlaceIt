@@ -1,7 +1,8 @@
 import {serverIP} from './requestConfig';
 
 async function saveReview(spotId, comment, score, userId){
-    const url = serverIP + '/spot/saveReview';
+    const url = serverIP + '/review/saveReview';
+    console.log({spotId:spotId, comment:comment, score:score, userId:userId})
     try{
         let reponse = await fetch(url,{
             mode: 'cors',
@@ -19,3 +20,5 @@ async function saveReview(spotId, comment, score, userId){
         return{success:false, data:exception};
     }
 }
+
+export {saveReview};

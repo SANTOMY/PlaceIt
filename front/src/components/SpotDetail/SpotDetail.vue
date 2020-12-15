@@ -82,7 +82,7 @@
                         <v-row justify="center">
                             <v-col cols="5">
 
-                                <spot-review-register />
+                                <spot-review-register  :spot_id="spotData.spot_id"/>
                             </v-col>
                         </v-row>
 
@@ -118,33 +118,6 @@ export default {
             rating: 5,      //仮
             photo: require("@/assets/Hakataramen.jpg"),    //仮
 
-            reviews: [
-                {
-                    user_name: "asada",
-                    comment: "ラーメンが美味しかったです。店員さんが優しくて替え玉一杯おごってくれました。また今度来ようと思います。",
-                    score: 5
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "piyo1",
-                    comment: "",
-                    score: 1
-                },
-                {
-                    user_name: "piyo2",
-                    comment: "",
-                    score: 1
-                },
-                {
-                    user_name: "piyo3",
-                    comment: "",
-                    score: 1
-                }
-            ],
             review_num_per_page: 3, //1ページあたりの表示するレビュー数
             now_review_page: 0,
 
@@ -157,6 +130,7 @@ export default {
 
     props: {
         spotData: null,
+        reviews: null,
         showDialog: Boolean
     },
 
@@ -178,8 +152,12 @@ export default {
             const start = this.now_review_page * this.review_num_per_page;
             const end = start + this.review_num_per_page;
             return this.reviews.slice(start, end)
+        },
+    },
+
+    watch: {
+        showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
         }
     }
-
 }
 </script>
