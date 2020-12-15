@@ -178,6 +178,7 @@ export default {
         showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
             this.updateDetail()
+            this.now_review_page = 0;
         }
     }
 }
