@@ -2,7 +2,7 @@
     <v-dialog
       v-model="showDialog"
       width="1200"
-      persistent=true
+      persistent
     >
         <v-card>
             <v-container>
@@ -13,8 +13,6 @@
                     show-arrows-on-hover
                 >
                     <v-carousel-item
-                        v-for="photo in spot_data.photos"
-                        :key="photo"
                         :src="photo"
                     />
                 </v-carousel>
@@ -24,15 +22,22 @@
                     mt-3 mb-5"
                 >
                     <!-- スポット名 -->
-                    <h1 class="mr-10"> {{ spot_data.name }} </h1>
+                    <h1 class="mr-10"> {{ spotData.spot_name }} </h1>
 
-                    <!-- スポットタイプ -->
-                    <spot-type-icon v-for="type in spot_data.types" :key="type"
+                    <!-- スポットタイプ --> 
+                    <!-- <spot-type-icon v-for="type in spotData.types" :key="type"
                         :type="type"
+                        class="mr-5"
+                        large
+                        color="gray"        複数タイプに対応していないので一旦コメントアウト
+                    /> -->
+                    <spot-type-icon
+                        :type="spotData.spot_type"
                         class="mr-5"
                         large
                         color="gray"
                     />
+
 
                 </v-row>
 
@@ -41,7 +46,7 @@
                     <v-col>
                         <v-row justify="center">
                             <star-rating
-                                v-model="spot_data.rating"
+                                v-model="rating"
                                 read-only
                                 :increment=0.5
                             >
@@ -110,20 +115,9 @@ export default {
     },
     data: function() {
         return {
-            spot_data: {
-                name: "ラーメン屋",
-                types: [
-                    "restaurant",
-                    "travel",
-                    "shopping"
-                ],
-                photos: [
-                    require("@/assets/Hakataramen.jpg"),
-                    require("@/assets/Hakataramen.jpg"),
-                    require("@/assets/Hakataramen.jpg")
-                ],
-                rating: 3.5
-            },
+            rating: 5,      //仮
+            photo: require("@/assets/Hakataramen.jpg"),    //仮
+
             reviews: [
                 {
                     user_name: "asada",
@@ -162,6 +156,7 @@ export default {
     },
 
     props: {
+        spotData: null,
         showDialog: Boolean
     },
 

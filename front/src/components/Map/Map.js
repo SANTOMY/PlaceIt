@@ -37,7 +37,8 @@ export default {
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
         time:0,//タイマー用変数
-        showDialog:false
+        showDialog:false,
+        selectedSpot:{spot_name:"", spot_type:""},
       };
     },
     methods: {
@@ -57,6 +58,7 @@ export default {
             'click', this.markerClickEvent);
             this.marker.title= spot.spot_id;
           });
+        this.spot = spots;
           
       },
       //画面の枠組みの経緯度を取得する関数
@@ -86,8 +88,11 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
+        console.log(event.target.title)
         this.showDialog = true;
-        console.log(event)//debug
+        const targetSpot = this.spot.find(s => s.spot_id == event.target.title);
+        console.log(targetSpot)//debug
+        this.selectedSpot = targetSpot;
         this.getWindow()
       },
 
