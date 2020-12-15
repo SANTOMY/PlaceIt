@@ -205,6 +205,14 @@
                             </v-icon>
                         </v-btn> 
                     </v-card-actions>
+                    <v-alert
+                        dense
+                        type="error"
+                        class="mt-7"
+                        v-if="!editSuccessed"
+                    >
+                        編集できませんでした
+                    </v-alert>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
@@ -231,6 +239,7 @@ export default {
                 edit_password : "",
                 edit: false,
             },
+            editSuccessed: true, //修正に失敗したかどうか
 
             showPasswordEdit : false, // trueで修正後パスワード表示
             stepData: [ // 各ステップで使用する変数を格納する配列
@@ -258,18 +267,6 @@ export default {
 
     methods: {
         editUserInformation: function() { // edit user information関数
-            if (this.model.edit_email == ""){
-                this.model.edit_email=""
-                // this.model.edit_email=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
-            }
-            if (this.model.edit_username == ""){
-                this.model.edit_username=""
-                // this.model.edit_username=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
-            }
-            if (this.model.edit_password == ""){
-                this.model.edit_password=""
-                // this.model.edit_password=undefined // TODO:undefinedを送ったらその情報は修正しないという処理用
-            }
             // Debug //
             console.log(this.user.email); // 変更前のemail
             console.log(this.model.edit_email); // 変更後のemail
@@ -279,7 +276,6 @@ export default {
             // backendのデータの修正処理
             editUser(this.user.email,this.model.edit_email,this.model.edit_password,this.model.edit_username)
                 .then(res => {
-                    console.log(res)
                     if (res.success) {
                         // 修正成功時にvuexの中身を書き換える
                         const userData = {  "id":this.$store.state.userData.id,
@@ -287,11 +283,11 @@ export default {
                                             "password":!this.model.edit_password ? this.$store.state.userData.password : this.model.edit_password,
                                             "username":!this.model.edit_username ? this.$store.state.userData.username : this.model.edit_username
                                          }
-                        console.log(userData)
                         this.$store.commit("login", userData)
                         this.reLoad() 
                     } else {
-                        this.closeCard()
+                        this.editSuccessed = false;
+                        //this.closeCard()
                     }
                 });
         },
@@ -308,6 +304,7 @@ export default {
             // 修正をスキップする関数
             this.state = value+1
             this.stepData[value-1].edit = false
+            this.editSuccessed = true;
         },
 
         continuePage: function(value){
@@ -323,6 +320,7 @@ export default {
             else if(value==3 && this.$refs.loginForm.validate()){
                 this.stepData[value-1].edit = true
                 this.state = value+1
+                this.editSuccessed = true;
             }
             else {
                 // Debag
