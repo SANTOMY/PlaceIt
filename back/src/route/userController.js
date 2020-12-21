@@ -98,7 +98,7 @@ module.exports = class UserController{
 
     async getUserById(req,res){
         const userId = req.params.userId;
-        return UserSQL.getUserById(userId).then((result) =>{
+        return userSQL.getUserById(userId).then((result) =>{
             if(result.success){
                 debug(fileLabel,"Successfully fetched user: " + userId);
                 return res.status(200).json({"success": true, "data": result.data});
