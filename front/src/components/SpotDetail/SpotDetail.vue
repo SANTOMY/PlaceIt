@@ -177,7 +177,12 @@ export default {
         sliced_reviews: function() {
             const start = this.now_review_page * this.REVIEW_NUM_PER_PAGE;
             const end = start + this.REVIEW_NUM_PER_PAGE;
-            return this.reviews.slice(start, end)
+            const raw_reviews = this.reviews.slice(start, end)
+            var enumerated_reviews = []
+            for(var i = 0; i < raw_reviews.length; i++) {
+                enumerated_reviews.push({"id":i, content:raw_reviews[i]});
+            }
+            return enumerated_reviews;
         },
     },
 
