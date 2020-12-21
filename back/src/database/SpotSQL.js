@@ -33,7 +33,6 @@ async function saveSpot(newSpot){
     }
 
     const client = await pool.connect();
-    //TODO: NULL CHECK
     
     return client.query(query1).then(()=>{
         return client.query(query2).then(()=>{
