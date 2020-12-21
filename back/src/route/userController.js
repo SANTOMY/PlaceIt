@@ -5,12 +5,14 @@ const User = require("../objects/user");
 const fileLabel = "userController"
 const userSQL = require("../database/UserSQL");
 const utility = require("../utility");
+const UserSQL = require('../database/UserSQL');
 
 module.exports = class UserController{
     constructor(){
         this.register.bind(this);
         this.getUserByEmail.bind(this);
         this.editUser.bind(this);
+        this.getUserById.bind(this);
     }
     
     async register(req, res){
@@ -47,9 +49,8 @@ module.exports = class UserController{
                 info(fileLabel, "Unsuccessful Get Information by email " + email +": " + JSON.stringify(result));
                 return res.status(400).json({"success": false, "error": result.data});
             }
-
         }).catch((exception)=>{
-            error(fileLabel,"Error in attempt to register "+ email + ": " + exception);
+            error(fileLabel,"Error in attempt to get user "+ email + ": " + exception);
             return res.status(400).json({"success": false, "error": exception});
         });
     }
@@ -92,6 +93,22 @@ module.exports = class UserController{
 
         }).catch((exception)=>{
             error(fileLabel,"Error in attempt to edit "+ currentEmail + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
+
+    async getUserById(req,res){
+        const userId = req.params.userId;
+        return UserSQL.getUserById(userId).then((result) =>{
+            if(result.success){
+                debug(fileLabel,"Successfully fetched user: " + userId);
+                return res.status(200).json({"success": true, "data": result.data});
+            } else{
+                info(fileLabel, "Could not fetched user with id " + userId +": " + JSON.stringify(result));
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+        }).catch((exception)=>{
+            error(fileLabel,"Error while getting user "+ userId + ": " + exception);
             return res.status(400).json({"success": false, "error": exception});
         });
     }

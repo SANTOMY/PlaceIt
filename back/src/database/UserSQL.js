@@ -56,6 +56,26 @@ async function getUserByEmail(email) {
     });
 }
 
+async function getUserById(userId){
+    const query = {
+        text:`SELECT * FROM users.users WHERE id='${userId}'`
+    };
+    const client = await pool.connect();
+    return client.query(query).then( result =>{
+        client.release();
+        if (result.rowCount == 0){
+            return {"success":false, "data":"User does not exist"};
+        }
+        info(fileLabel,"Fetching user with id: " + userId);
+        return {"success":true, "data":result.rows};
+    }).catch((exception) => {
+        client.release();
+        error(fileLabel,"Error while getting user with id: " + userId);
+        error(fileLabel,exception);
+        return {"success":false, "data":exception};
+    });
+}
+
 async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     var setQuery = "";
     var emailStatus = "not updated";
@@ -119,4 +139,5 @@ async function login(email, password) {
     });
 }
 
-module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser, login:login};
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser,
+     login:login, getUserById:getUserById};
