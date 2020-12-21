@@ -5,7 +5,6 @@ const User = require("../objects/user");
 const fileLabel = "userController"
 const userSQL = require("../database/UserSQL");
 const utility = require("../utility");
-const UserSQL = require('../database/UserSQL');
 
 module.exports = class UserController{
     constructor(){
