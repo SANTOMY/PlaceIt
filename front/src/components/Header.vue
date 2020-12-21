@@ -38,10 +38,16 @@
             </template>
             <v-list>
                 <v-list-item>
-                    <v-btn to="/user" class="px-8 mb-2">Profile</v-btn>
+                    <v-btn to="/user" class="px-8 mb-2">
+                    <v-icon left large color="gray" class="px-5"> mdi-account-circle</v-icon>
+                    Profile
+                </v-btn>
                 </v-list-item>
                 <v-list-item>
-                    <v-btn @click="logout" class="px-8">Logout</v-btn>
+                    <v-btn @click="logout" class="px-8">
+                        <v-icon left large color="gray" class="px-5"> mdi-logout</v-icon>
+                        Logout
+                    </v-btn>
                 </v-list-item>
             </v-list>
         </v-menu>
