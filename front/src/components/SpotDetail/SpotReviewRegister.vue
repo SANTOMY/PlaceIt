@@ -79,7 +79,7 @@ export default {
     methods: {
         onClickedRegisterButton: function() {
             this.showDialog = false;
-            saveReview(this.spot_id, this.review_data.comment, this.review_data.rating, this.$store.state.userData.userId)
+            saveReview(this.spot_id, this.review_data.comment, this.review_data.rating, this.$store.state.userData.id)
                 .then(res => {
                     console.log(res)        // Debug
                     this.$emit('submit')

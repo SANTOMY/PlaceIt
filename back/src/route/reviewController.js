@@ -11,6 +11,7 @@ module.exports = class ReviewController{
     }
     
     async saveReview(req, res){
+        console.log("review!!!")
         const {spotId, comment, score, userId} = req.body;
         const review = new Review(uuidv4(), spotId, comment, score, userId);
         return reviewSQL.saveReview(review).then((result)=>{

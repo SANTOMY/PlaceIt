@@ -194,6 +194,7 @@ export default {
     watch: {
         showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
+            console.log(this.spot_id)
             this.updateDetail()
             this.now_review_page = 0;
         }
