@@ -25,7 +25,7 @@ module.exports = class UserController{
         return userSQL.saveUser(user).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Registration for " + email);
-                return res.status(200).json({"success": true, "userId": user.userId, "userName": user.userName});
+                return res.status(200).json({"success": true, "userId": user.userId, "userName": user.userName, "email": user.email});
             }else{
                 info(fileLabel, "Unsuccessful Registration for " + email +": " + JSON.stringify(result));
                 return res.status(400).json({"success": false, "error": result.data});
