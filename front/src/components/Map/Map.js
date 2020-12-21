@@ -46,7 +46,7 @@ export default {
         var data = await getSpot("","",type,"");
         if (data.success){
           var spots = data.spots;
-          //console.log(data)
+          console.log(data)
           spots.forEach(spot => {
             this.marker.unshift(L.marker([spot.y, spot.x]).on(
               'click', this.markerClickEvent));
