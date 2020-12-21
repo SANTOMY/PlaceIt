@@ -7,7 +7,6 @@ const fileLabel = "ReviewSQL"
 const Review = require('../objects/review');
 const util = require('util');
 const utility = require('../utility');
-const { isEmpty } = require('../utility');
 
 module.exports.saveReview = async function(newReview){
     const checkQuery = {
@@ -22,14 +21,14 @@ module.exports.saveReview = async function(newReview){
     if(utility.isEmpty(newReview.spotName)){
         error(fileLabel,"ERROR OBJECT:" + util.inspect(newReview.spotId,{showHidden: false, depth: null}));
         error(fileLabel,"Spot name is empty or undefined" + newReview.spotName);
-        return {"success":false,"data":"Spot Id is empty or undefined"};
+        return {"success":false,"data":"Spot Name is empty or undefined"};
     }
     const client = await pool.connect();
     return client.query(checkQuery)
     .then( nullchecker =>{
          if(nullchecker.rowCount == 0){
             client.release();
-            return {"success":false,"data":"This spot does no exist: " + newSpot.spotName};
+            return {"success":false,"data":"This spot does not exist: " + newSpot.spotName};
         }
         return client.query(query)
         .then(() =>{
