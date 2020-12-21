@@ -25,9 +25,6 @@
                 <v-card-actions>
                     <v-btn @click="login">ログイン</v-btn>
                 </v-card-actions>
-                <v-card-actions>
-                    <v-btn @click="logout">ログアウト</v-btn>
-                </v-card-actions>
 
                 <v-alert
                     dense
@@ -85,13 +82,7 @@ export default {
                         this.errorMessage = res.data 
                     }
                 })
-        },
-
-        logout() { //ほんとはいらないけどデバッグ用として...
-            this.$store.commit("logout")
-            this.$router.push('/map')
         }
     }
-    
 }
 </script>
