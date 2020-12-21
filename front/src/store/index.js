@@ -6,8 +6,7 @@ Vue.use(Vuex);
 
 
 const state = {
-    isLoginState: false,
-    userId: "sampleUser"
+    userData: null
 }
 
 const mutations =  {
