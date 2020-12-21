@@ -18,6 +18,7 @@
                         <img v-bind:src="user.src">
                     </v-avatar>
                 </v-layout>
+                <avatar-register />
             </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
@@ -47,12 +48,14 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
+import AvatarRegister from "./AvatarRegister.vue"
 
 export default {
 
     components: {
         SpotListCard,
-        UserEdit
+        UserEdit,
+        AvatarRegister
     },
     data() {
         return {
