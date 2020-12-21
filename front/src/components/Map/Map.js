@@ -4,6 +4,7 @@ import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
+import {getReviewBySpotId} from '../../routes/reviewRequest'
 
 
 delete  L.Icon.Default.prototype._getIconUrl
@@ -40,13 +41,6 @@ export default {
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
       showSpot: async function(){
-        //var spotList = getSpot()
-        //console.log(spotList)//debug
-        //for(step=0;step<len(spotList);step++){
-          //var spot = spotList[step]
-          //L.marker(,],{ title: }).addTo(this.map).on(
-        //'click', this.markerClickEvent);
-        //}
         const data = await getSpot("","","","")
         const spots = data.spots;
         spots.forEach(spot => {
@@ -82,10 +76,16 @@ export default {
       },
 
       //Markerがクリックされた時に起動する関数
-      markerClickEvent(event){
-        alert(event.target.title);
-        console.log(event)//debug
-        this.getWindow()
+      markerClickEvent: async function(event){
+        //For Debudg
+        const row = await getReviewBySpotId(event.target.title)
+        const review = row.review
+        var s = "";
+        review.forEach(r => {
+          s = s + r.comment + "\n";
+        })
+        alert(s);
+        this.getWindow();
       },
 
       //現在地アイコンを更新する関数(予定)
