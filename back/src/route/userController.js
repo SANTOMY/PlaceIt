@@ -38,7 +38,7 @@ module.exports = class UserController{
     }
 
     async getUserByEmail(req, res){
-        const email = req.body.email;
+        const email = req.params.email;
         return userSQL.getUserByEmail(email).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Get Information by email " + email);
@@ -84,7 +84,7 @@ module.exports = class UserController{
         return userSQL.editUser(currentEmail.trim(), newEmail.trim(), encryptedNewPassword, newUserName.trim()).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Edit Information " + currentEmail);
-                return res.status(200).json({"success": true,  "email":result.email, "password":result.password, "username":result.username});
+                return res.status(200).json({"success": true, "email":result.email, "password":result.password, "username":result.username});
             }else{
                 info(fileLabel, "Unsuccessful Edit Information " + currentEmail + ": " + JSON.stringify(result));
                 return res.status(400).json({"success": false, "error": exception});
