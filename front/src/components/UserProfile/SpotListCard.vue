@@ -62,7 +62,9 @@
         >
 
           <!-- サブカード -->
-          <v-card max-width="400" >
+          <v-card max-width="400" 
+            @click="spotInformationPage(index)"
+          >
             <!-- カード画像 -->
             <v-img
               :src="card.src"
@@ -125,14 +127,14 @@ export default {
       this.select = i
       this.spot = [];
       if(i==0){
-        this.GoodSpot()
+        this.GoodSpotSort()
       }else if(i==1){
-        this.CreatedSpot()
+        this.CreatedSpotSort()
       }else if(i==2){
         this.spot = this.spot_list
       }
     },
-    CreatedSpot: function () {  
+    CreatedSpotSort: function () { // 作ったスポットを表示する関数 
       let j = 0
       for (let i = 0; i < this.spot_list.length; i++){
         if (this.spot_list[i].user_id==this.user.user_id){
@@ -141,7 +143,7 @@ export default {
         }
       }
     },
-    GoodSpot: function () {  
+    GoodSpotSort: function () { // いいね！したスポットを表示する関数
       let j = 0
       for (let i = 0; i < this.spot_list.length; i++){
         for (let k = 0; k < this.spot_list[i].review.length; k++){
@@ -152,7 +154,12 @@ export default {
           }
         }
       }
-    }
+    },
+    spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
+      console.log(this.spot_list[value].spotId) // Debug
+      this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
+    },
+
   }
 
 };
