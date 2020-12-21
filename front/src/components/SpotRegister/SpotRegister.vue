@@ -116,7 +116,7 @@
 
 <script>
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
-import {getSpotTypeData} from "../share/SpotTypeFunction"
+import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import {saveSpot} from '../../routes/spotRequest'
 import StarRating from 'vue-star-rating'
 
@@ -158,7 +158,7 @@ export default {
         }
     },
     mounted(){
-            let Data = getSpotTypeData()
+            let Data = getSpotTypeDict()
             this.all_spot_types = Object.keys(Data)
     },
 

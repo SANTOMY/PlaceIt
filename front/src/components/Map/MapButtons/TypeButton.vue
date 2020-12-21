@@ -46,13 +46,13 @@
 </template>
 
 <script>
-import {getSpotTypeData} from "../../share/SpotTypeFunction"
+import {getSpotTypeDict} from "../../share/SpotTypeFunction"
 export default {
     data: function(){
         return {
             nowType:'reset',//スポット検索の種別
             types:["reset"], //spot種別一覧
-            featureIcons: getSpotTypeData(), // iconたち
+            featureIcons: getSpotTypeDict(), // iconたち
         }
     },
     created(){

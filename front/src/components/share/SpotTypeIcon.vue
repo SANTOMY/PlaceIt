@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {getSpotTypeData} from "./SpotTypeFunction"
+import {getSpotTypeDict} from "./SpotTypeFunction"
 export default {
     props: {
         type: String,
@@ -17,7 +17,7 @@ export default {
     },
     data: function() {
         return {
-            type_dict: getSpotTypeData()
+            type_dict: getSpotTypeDict()
         }
     }  
 }
