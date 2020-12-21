@@ -88,7 +88,11 @@
                         <v-row justify="center">
                             <v-col cols="5">
 
-                                <spot-review-register  :spot_id="spotData.spot_id" @submit="updateDetail()"/>
+                                <spot-review-register  
+                                    v-if="this.$store.state.userData != null"
+                                    :spot_id="spotData.spot_id" 
+                                    @submit="updateDetail()"
+                                />
                             </v-col>
                         </v-row>
 
