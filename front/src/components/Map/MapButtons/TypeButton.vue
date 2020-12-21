@@ -51,8 +51,8 @@ export default {
     data: function(){
         return {
             nowType:'reset',//スポット検索の種別
-            types:["reset"], //spot種別一覧
-            featureIcons: getSpotTypeDict(), // iconたち
+            types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
+            featureIcons: getSpotTypeDict(), // iconを格納するオブジェクト -> mountedでデータ追加
         }
     },
     created(){
