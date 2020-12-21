@@ -182,9 +182,10 @@ export default {
             const start = this.now_review_page * this.REVIEW_NUM_PER_PAGE;
             const end = start + this.REVIEW_NUM_PER_PAGE;
             const raw_reviews = this.reviews.slice(start, end)
+            // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
             for(var i = 0; i < raw_reviews.length; i++) {
-                enumerated_reviews.push({"id":i, content:raw_reviews[i]});
+                enumerated_reviews.push({id:i, content:raw_reviews[i]});
             }
             return enumerated_reviews;
         },
