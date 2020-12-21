@@ -7,6 +7,9 @@
     <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()" v-if='this.$store.state.userData != null'/>
     <!-- 現在地ボタン -->
     <now-loc-button v-on:click.native="setNowLocation()"/>
+    <!--spot-detail 
+    <spot-detail />
+    -->
   </div>
 </template>
 
@@ -38,8 +41,4 @@ body {
 }
   /* 各オブジェクトのstyleでz-indexを0以上に設定する 
   基本は1000でOK*/
-#form {
-  z-index: 1000;
-}
-
 </style>
