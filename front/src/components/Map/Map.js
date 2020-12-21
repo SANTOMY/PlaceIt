@@ -35,7 +35,6 @@ export default {
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
         time:0,//タイマー用変数
-        marker:[],//マーカーリスト
         markers:null,//マーカーリストのレイヤー群
       };
     },
@@ -46,16 +45,17 @@ export default {
         var data = await getSpot("","",type,"");
         if (data.success){
           var spots = data.spots;
-          console.log(data)
+          console.log(data)//debug
+          var markerSet = []//マーカーのリスト
           spots.forEach(spot => {
-            this.marker.unshift(L.marker([spot.y, spot.x]).on(
-              'click', this.markerClickEvent));
-              this.marker[0].spot_name = spot.spot_name;
-              this.marker[0].spot_id = spot.spot_id;
-              this.marker[0].spot_type = spot.spot_type;
-              this.marker[0].picture = spot.picture;
+             var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
+             marker.spot_name = spot.spot_name;
+             marker.spot_id = spot.spot_id;
+             marker.spot_type = spot.spot_type;
+             marker.spot_picture = spot.spot_picture;
+             markerSet.push(marker)
             });
-            this.markers = L.layerGroup(this.marker).addTo(this.map)
+            this.markers = L.layerGroup(markerSet).addTo(this.map)
           } else {
             alert('Spot cannot get.')
           }

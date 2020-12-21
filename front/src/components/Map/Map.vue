@@ -41,12 +41,4 @@ body {
 }
   /* 各オブジェクトのstyleでz-indexを0以上に設定する 
   基本は1000でOK*/
-#form {
-  z-index: 1000;
-}
-/*
-#close {
-  z-index: 2000;
-}
-*/
 </style>
