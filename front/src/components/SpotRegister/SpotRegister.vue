@@ -158,8 +158,7 @@ export default {
         }
     },
     mounted(){
-            let Data = getSpotTypeDict()
-            this.all_spot_types = Object.keys(Data)
+        this.all_spot_types = getSpotTypeDict('type')
     },
 
     methods: {

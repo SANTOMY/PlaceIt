@@ -52,15 +52,15 @@ export default {
         return {
             nowType:'reset',//スポット検索の種別
             types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
-            featureIcons: getSpotTypeDict(), // iconを格納するオブジェクト -> mountedでデータ追加
+            featureIcons: getSpotTypeDict('icon'), // iconを格納するオブジェクト -> mountedでデータ追加
+            typeNameList: getSpotTypeDict('type') //spot type object のkey配列作成 -> mountedで'reset'追加
         }
     },
     created(){
         this.changeSearchType
     },
     mounted(){
-        let typeNameList = Object.keys(this.featureIcons) //spot type object のkey配列作成
-        this.types.push(... typeNameList ) // typesにtype name listを追加
+        this.types.push(... this.typeNameList ) // typesにtype name listを追加
         this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
     },
     methods:{

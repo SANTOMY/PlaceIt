@@ -17,7 +17,7 @@ export default {
     },
     data: function() {
         return {
-            type_dict: getSpotTypeDict()
+            type_dict: getSpotTypeDict('icon')
         }
     }  
 }
