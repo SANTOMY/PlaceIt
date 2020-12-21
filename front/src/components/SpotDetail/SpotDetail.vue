@@ -159,14 +159,14 @@ export default {
         },
         updateDetail: function() {
             this.isLoading = true;      // データを取得している間はローディング画面を表示する
-            getSpot("", "", "", "") //TODO:spot_idでしぼる
+            getSpot(this.spot_id, "", "", "")
                 .then(res => {
-                    this.spotData = res.spots.find(s => s.spot_id == this.spot_id);
-                    this.reviews = res.review.filter(r => r.spot_id == this.spot_id);
+                    this.spotData = res.spots[0];
+                    this.reviews = res.review;
                     this.isLoading = false;
                     this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)))
                     
-                }) 
+                })
         },
         calcRating: function(scores) {
             var average = 0;
