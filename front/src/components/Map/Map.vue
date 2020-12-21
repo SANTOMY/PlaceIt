@@ -4,7 +4,7 @@
     <!-- spot種別検索メニュー -->
     <type-button @update-type="updateType"/>
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
-    <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()"/>
+    <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()" v-if='this.$store.state.userData != null'/>
     <!-- 現在地ボタン -->
     <now-loc-button v-on:click.native="setNowLocation()"/>
     <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
