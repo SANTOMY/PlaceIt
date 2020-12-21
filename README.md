@@ -1,23 +1,45 @@
-# pbl2_group2
+# Place It! (SANTOMY)
+
+# Member 
+- Front
+  - 浅田
+  - 高田
+  - 松尾
+- Back 
+  - 清水
+  - 中村
+  - 山手
+  - Olivier
+- route
+  - Olivier
+
+# What is it?
+- It is Map application for college student.
+
+# version
+- now status:before release
+- version n.n.n (?/?)
 
 # スプリント情報
-- スプリント1
-- スケジュール:10/19-10/27
+- スプリント5
+- スケジュール:12/14-12/22
 
-# 議事録Format
+# PMメモ
 - https://docs.google.com/document/d/148lP1wZMw-8HKG6Fl9SislHI9NlvjODZYrUFlQNJ9YQ/edit?usp=sharing
 
+# PMスライド
+- https://docs.google.com/presentation/d/1nzYtNJTBaXkg81kN8nTYZNzAEGqQDV3AtMrZ3RBoRbk/edit?usp=sharing
 
 # How To Run
 ## For Docker
-- 1.Copy docker-compose.yml (Check discord)
+- 1.Copy .env (Check discord)
 - 2.Make docker image
 ```
 $ docker-compose build
 ```
 - 3.Run container
 ```
-$ docker run -it -p 3000:3000 pbl2-back
+$ docker run -it -p 5000:5000 pbl2-back
 ```
 ## Connect to DB from console
 - 1.Connect
