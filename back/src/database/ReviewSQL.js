@@ -54,13 +54,13 @@ module.exports.getReviewBySpotId = async function(spotId){
     return client.query(query).then( result => {
         client.release();
         if (result.rowCount == 0)
-            return {"success":false, "data":"No reviews exist for this spot"};
+            return {"success":false, "review":"No reviews exist for this spot"};
         info(fileLabel,"get review by spot_id: " + util.inspect(spotId,{showHidden: false, depth: null}));
-        return {"success":true, "data":result.rows};
+        return {"success":true, "review":result.rows};
     }).catch((err)=>{
         client.release();
         error(fileLabel,"ERROR OBJECT:" + util.inspect(err,{showHidden: false, depth: null}));
         error(fileLabel,"Error while getting review. " + err);
-        return {"success":false, "data":err};      
+        return {"success":false, "review":err};      
     });
 }
