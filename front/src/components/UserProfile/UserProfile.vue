@@ -59,9 +59,9 @@ export default {
             editer: false,
             dialogEdit: false,
             user: { // ユーザー仮データ
-                username: '',
-                email: 'takata@takata.com',
-                password: 'takatakeisuke',
+                username: this.$store.state.userData.name,
+                email: this.$store.state.userData.email,
+                password: this.$store.state.userData.password,
                 src: require('@/assets/pose_kuyashii_man.png')
             },
             spot: [ // spot仮データ
