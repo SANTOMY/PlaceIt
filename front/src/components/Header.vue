@@ -25,9 +25,10 @@
         </v-btn>
         
         <v-menu 
-          offset-y :close-on-click=false
+          offset-y :close-on-click="clockseOnClick"
           close-on-content-click=false
           v-if="isLoggedIn"
+          
         >
             <template v-slot:activator="{ on }">
                 <v-btn class="px-10 mx-2" v-if="isLoggedIn" v-on="on">
