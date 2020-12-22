@@ -116,6 +116,7 @@
 
 <script>
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
+import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import {saveSpot} from '../../routes/spotRequest'
 import StarRating from 'vue-star-rating'
 
@@ -140,11 +141,8 @@ export default {
             //ここの記述があんまり良くない
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
             //スポットタイプ名のリストをどこかにまとめる方法はないか
-            all_spot_types: [
-                "restaurant",
-                "travel",
-                "shopping"
-            ],
+            // =>解決
+            all_spot_types: {}, // mountedで取得
 
             // アップロードされたファイルを一時的に保管する変数
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
@@ -158,6 +156,9 @@ export default {
             ]
 
         }
+    },
+    mounted(){
+        this.all_spot_types = getSpotTypeDict('type')
     },
 
     methods: {
@@ -193,21 +194,21 @@ export default {
         ratingSelected: function (val) {
         this.$emit('rating-selected',val)
         },
-    currentRating: function (val) {
-        this.$emit('current-rating',val)}
-    },
+        currentRating: function (val) {
+            this.$emit('current-rating',val)}
+        },
 
-    watch: {
-        uploadedFiles: function() {
-            this.spot_data.photos = []
-            this.uploadedFiles.forEach(file => {
-                const reader = new FileReader()         //ファイルリーダを用意
-                reader.onload = (e) => {                //読み込みが完了したら配列に追加
-                    this.spot_data.photos.push(e.target.result)
-                }
-                reader.readAsDataURL(file)    
-            })
+        watch: {
+            uploadedFiles: function() {
+                this.spot_data.photos = []
+                this.uploadedFiles.forEach(file => {
+                    const reader = new FileReader()         //ファイルリーダを用意
+                    reader.onload = (e) => {                //読み込みが完了したら配列に追加
+                        this.spot_data.photos.push(e.target.result)
+                    }
+                    reader.readAsDataURL(file)    
+                })
+            }
         }
-    }
 }
 </script>
