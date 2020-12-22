@@ -18,26 +18,27 @@
                     </v-col>
                 </v-row>
             </v-container>
-            
         </template>
 
+        <!--  画像の切り取り画面  -->
         <v-card class="px-5" v-if='croppedImage === ""'>
             <v-container>
                 <v-row>
                     <v-col>
                         <h1 class="mb-5">アイコン画像を変更</h1>
+                        <!--  ファイル選択  -->
                         <v-form>
                             <v-file-input
                                 v-model="uploadedFile"
                                 placeholder=""
                                 label="写真ファイルを追加"
                                 prepend-icon="mdi-paperclip"
-                            >
-                            </v-file-input>
+                            />
                         </v-form>
                     </v-col>
                 </v-row>
                 <v-row>
+                    <!--  切り取りUI  -->
                     <v-col>
                         <div
                             v-if="rawImage !== ''"
@@ -76,6 +77,7 @@
             </v-container>
         </v-card>
 
+        <!--  確認画面  -->
         <v-card class="px-5" v-if='croppedImage !== ""'>
             <v-container>
                 <v-row justify="center">
@@ -127,9 +129,9 @@ export default {
     data: function() {
         return {
             showDialog: false,
-            uploadedFile: "",
-            rawImage: "",
-            croppedImage: ""
+            uploadedFile: "",   //選択されたファイル
+            rawImage: "",       //切り取る前の画像データ(base64)
+            croppedImage: ""    //切り取り&リサイズ後の画像データ(base64)
         }
     },
     methods: {
@@ -156,7 +158,7 @@ export default {
             this.croppedImage = ""
         },
         submitImage: function() {
-            console.log(this.croppedImage); //アイコン画像登録
+            console.log(this.croppedImage); //TODO: データベースに登録
             this.$emit('submit', this.croppedImage);
             this.showDialog = false;
             this.croppedImage = "";
