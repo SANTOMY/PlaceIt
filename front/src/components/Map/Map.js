@@ -49,7 +49,6 @@ export default {
         var data = await getSpot("","",type,"");
         if (data.success){
           var spots = data.spots;
-          console.log(data)//debug
           var markerSet = []//マーカーのリスト
           spots.forEach(spot => {
              var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);

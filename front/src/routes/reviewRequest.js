@@ -20,4 +20,23 @@ async function saveReview(spotId, comment, score, userId){
     }
 }
 
-export {saveReview};
+async function getReviewBySpotId(spotId){
+    const url = serverIP + '/review/getReviewBySpotId/' + spotId;
+
+    try{
+        let response = await fetch(url,);
+        let responseJson = await response.json();
+        //Should probably use status code instead of this
+        if (responseJson.success){
+            return {review:responseJson.review};
+        } else{
+            return responseJson.error;
+        }
+
+    } catch(exception){
+        console.log(exception);
+        return {success:false, review:exception};
+    }
+}
+
+export {saveReview, getReviewBySpotId};
