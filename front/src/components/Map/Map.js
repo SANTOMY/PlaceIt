@@ -46,7 +46,6 @@ export default {
         var data = await getSpot("","",type,"");
         if (data.success){
           var spots = data.spots;
-          console.log(data)//debug
           var markerSet = []//マーカーのリスト
           spots.forEach(spot => {
              var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
@@ -89,15 +88,19 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent: async function(event){
-        //For Debudg
+        //For Debug
         const row = await getReviewBySpotId(event.target.spot_id)
         const review = row.review
-        var s = "";
-        review.forEach(r => {
-          s = s + r.comment + "\n";
-        })
-        alert(s);
-        this.getWindow();
+        if(row.error){
+          alert("Review cannot get")
+        }else{
+          var s = "";
+          review.forEach(r => {
+            s = s + r.comment + "\n";
+          })
+          alert(s);
+          this.getWindow();
+        }
       },
 
       //現在地アイコンを更新する関数(予定)
