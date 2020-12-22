@@ -2,7 +2,7 @@ import { Radar, mixins } from 'vue-chartjs'
 const { reactiveProp } = mixins
 
 export default {
-    extends: Radar,
+    extends: Radar, // レーダーチャート
     mixins: [reactiveProp],
     props: ['options'],
     mounted () {

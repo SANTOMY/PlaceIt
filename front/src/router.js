@@ -6,7 +6,6 @@ import UserProfile from './components/UserProfile/UserProfile.vue'
 import Map from './components/Map/Map.vue'
 import SpotDetail from './components/SpotDetail/SpotDetail.vue'
 import SpotRegister from './components/SpotRegister/SpotRegister.vue'
-import test1 from './components/share/test1.vue'
 
 
 Vue.use(Router)
@@ -44,10 +43,5 @@ export default new Router({
         name: 'register',
         component: SpotRegister
       },
-    {
-      path: '/test',
-      name: 'test',
-      component: test1
-    },
   ]
 })

@@ -35,40 +35,41 @@
                 <!-- スポットの評価 -->
                 <v-col>
                     <v-row justify="center">
-                        <star-rating
-                            v-model="spot_data.rating"
-                            read-only
-                            :increment=0.5
-                        >
-                        </star-rating>
+                        <radarChartDisp
+                            :type="this.spot_data.types[0]"
+                            :reviewRating="spot_data.rating5"
+                        />
                     </v-row>
                 </v-col>
 
                 <!-- レビュー 一覧 -->
                 <v-col>
                     <v-row justify="center">
+                        平均
+                        <star-rating
+                            v-model="spot_data.rating"
+                            read-only
+                            :increment=0.1
+                        >
+                        </star-rating>
+                    </v-row>
+                    <v-row justify="center">
                         <v-col cols="11">
                             <spot-review-list :reviews="sliced_reviews" />
                         </v-col>
                     </v-row>
-
-                    <v-row class="mt-1">
-                        <v-icon
-                            class="ml-8"
-                            large
-                            @click="change_page(-1)"
-                        >
-                            mdi-chevron-left
-                        </v-icon>
-                        <v-icon
-                            class="ml-6"
-                            large
-                            @click="change_page(1)"
-                        >
-                            mdi-chevron-right
-                        </v-icon>
+                    <v-row justify="center">
+                        <v-col cols="8">
+                            <v-container class="max-width">
+                                <v-pagination                                
+                                    @input="getNumber"
+                                    v-model="now_review_page"
+                                    :length="num_page"
+                                    :total-visible="7"
+                                ></v-pagination>
+                            </v-container>
+                        </v-col>
                     </v-row>
-
                     <v-row justify="center">
                         <v-col cols="5">
 
@@ -88,29 +89,28 @@ import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
+import radarChartDisp from '../share/RadarChartDisp'
 
 export default {
     components: {
         starRating,
         spotReviewList,
         spotTypeIcon,
-        spotReviewRegister
+        spotReviewRegister,
+        radarChartDisp
     },
     data: function() {
         return {
             spot_data: {
                 name: "ラーメン屋",
-                types: [
-                    "restaurant",
-                    "travel",
-                    "shopping"
-                ],
+                types: ["restaurant"],
                 photos: [
                     require("@/assets/Hakataramen.jpg"),
-                    require("@/assets/Hakataramen.jpg"),
-                    require("@/assets/Hakataramen.jpg")
+                    // require("@/assets/Hakataramen.jpg"),
+                    // require("@/assets/Hakataramen.jpg"),
                 ],
-                rating: 3.5
+                rating:[],
+                rating5: [0,1,1,1,1]
             },
             reviews: [
                 {
@@ -124,9 +124,125 @@ export default {
                     score: 3
                 },
                 {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+                {
+                    user_name: "hoge",
+                    comment: "うまい",
+                    score: 3
+                },
+
+                {
                     user_name: "piyo1",
                     comment: "",
-                    score: 1
+                    score: 2
                 },
                 {
                     user_name: "piyo2",
@@ -140,28 +256,52 @@ export default {
                 }
             ],
             review_num_per_page: 3, //1ページあたりの表示するレビュー数
-            now_review_page: 0,
-
+            now_review_page: 1,
+            num_page: 0,
             pos: {
                 lat: 0,
                 lon: 0
             }
         }
     },
-
+    created(){
+        let scores = this.reviews.map(item => item.score)
+        this.spot_data.rating = this.ave(scores)
+        this.spot_data.rating5[0] = this.spot_data.rating
+        console.log(this.spot_data.rating5) // Debug
+        this.num_page = Math.ceil(this.reviews.length/this.review_num_per_page) // 総ページ数
+    },
     methods: {
-        change_page: function(dir) {
-            const next_page = this.now_review_page + dir
-            const max_page = (this.reviews.length - 1) / this.review_num_per_page
-            if(next_page < 0 || next_page > max_page) return
-            else this.now_review_page = next_page
+        // change_page: function(dir) {
+        //     const next_page = this.now_review_page + dir
+        //     const max_page = (this.reviews.length ) / this.review_num_per_page
+        //     if(next_page < 1 || next_page > max_page) return
+        //     else this.now_review_page = next_page
+        // },
+        jump_page: function(page) {
+            return this.now_review_page = page
+        },
+        getNumber: function(number){
+            console.log(number)
+            this.jump_page(number)
+        },
+        sum: function(arr){
+            var sum = 0;
+            arr.forEach(element => {
+                sum += element;
+            });
+            return sum
+        },
+        ave: function(arr){
+            return (this.sum(arr))/arr.length
         }
+
     },
 
     computed: {
         //現在のページに表示するレビューを返す
         sliced_reviews: function() {
-            const start = this.now_review_page * this.review_num_per_page;
+            const start = (this.now_review_page-1) * this.review_num_per_page;
             const end = start + this.review_num_per_page;
             return this.reviews.slice(start, end)
         }
