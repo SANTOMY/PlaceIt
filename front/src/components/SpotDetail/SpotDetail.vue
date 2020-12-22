@@ -157,7 +157,10 @@ export default {
             else this.now_review_page = next_page
         }
     },
-
+    mounted(){
+        this.spot_data.name = this.$route.query.spot_name;
+        this.spot_data.types = [this.$route.query.spot_type];
+    },
     computed: {
         //現在のページに表示するレビューを返す
         sliced_reviews: function() {
