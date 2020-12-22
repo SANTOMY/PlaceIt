@@ -4,6 +4,7 @@ import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
+import {getReviewBySpotId} from '../../routes/reviewRequest'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -45,7 +46,6 @@ export default {
         var data = await getSpot("","",type,"");
         if (data.success){
           var spots = data.spots;
-          console.log(data)//debug
           var markerSet = []//マーカーのリスト
           spots.forEach(spot => {
              var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
@@ -87,9 +87,20 @@ export default {
       },
 
       //Markerがクリックされた時に起動する関数
-      markerClickEvent(event){
-        alert(event.target.spot_type);
-        //スポット詳細のダイアログを出す
+      markerClickEvent: async function(event){
+        //For Debug
+        const row = await getReviewBySpotId(event.target.spot_id)
+        const review = row.review
+        if(row.error){
+          alert("Review cannot get")
+        }else{
+          var s = "";
+          review.forEach(r => {
+            s = s + r.comment + "\n";
+          })
+          alert(s);
+          this.getWindow();
+        }
       },
 
       //現在地アイコンを更新する関数(予定)
