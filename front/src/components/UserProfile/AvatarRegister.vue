@@ -150,11 +150,19 @@ export default {
         },
         submitImage: function() {
             console.log(this.croppedImage); //アイコン画像登録
+            this.$emit('submit', this.croppedImage);
+            this.showDialog = false;
+            this.croppedImage = "";
+            this.uploadedFile = "";
         }
     },
 
     watch: {
         uploadedFile: function() {
+            if(this.uploadedFile === "") {
+                this.rawImage = "";
+                return;
+            }
             this.rawImage = "";
             const reader = new FileReader()         //ファイルリーダを用意
             reader.onload = (e) => {                //読み込みが完了したら配列に追加

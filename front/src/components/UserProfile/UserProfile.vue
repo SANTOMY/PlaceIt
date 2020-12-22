@@ -18,7 +18,7 @@
                         <img v-bind:src="user.src">
                     </v-avatar>
                 </v-layout>
-                <avatar-register />
+                <avatar-register @submit="editAvatarImage"/>
             </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
@@ -127,6 +127,9 @@ export default {
         closeUserEdit: function(){          
             this.dialogEdit = false
         },
+        editAvatarImage: function(image) {
+            this.user.src = image;
+        }
     }
 };
 </script>
