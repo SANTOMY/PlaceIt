@@ -131,7 +131,8 @@ export default {
             showDialog: false,
             uploadedFile: "",   //選択されたファイル
             rawImage: "",       //切り取る前の画像データ(base64)
-            croppedImage: ""    //切り取り&リサイズ後の画像データ(base64)
+            croppedImage: "",    //切り取り&リサイズ後の画像データ(base64)
+            AVATAR_SIZE: 200    //アバターのサイズ
         }
     },
     methods: {
@@ -142,14 +143,13 @@ export default {
         resizeImage: function(base64image) {       
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            const AVATAR_SIZE = 200;
-            canvas.width = AVATAR_SIZE;
-            canvas.height = AVATAR_SIZE;
+            canvas.width = this.AVATAR_SIZE;
+            canvas.height = this.AVATAR_SIZE;
             var image = new Image();
             image.crossOrigin = "Anonymous";
             image.onload = (event) => {
                 console.log(event)
-                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, AVATAR_SIZE, AVATAR_SIZE);
+                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, this.AVATAR_SIZE, this.AVATAR_SIZE);
                 this.croppedImage = canvas.toDataURL('image/jpeg');
             };
             image.src = base64image;
