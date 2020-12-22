@@ -69,7 +69,8 @@ export default {
             register(this.username,this.email,this.password)
                 .then(res => {
                     console.log(res)
-                    this.$store.commit("login", res)
+                    const userData = {"id":res.userId, "email":res.email, "username":res.userName}
+                    this.$store.commit("login", userData)
                     this.$router.push('/map')
                 });
         }

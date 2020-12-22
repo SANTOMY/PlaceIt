@@ -4,6 +4,7 @@ import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
+import spotDetail from '../SpotDetail/SpotDetail.vue'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -20,6 +21,7 @@ export default {
       spotRegButton,
       nowLocButton,
       typeButton,
+      spotDetail
     },
     data: function(){
       return {
@@ -35,6 +37,8 @@ export default {
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
         time:0,//タイマー用変数
+        showDialog:false, //ダイアログを表示するか
+        selectedSpotID: "", //クリックして選択しているspotのid
         markers:null,//マーカーリストのレイヤー群
       };
     },
@@ -45,7 +49,6 @@ export default {
         var data = await getSpot("","",type,"");
         if (data.success){
           var spots = data.spots;
-          console.log(data)//debug
           var markerSet = []//マーカーのリスト
           spots.forEach(spot => {
              var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
@@ -88,8 +91,9 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
-        alert(event.target.spot_type);
-        //スポット詳細のダイアログを出す
+        this.showDialog = true;
+        this.getWindow()
+        this.selectedSpotID = event.target.spot_id
       },
 
       //現在地アイコンを更新する関数(予定)
@@ -128,12 +132,16 @@ export default {
         this.nowType = type;
         await this.showSpot(type);
       },
+
+      closeDialog() {
+        this.showDialog = false;
+      }
     },
 
     //画面読み込み時の関数
     mounted:async function() {
       //Mapオブジェクトの生成
-      this.map = L.map('map',{zoom: 10,maxZoom: 15})
+      this.map = L.map('map',{zoom: 10,maxZoom: 18})
       .addLayer(
         L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
           attribution:
