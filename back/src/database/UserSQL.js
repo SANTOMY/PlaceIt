@@ -1,11 +1,10 @@
 'use strict';
 const con = require('./DBHandler.js');
 const {info, debug, warning, error}  = require('../winston');
-const { connect } = require('../route/userRoute.js');
 const pool = con.pool;
 const fileLabel = "UserSQL"
-const User = require('../objects/user');
 const util = require('util');
+const bcrypt = require('bcryptjs');
 const utility = require('../utility');
 
 
@@ -57,6 +56,26 @@ async function getUserByEmail(email) {
     });
 }
 
+async function getUserById(userId){
+    const query = {
+        text:`SELECT * FROM users.users WHERE id='${userId}'`
+    };
+    const client = await pool.connect();
+    return client.query(query).then( result =>{
+        client.release();
+        if (result.rowCount == 0){
+            return {"success":false, "data":"User does not exist"};
+        }
+        info(fileLabel,"Fetching user with id: " + userId);
+        return {"success":true, "data":result.rows};
+    }).catch((exception) => {
+        client.release();
+        error(fileLabel,"Error while getting user with id: " + userId);
+        error(fileLabel,exception);
+        return {"success":false, "data":exception};
+    });
+}
+
 async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     var setQuery = "";
     var emailStatus = "not updated";
@@ -96,4 +115,29 @@ async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     });
 }
 
-module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser};
+async function login(email, password) {
+    const query = {
+        text: `SELECT * FROM users.users WHERE email='${email}'`
+    };
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+        client.release();
+        if (result.rowCount == 0)
+            return {"success":false, "data":"User does not exist"};
+        const hash = result.rows[0].password;
+        const isCorrectPassword = bcrypt.compareSync(password, hash);
+        info(fileLabel,"authentication by email: " + email);
+        if (isCorrectPassword) {
+            return {"success":true, "data":"Password is correct", "email":result.rows[0].email, "id":result.rows[0].id, "username":result.rows[0].username, "password":result.rows[0].password};
+        } else {
+            return {"success":false, "data":"Password is incorrect"};
+        }
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while log in. " + exception);
+        return {"success":false, "data":exception};      
+    });
+}
+
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser,
+     login:login, getUserById:getUserById};

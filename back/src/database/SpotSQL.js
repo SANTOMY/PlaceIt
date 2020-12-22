@@ -33,7 +33,6 @@ async function saveSpot(newSpot){
     }
 
     const client = await pool.connect();
-    //TODO: NULL CHECK
     
     return client.query(query1).then(()=>{
         return client.query(query2).then(()=>{
@@ -84,7 +83,7 @@ async function getSpotByKeywords(keywords){
             if (results2.rowCount == 0)
                 return {"success":false, "data":"review does not exist"};
             info(fileLabel,"get review: " + util.inspect(spotIds,{showHidden: false, depth: null}));
-            return {"success":true, "data":results1.rows, "review":results2.rows};
+            return {"success":true, "spots":results1.rows, "review":results2.rows};
         }).catch((exception)=>{
             client.release();
             error(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));

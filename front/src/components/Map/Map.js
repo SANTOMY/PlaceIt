@@ -3,9 +3,10 @@ import  L from 'leaflet'
 import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
+import {getSpot} from '../../routes/spotRequest'
 
+//アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
-
 L.Icon.Default.mergeOptions(
     {   iconUrl         : require( 'leaflet/dist/images/marker-icon.png' )
     ,   iconRetinaUrl   : require( 'leaflet/dist/images/marker-icon-2x.png' )
@@ -25,16 +26,51 @@ export default {
         lat:0,//緯度
         lon:0,//経度
         map: L.map,//Mapオブジェクト
-        zoom:15,//zoomのサイズ まだうまく制御できてない(SATD)
+        zoom:10,//zoomのサイズ まだうまく制御できてない(SATD)
         spot:null,//spot用のオブジェクト
+        review:null,//review用のオブジェクト
         myplace:null,//現在地オブジェクト
         regFlag:false,//スポット登録モードのフラグ
         flag :false,//実装上の都合で導入したフラグ
         locMarker:null,//現在地のマーカーオブジェクト 
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
+        time:0,//タイマー用変数
+        markers:null,//マーカーリストのレイヤー群
       };
     },
     methods: {
+    //Map上に検索条件にあったスポットを表示する関数
+      showSpot: async function(type){
+        if (type=="reset") type = "";
+        var data = await getSpot("","",type,"");
+        if (data.success){
+          var spots = data.spots;
+          console.log(data)//debug
+          var markerSet = []//マーカーのリスト
+          spots.forEach(spot => {
+             var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
+             marker.spot_name = spot.spot_name;
+             marker.spot_id = spot.spot_id;
+             marker.spot_type = spot.spot_type;
+             marker.spot_picture = spot.spot_picture;
+             markerSet.push(marker)
+            });
+            this.markers = L.layerGroup(markerSet).addTo(this.map)
+          } else {
+            alert('Spot cannot get.')
+          }
+      },
+
+      //画面の枠組みの経緯度を取得する関数
+      getWindow: function(){
+        var mapframe = this.map.getBounds()
+        var west = mapframe.getWest()
+        var east = mapframe.getEast()
+        var north = mapframe.getNorth()
+        var south = mapframe.getSouth()
+        console.log([west,east,north,south])
+        
+      },
     //Map上のどこかををクリックした時に起動する関数
       mapClickEvent(event){
         if(this.flag){
@@ -52,13 +88,13 @@ export default {
 
       //Markerがクリックされた時に起動する関数
       markerClickEvent(event){
-        console.log(event.latlng);//debug
-        console.log(this.nowType)//debug
+        alert(event.target.spot_type);
+        //スポット詳細のダイアログを出す
       },
 
       //現在地アイコンを更新する関数(予定)
       locationMarker(){
-        //this.locMarker = L.marker(location.latlng,{icon:this.currentLocationIcon}).addTo(this.map)//debug
+        this.map.locate({ setView: true, zoom: this.zoom});
       },
 
       //スポット登録関数
@@ -81,21 +117,23 @@ export default {
 
       //マップの中心を現在地に更新する関数
       setNowLocation: function(){
-        this.map.locate({ setView: true,maxZoom: 18});
+        this.map.locate({ setView: true, zoom: this.zoom});
         //現在地マーカーを設置
-        //this.map.on("locationfound",this.locationMarker);
       },
 
       //検索ジャンルを更新するメソッド(TypeButton.vueから呼ばれる)
-      updateType(type){
-        this.nowType = type
-        console.log(this.nowType)//debug
+      updateType: async function(type){
+        this.markers.clearLayers();
+        this.marker = [];
+        this.nowType = type;
+        await this.showSpot(type);
       },
     },
 
-    mounted: function() {
+    //画面読み込み時の関数
+    mounted:async function() {
       //Mapオブジェクトの生成
-      this.map = L.map('map',{zoom: this.zoom})
+      this.map = L.map('map',{zoom: 10,maxZoom: 15})
       .addLayer(
         L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
           attribution:
@@ -104,14 +142,13 @@ export default {
       );
 
       //初期位置を現在地に
-      this.map.locate({ setView: true,maxZoom: 18});
+      this.map.locate({ setView: true, zoom:this.zoom});
 
       //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
 
-      //マーカーの登録とマーカークリック時に起動する関数の登録
-      this.marker = L.marker([33.3623,130.2505],{ title: "sample spot"}).addTo(this.map).on(
-        'click', this.markerClickEvent);
+      //spot表示
+      this.showSpot(this.nowType);
     }, 
     //現在地追跡のために利用(予定)
     watch: {

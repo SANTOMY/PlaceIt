@@ -71,12 +71,8 @@
 
                     <v-row justify="center">
                         <v-col cols="5">
-                            <v-btn 
-                                class="px-10 py-6"
-                                block
-                            >
-                                <h2>Add Review</h2>
-                            </v-btn>
+
+                            <spot-review-register />
                         </v-col>
                     </v-row>
 
@@ -91,12 +87,14 @@
 import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
+import spotReviewRegister from './SpotReviewRegister.vue'
 
 export default {
     components: {
         starRating,
         spotReviewList,
-        spotTypeIcon
+        spotTypeIcon,
+        spotReviewRegister
     },
     data: function() {
         return {
@@ -159,7 +157,10 @@ export default {
             else this.now_review_page = next_page
         }
     },
-
+    mounted(){
+        this.spot_data.name = this.$route.query.spot_name;
+        this.spot_data.types = [this.$route.query.spot_type];
+    },
     computed: {
         //現在のページに表示するレビューを返す
         sliced_reviews: function() {
