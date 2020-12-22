@@ -1,12 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+const User = require("./user");
 
 Vue.use(Vuex);
 
-
 const state = {
-    userData: null
+    userData: User
 }
 
 const mutations =  {
