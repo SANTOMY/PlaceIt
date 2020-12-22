@@ -5,20 +5,27 @@
     >
         <!-- ダイアログを開くボタン -->
         <template v-slot:activator="{ on, attrs }">
-            <v-btn 
-                class="px-5 py-6"
-                block
-                v-bind="attrs"
-                v-on="on"
-            >
-                <h3>アイコン画像を変更</h3>
-            </v-btn>
+            <v-container>
+                <v-row justify="center">
+                    <v-col cols="6">
+                        <v-btn 
+                            class="px-5 py-6"
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                            <h3>アイコン画像を変更</h3>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-container>
+            
         </template>
 
         <v-card class="px-5" v-if='croppedImage === ""'>
             <v-container>
                 <v-row>
                     <v-col>
+                        <h1 class="mb-5">アイコン画像を変更</h1>
                         <v-form>
                             <v-file-input
                                 v-model="uploadedFile"
