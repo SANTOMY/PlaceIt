@@ -15,7 +15,7 @@
             </v-btn>
         </template>
 
-        <v-card class="px-5">
+        <v-card class="px-5" v-if='croppedImage === ""'>
             <v-container>
                 <v-row>
                     <v-col>
@@ -55,12 +55,58 @@
                 </v-row>               
                 <v-row justify="center">
                     <v-col cols="5">
-                        <v-btn block class="pa-5" v-if="rawImage !== ''"><h3>切り取る</h3></v-btn>
+                        <v-btn 
+                            block
+                            class="pa-5" 
+                            v-if="rawImage !== ''"
+                            @click="cropImage"
+                        >
+                            <h3>切り取る</h3>
+                        </v-btn>
+                        
                     </v-col>
                 </v-row>
             </v-container>
-
         </v-card>
+
+        <v-card class="px-5" v-if='croppedImage !== ""'>
+            <v-container>
+                <v-row justify="center">
+                    <v-col cols="6">
+                        <h1>これに設定しますか？</h1>
+                    </v-col>
+                </v-row>
+                <v-row justify="center">
+                    <v-col cols="5">
+                        <v-img 
+                            :src="croppedImage" 
+                            aspect-ratio="1"
+                        />
+                    </v-col>
+                </v-row>
+                <v-row justify="center">
+                    <v-col cols="5">
+                        <v-btn 
+                            block
+                            class="pa-5"
+                            @click="cancelCrop()" 
+                        >
+                            <h3>やり直す</h3>
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="5">
+                        <v-btn 
+                            block
+                            class="pa-5" 
+                            @click="submitImage()"
+                        >
+                            <h3>設定する</h3>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card>
+
     </v-dialog>
 </template>
 
@@ -75,25 +121,46 @@ export default {
         return {
             showDialog: false,
             uploadedFile: "",
-            rawImage: ""
+            rawImage: "",
+            croppedImage: ""
         }
     },
     methods: {
+        cropImage: function() {
+            const raw_size_image = this.$refs.cropper.getCroppedCanvas().toDataURL();
+            this.resizeImage(raw_size_image);
+        },
+        resizeImage: function(base64image) {       
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const AVATAR_SIZE = 200;
+            canvas.width = AVATAR_SIZE;
+            canvas.height = AVATAR_SIZE;
+            var image = new Image();
+            image.crossOrigin = "Anonymous";
+            image.onload = (event) => {
+                console.log(event)
+                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, AVATAR_SIZE, AVATAR_SIZE);
+                this.croppedImage = canvas.toDataURL('image/jpeg');
+            };
+            image.src = base64image;
+        },
+        cancelCrop: function() {
+            this.croppedImage = ""
+        },
+        submitImage: function() {
+            console.log(this.croppedImage); //アイコン画像登録
+        }
     },
+
     watch: {
         uploadedFile: function() {
-            console.log("11111")
             this.rawImage = "";
-            
             const reader = new FileReader()         //ファイルリーダを用意
             reader.onload = (e) => {                //読み込みが完了したら配列に追加
                 this.rawImage = e.target.result;
-
-                console.log("22222")
-                
             };
             reader.readAsDataURL(this.uploadedFile)    
-            
         }
     }
 }
