@@ -2,26 +2,23 @@
     <v-icon
         class="mr-5"
         large
-        color="gray"
+        :color="iconColor"
     >
         {{ type_dict[type] }}
     </v-icon>    
 </template>
 
 <script>
+import {getSpotTypeDict} from "./SpotTypeFunction"
 export default {
     props: {
-        type: String
+        type: String,
+        iconColor: String // spot iconのカラー指定
     },
-
     data: function() {
         return {
-            type_dict: {
-                restaurant: "mdi-silverware-fork-knife",
-                travel: "mdi-bag-suitcase",
-                shopping: "mdi-cart"
-            }
+            type_dict: getSpotTypeDict('icon')
         }
-    }    
+    }  
 }
 </script>
