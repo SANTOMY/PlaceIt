@@ -62,7 +62,7 @@
                         <v-col cols="8">
                             <v-container class="max-width">
                                 <v-pagination                                
-                                    @input="getNumber"
+                                    @input="change_page"
                                     v-model="now_review_page"
                                     :length="num_page"
                                     :total-visible="7"
@@ -268,7 +268,7 @@ export default {
         let scores = this.reviews.map(item => item.score)
         this.spot_data.rating = this.ave(scores)
         this.spot_data.rating5[0] = this.spot_data.rating
-        console.log(this.spot_data.rating5) // Debug
+        // console.log(this.spot_data.rating5) // Debug
         this.num_page = Math.ceil(this.reviews.length/this.review_num_per_page) // 総ページ数
     },
     methods: {
@@ -278,24 +278,20 @@ export default {
         //     if(next_page < 1 || next_page > max_page) return
         //     else this.now_review_page = next_page
         // },
-        jump_page: function(page) {
-            return this.now_review_page = page
-        },
-        getNumber: function(number){
+        change_page: function(number){
             console.log(number)
-            this.jump_page(number)
+            return this.now_review_page = number
         },
-        sum: function(arr){
+        sum: function(arr){ // 配列の要素の合計を計算
             var sum = 0;
             arr.forEach(element => {
                 sum += element;
             });
             return sum
         },
-        ave: function(arr){
+        ave: function(arr){ // 配列の要素の平均を計算
             return (this.sum(arr))/arr.length
         }
-
     },
 
     computed: {
