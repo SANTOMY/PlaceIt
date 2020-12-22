@@ -4,10 +4,10 @@
     >
         <v-layout column style="height: 300px">      
             <v-flex style="overflow: auto">
-                <spot-review v-for="review in reviews" :key="review"
-                    :user_name="review.user_name"
-                    :comment="review.comment"
-                    :score="review.score"
+                <spot-review v-for="review in reviews" :key="review.id"
+                    :user_name="review.content.user_name"
+                    :comment="review.content.comment"
+                    :score="review.content.score"
                 />
             </v-flex>
         </v-layout>
