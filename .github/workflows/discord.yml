@@ -2,7 +2,7 @@ name: Discord Message Notify
 
 on:
   push:
-    branches: [ github-actions ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -16,4 +16,4 @@ jobs:
         color: "#48f442"
         username: "Develop update bot"
         args: ${{ github.actor }} updated develop branch.
-        avatar_url: ${{github.event.sender.avatar_url}}
+        avatar_url: ${{ github.event.sender.avatar_url }}
