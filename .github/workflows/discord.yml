@@ -15,5 +15,5 @@ jobs:
         webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
         color: "#48f442"
         username: "Develop update bot"
-        args: The ${{ github.event_name }} event triggered.
-        avatar_url: https://github.com/SANTOMY/PlaceIt/blob/develop/front/src/assets/KFC.jpg
+        args: ${{ github.actor }} updated develop branch.
+        avatar_url: ${{github.event.sender.avatar_url}}
