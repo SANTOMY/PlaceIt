@@ -61,6 +61,6 @@ module.exports.getReviewBySpotId = async function(spotId){
         client.release();
         error(fileLabel,"ERROR OBJECT:" + util.inspect(err,{showHidden: false, depth: null}));
         error(fileLabel,"Error while getting review. " + err);
-        return {"success":false, "review":err};      
+        return {"success":false, "error":err};      
     });
 }
