@@ -13,8 +13,8 @@ const utility = require('../utility');
  */
 async function saveUser(newUser) {
     const query = {
-        text: 'INSERT INTO users.users(id, username, email, password) VALUES($1, $2, $3, $4)',
-        values: [newUser.userId, newUser.userName, newUser.email, newUser.password]
+        text: 'INSERT INTO users.users(id, username, email, password, university) VALUES($1, $2, $3, $4, $5)',
+        values: [newUser.userId, newUser.userName, newUser.email, newUser.password, newUser.university]
     };
 
     const client = await pool.connect();
