@@ -20,7 +20,7 @@
                 </v-layout>
             </v-col>
 <!-----------------------特定のユーザーが投稿したスポットを取得するテスト------------->
-            <v-col>
+            <!-- <v-col>
                 スポットの取得テスト1
                 <h1>{{ user.username }}</h1>
                 
@@ -30,7 +30,7 @@
                     >
                     スポットの取得テスト2
                     </v-btn> 
-            </v-col>
+            </v-col> -->
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
                 ユーザー名
@@ -60,7 +60,7 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
-import {getSpot} from '../../routes/spotRequest'
+// import {getSpot} from '../../routes/spotRequest'
 
 export default {
 
@@ -134,7 +134,7 @@ export default {
                 this.user.username = result[0].username
                 this.user.user_id = result[0].id
         })
-        this.getSpotByUserId( "aaa" )
+        // this.getSpotByUserId( "aaa" )
     },
     methods:  {
         editProfile: function() {
@@ -143,17 +143,17 @@ export default {
         closeUserEdit: function(){          
             this.dialogEdit = false
         },
-        getSpotByUserId: function(user_id){
-            getSpot('', '', '', user_id).then(result => {
-                console.log( result );
-                for( var s in result.spots ){
-                    var name = result.spots[ s ].spot_name;
-                    var src = require( "@/assets/Mac.jpg" );
-                    var good = 1024;
-                    this.my_spot.push( { "name": name, "src": src, "good": good } );
-                }    
-            })
-        }
+        // getSpotByUserId: function(user_id){
+        //     getSpot('', '', '', user_id).then(result => {
+        //         console.log( result );
+        //         for( var s in result.spots ){
+        //             var name = result.spots[ s ].spot_name;
+        //             var src = require( "@/assets/Mac.jpg" );
+        //             var good = 1024;
+        //             this.my_spot.push( { "name": name, "src": src, "good": good } );
+        //         }    
+        //     })
+        // }
     }
 };
 </script>
