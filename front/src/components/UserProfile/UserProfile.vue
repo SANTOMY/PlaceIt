@@ -19,6 +19,18 @@
                     </v-avatar>
                 </v-layout>
             </v-col>
+<!-----------------------特定のユーザーが投稿したスポットを取得するテスト------------->
+            <v-col>
+                スポットの取得テスト1
+                <h1>{{ user.username }}</h1>
+                
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        @click="getSpotByUserId( 'aaa' )"
+                    >
+                    スポットの取得テスト2
+                    </v-btn> 
+            </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
                 ユーザー名
@@ -37,6 +49,7 @@
         <SpotListCard 
             v-bind:spot_list="spot"
             v-bind:user_list="user"
+            v-bind:my_spot_list="spot_to_show"
             color="green"
         ></SpotListCard>
     </v-container>
@@ -47,6 +60,7 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
+import {getSpot} from '../../routes/spotRequest'
 
 export default {
 
@@ -59,7 +73,8 @@ export default {
             editer: false,
             dialogEdit: false,
             user: { // ユーザー仮データ
-                username: this.$store.state.userData.userName, 
+                user_id: 'default_id',
+                username: this.$store.state.userData.userName,
                 email: this.$store.state.userData.email,
                 password: this.$store.state.userData.password,
                 src: require('@/assets/pose_kuyashii_man.png')
@@ -69,7 +84,7 @@ export default {
                     name: 'マクドナルド',
                     spotId: '000000',
                     type: 'restaurant',
-                    user_id: '000000',
+                    user_id: '2bedc185-298d-49c4-b1e7-20897646dd92',
                     username: 'asada',
                     good: 123,
                     src: require("@/assets/Mac.jpg"),
@@ -103,7 +118,26 @@ export default {
                         { user_id:'000002' },
                         { user_id:'000000' }
                     ]
-                }      
+                },
+                {
+                    name: 'Lotteria',
+                    spotId: '000003',
+                    type: 'restaurant',
+                    user_id: '000003',
+                    username: 'nakamura',
+                    good: 99,
+                    src: require('@/assets/lotteria.png'), 
+                    review:[
+                        { user_id:'000002' },
+                        { user_id:'000000' }
+                    ]
+                } 
+            ],
+            my_spot: [
+                    // required attribute: name, src, good
+            ],
+            spot_to_show: [
+
             ]
         }
     },
@@ -111,10 +145,14 @@ export default {
         // call getUser(email) from .vue file:
         getUser(this.user.email)
             .then(result => {
+                console.log(result[0])
                 console.log(result[0].username)
                 this.user.username = result[0].username
-                // this.user.password = result[0].password
-        })  
+                this.user.user_id = result[0].id
+        })
+        this.getSpotByUserId( "aaa" ).then( () =>{
+            this.getLatestSpots( 0, 28 )
+        })
     },
     methods:  {
         editProfile: function() {
@@ -123,6 +161,25 @@ export default {
         closeUserEdit: function(){          
             this.dialogEdit = false
         },
+        getSpotByUserId: async function(user_id){
+            return getSpot('', '', '', user_id).then(result => {
+                console.log( result );
+                for( var s in result.spots ){
+                    var name = result.spots[ s ].spot_name;
+                    var src = require( "@/assets/Mac.jpg" );
+                    if( Math.random() >= 0.5 ){
+                        src = require('@/assets/mos.png');
+                    }
+                    var good = 1024;
+                    this.my_spot.push( { "name": name, "src": src, "good": good } );
+                }
+                return true   
+            })
+        },
+        getLatestSpots: function( left = 0, right ){
+            console.log( "latestSpots", ( this.my_spot ).slice( left, right ) )
+            this.spot_to_show = ( this.my_spot ).slice( left, right )
+        }
     }
 };
 </script>

@@ -1,6 +1,9 @@
 <template>
   <!-- カードリストの大枠 -->
-  <v-card v-bind:class="color + ' lighten-4'" >
+  <v-card
+    :class="color + ' lighten-4'" 
+    height="500px"
+  >
     
     <!-- カードのヘッダー部分 -->
     <v-toolbar
@@ -25,6 +28,7 @@
       v-model="drawer"
       absolute
       temporary
+      height="145px"
     >
       <v-list
         nav
@@ -90,8 +94,48 @@
             </v-card-actions>
           </v-card>
         
-        </v-col>
+        </v-col> 
       </v-row>
+<!----------------------スポットのページ送り------------------------------------------------->
+      <v-card-actions>
+        <v-row class="mt-1">
+            <v-icon
+                class="ml-8"
+                large
+                @click="changeSpotPage( 3, ahead = false )"
+            >
+                mdi-chevron-left
+            </v-icon>
+            <v-icon
+                class="ml-6"
+                large
+                @click="changeSpotPage( 3 )"
+            >
+                mdi-chevron-right
+            </v-icon>
+        </v-row>
+      </v-card-actions>
+
+<!-----スポットのページ変更------------------------------>
+<v-col>
+  <v-row justify="center">
+      <v-col cols="8">
+          <v-container class="max-width">
+              <v-pagination                                
+                  @input="getNumber"
+                  v-model="now_page"
+                  :length="num_page"
+                  :total-visible="7"
+              ></v-pagination>
+          </v-container>
+      </v-col>
+  </v-row>
+  <v-row justify="center">
+      <v-col cols="5">
+      </v-col>
+  </v-row>
+</v-col>
+
     </v-container>
   
   </v-card>  
@@ -104,6 +148,7 @@ export default {
   props: {
     color: String,
     spot_list: null,
+    my_spot_list: null,
     user_list: null
   },
 
@@ -115,32 +160,45 @@ export default {
         { title: 'いいね！したスポット', icon: 'mdi-home-city' },
         { title: '作成スポット', icon: 'mdi-account' },
         { title: 'おすすめスポット', icon: 'mdi-account-group-outline' },
-    ]
+    ],
+    left: 0,
+    right: 3,
+    now_page: 0,
+    num_per_page: 3,
+    num_page: 10,
+    num_page_array: [ 10, 10, 10 ]
   }),
   mounted() {
     this.spot = this.spot_list
     this.user = this.user_list
+    this.ChangeCategory( this.select )
   },
   methods:  {
-    ChangeCategory: function(i) {
-      console.log(i) // どれを選択
+    getNumber: function(number){
+      console.log(number)
+      this.jumpSpotPage(number)
+    },
+    ChangeCategory: function( i ) {
+      console.log( "ChangeCategory is called. ( left, right ): ", this.left, this.right )
+      if( i != this.select ){
+        this.left = 0
+        this.right = this.num_per_page
+        this.now_page = 1
+      }
       this.select = i
+      this.num_page = this.num_page_array[ this.select ]
       this.spot = [];
       if(i==0){
         this.GoodSpotSort()
       }else if(i==1){
         this.CreatedSpotSort()
       }else if(i==2){
-        this.spot = this.spot_list
+        this.RecommendedSpotSort()
       }
     },
     CreatedSpotSort: function () { // 作ったスポットを表示する関数 
-      let j = 0
-      for (let i = 0; i < this.spot_list.length; i++){
-        if (this.spot_list[i].user_id==this.user.user_id){
-          this.spot[j] = this.spot_list[i]
-          j++;
-        }
+      for( let i = this.left; i < this.right; i++ ){
+        this.spot[ i - this.left ] = this.my_spot_list[ i ]
       }
     },
     GoodSpotSort: function () { // いいね！したスポットを表示する関数
@@ -155,12 +213,63 @@ export default {
         }
       }
     },
+    RecommendedSpotSort: function () { // おすすめスポットを表示する関数
+      for( let i = this.left; i < this.right; i++ ){
+        this.spot[ i - this.left ] = this.spot_list[ i ]
+      }
+    },
     spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
       console.log(this.spot_list[value].spotId) // Debug
       this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
     },
+    changeSpotPage: function( diff, ahead = true ){
+      let spot_num
+      if( this.select == 0 ){
+        spot_num = this.spot_list.length
+      }else if( this.select == 1 ){
+        spot_num = this.my_spot_list.length
+      }else{
+        spot_num = this.spot_list.length
+      }
 
+      if( ahead == true ){
+        if( this.right + diff <= spot_num ){
+          this.left = this.left + diff
+          this.right = this.right + diff
+        }else{
+          this.left = spot_num - ( this.right - this.left )
+          this.right = spot_num
+        }
+      }else{
+        if( this.left - diff >= 0 ){
+          this.left = this.left - diff
+          this.right = this.right - diff
+        }else{
+          this.right = this.right - this.left
+          this.left = 0
+        }
+      }
+      this.ChangeCategory( this.select )
+    },
+    jumpSpotPage: function( pageToJump ){
+      console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
+      this.now_page = pageToJump
+      this.left = ( this.now_page - 1 ) * this.num_per_page
+      this.right = this.left + this.num_per_page
+      if( this.right > this.spot_num() ){
+        this.right = this.spot_num()
+      }
+      this.ChangeCategory( this.select )
+    },
+    spot_num: function(){
+      if( this.select == 0 ){
+        return this.spot_list.length
+      }else if( this.select == 1 ){
+        return this.my_spot_list.length
+      }else{
+        return this.spot_list.length
+      }
+    }
   }
-
 };
 </script>
