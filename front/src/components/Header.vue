@@ -53,6 +53,23 @@
         </v-menu>
 
         <v-btn
+            to="/signup"
+            class="px-10 mx-2"
+            text
+            v-if="!isLoggedIn"
+        >
+            <v-icon
+                left
+                large
+                color="gray"
+                class="px-5"
+            >
+                mdi-account-plus
+            </v-icon>
+            Sign Up
+        </v-btn>
+        
+        <v-btn
             to="/login"
             class="px-10 mx-2"
             text
@@ -68,6 +85,7 @@
             </v-icon>
             Login
         </v-btn>
+
     </v-app-bar>
 </template>
 

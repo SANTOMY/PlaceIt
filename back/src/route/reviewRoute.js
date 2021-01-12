@@ -4,5 +4,6 @@ const ReviewController = require('./reviewController');
 const reviewController = new ReviewController();
 
 router.post("/saveReview",reviewController.saveReview);
+router.get("/getReviewBySpotId/:spotId" ,reviewController.getReviewBySpotId)
 
 module.exports = router;
