@@ -25,9 +25,6 @@
                 <v-card-actions>
                     <v-btn @click="login">ログイン</v-btn>
                 </v-card-actions>
-                <v-card-actions>
-                    <v-btn @click="logout">ログアウト</v-btn>
-                </v-card-actions>
 
                 <v-alert
                     dense
@@ -77,7 +74,7 @@ export default {
                 .then(res => {
                     console.log(res)
                     if (res.success) {
-                        const userData = {"id":res.data.id, "email":res.data.email, "password":res.data.password, "username":res.data.username}
+                        const userData = {"id":res.data.id, "email":res.data.email, "username":res.data.username}
                         this.$store.commit("login", userData)
                         this.$router.push('/map')
                     } else {
@@ -85,13 +82,7 @@ export default {
                         this.errorMessage = res.data 
                     }
                 })
-        },
-
-        logout() { //ほんとはいらないけどデバッグ用として...
-            this.$store.commit("logout")
-            this.$router.push('/map')
         }
     }
-    
 }
 </script>

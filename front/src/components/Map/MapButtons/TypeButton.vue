@@ -38,33 +38,30 @@
                 link
                 >
                 <v-list-item-title
-                    v-on:click="changeSearchType(type.title)"
-                    >{{ type.title }}</v-list-item-title>
+                    v-on:click="changeSearchType(type)"
+                    >{{ type }}</v-list-item-title>
             </v-list-item>
         </v-list>
     </v-menu>
 </template>
 
 <script>
+import {getSpotTypeDict} from "../../share/SpotTypeFunction"
 export default {
     data: function(){
         return {
-        nowType:'reset',//スポット検索の種別
-        types: [  {title:"reset"},
-                  {title:"restaurant"},
-                  {title:"travel"},
-                  {title:"shopping"},
-                ],//spot種別一覧
-        featureIcons: {
-          restaurant: "mdi-silverware-fork-knife",
-          travel: "mdi-bag-suitcase",
-          shopping: "mdi-cart",
-          reset:"mdi-map-marker-circle"
-        },//iconたち
+            nowType:'reset',//スポット検索の種別
+            types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
+            featureIcons: getSpotTypeDict('icon'), // iconを格納するオブジェクト -> mountedでデータ追加
+            typeNameList: getSpotTypeDict('type') //spot type object のkey配列作成 -> mountedで'reset'追加
         }
     },
     created(){
         this.changeSearchType
+    },
+    mounted(){
+        this.types.push(... this.typeNameList ) // typesにtype name listを追加
+        this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
     },
     methods:{
         //選ばれたジャンルタイプをMapに送信
@@ -72,6 +69,7 @@ export default {
             this.nowType = type;
             this.$emit('update-type',this.nowType);
         },
+        
     }
 }
 </script>

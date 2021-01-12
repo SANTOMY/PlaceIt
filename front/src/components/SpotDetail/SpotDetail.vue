@@ -1,43 +1,59 @@
 <template>
-    <v-container>
+    <v-dialog
+      v-model="showDialog"
+      width="1200"
+      persistent
+    >
         <v-card>
-            <!-- 写真 -->
-            <v-carousel
-                cycle
-                hide-delimiter-background
-                show-arrows-on-hover
-            >
-                <v-carousel-item
-                    v-for="photo in spot_data.photos"
-                    :key="photo"
-                    :src="photo"
-                />
-            </v-carousel>
-            <v-row
-                justify="center"
-                class="mx-10
-                mt-3 mb-5"
-            >
-                <!-- スポット名 -->
-                <h1 class="mr-10"> {{ spot_data.name }} </h1>
+            <!-- ローディング画面 -->
+            <v-skeleton-loader
+                v-if="isLoading"
+                type="image, article, article"
+                class="mx-auto"
+            ></v-skeleton-loader>
+            <v-container v-if="!isLoading">
+                <!-- 写真 -->
+                <v-carousel
+                    cycle
+                    hide-delimiter-background
+                    show-arrows-on-hover
+                >
+                    <v-carousel-item
+                        :src="photo"
+                    />
+                </v-carousel>
+                <v-row
+                    justify="center"
+                    class="mx-10
+                    mt-3 mb-5"
+                >
+                    <!-- スポット名 -->
+                    <h1 class="mr-10"> {{ spotData.spot_name }} </h1>
 
-                <!-- スポットタイプ -->
-                <spot-type-icon v-for="type in spot_data.types" :key="type"
-                    :type="type"
-                    class="mr-5"
-                    large
-                    color="gray"
-                />
+                    <!-- スポットタイプ --> 
+                    <!-- <spot-type-icon v-for="type in spotData.types" :key="type"
+                        :type="type"
+                        class="mr-5"
+                        large
+                        color="gray"        複数タイプに対応していないので一旦コメントアウト
+                    /> -->
+                    <spot-type-icon
+                        :type="spotData.spot_type"
+                        class="mr-5"
+                        large
+                        color="gray"
+                    />
 
-            </v-row>
+
+                </v-row>
 
             <v-row>
                 <!-- スポットの評価 -->
                 <v-col>
                     <v-row justify="center">
                         <radarChartDisp
-                            :type="this.spot_data.types[0]"
-                            :reviewRating="spot_data.rating5"
+                            :type="this.spotData.spot_type"
+                            :reviewRating="rating5"
                         />
                     </v-row>
                 </v-col>
@@ -45,20 +61,23 @@
                 <!-- レビュー 一覧 -->
                 <v-col>
                     <v-row justify="center">
+                        <!-- 星評価平均 -->
                         平均
                         <star-rating
-                            v-model="spot_data.rating"
+                            v-model="rating"
                             read-only
                             :increment=0.1
                         >
                         </star-rating>
                     </v-row>
                     <v-row justify="center">
+                        <!-- レビューリスト -->
                         <v-col cols="11">
                             <spot-review-list :reviews="sliced_reviews" />
                         </v-col>
                     </v-row>
                     <v-row justify="center">
+                        <!-- レビューリストのページ遷移をするやつ -->
                         <v-col cols="8">
                             <v-container class="max-width">
                                 <v-pagination                                
@@ -71,17 +90,28 @@
                         </v-col>
                     </v-row>
                     <v-row justify="center">
+                        <!-- レビュー投稿ボタン -->
                         <v-col cols="5">
-
-                            <spot-review-register />
+                            <spot-review-register  
+                                v-if="this.$store.state.userData != null"
+                                :spot_id="spotData.spot_id" 
+                                @submit="updateDetail()"
+                            />
                         </v-col>
                     </v-row>
 
                 </v-col>
             </v-row>
+            <v-row>
+                <v-col>
+                    <v-btn block @click="closeDialog()">
+                        <h3>Close</h3>
+                    </v-btn>
+                </v-col>
+            </v-row>
+            </v-container>
         </v-card>
-    </v-container>
-
+    </v-dialog>
 </template>
 
 <script>
@@ -90,6 +120,7 @@ import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
 import radarChartDisp from '../share/RadarChartDisp'
+import {getSpot} from '../../routes/spotRequest'
 
 export default {
     components: {
@@ -101,175 +132,25 @@ export default {
     },
     data: function() {
         return {
-            spot_data: {
-                name: "ラーメン屋",
-                types: ["restaurant"],
-                photos: [
-                    require("@/assets/Hakataramen.jpg"),
-                    // require("@/assets/Hakataramen.jpg"),
-                    // require("@/assets/Hakataramen.jpg"),
-                ],
-                rating:[],
-                rating5: [0,1,1,1,1]
-            },
-            reviews: [
-                {
-                    user_name: "asada",
-                    comment: "ラーメンが美味しかったです。店員さんが優しくて替え玉一杯おごってくれました。また今度来ようと思います。",
-                    score: 5
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-                {
-                    user_name: "hoge",
-                    comment: "うまい",
-                    score: 3
-                },
-
-                {
-                    user_name: "piyo1",
-                    comment: "",
-                    score: 2
-                },
-                {
-                    user_name: "piyo2",
-                    comment: "",
-                    score: 1
-                },
-                {
-                    user_name: "piyo3",
-                    comment: "",
-                    score: 1
-                }
-            ],
-            review_num_per_page: 3, //1ページあたりの表示するレビュー数
-            now_review_page: 1,
+            spotData: {spot_name:"", spot_type:""},
+            reviews: [],
+            rating: 5,
+            rating5: [0,1,1,1,1],
+            photo: require("@/assets/Hakataramen.jpg"),    //仮
             num_page: 0,
+            REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
+            now_review_page: 1,
+
             pos: {
                 lat: 0,
                 lon: 0
-            }
+            },
+            isLoading: false
         }
     },
-    created(){
-        let scores = this.reviews.map(item => item.score)
-        this.spot_data.rating = this.ave(scores)
-        this.spot_data.rating5[0] = this.spot_data.rating
-        // console.log(this.spot_data.rating5) // Debug
-        this.num_page = Math.ceil(this.reviews.length/this.review_num_per_page) // 総ページ数
+    props: {
+        spot_id: String,
+        showDialog: Boolean
     },
     methods: {
         // change_page: function(dir) {
@@ -291,17 +172,51 @@ export default {
         },
         ave: function(arr){ // 配列の要素の平均を計算
             return (this.sum(arr))/arr.length
+        },
+        closeDialog: function() {
+            this.$emit("close");
+        },
+        updateDetail: function() {
+            this.isLoading = true;      // データを取得している間はローディング画面を表示する
+            getSpot(this.spot_id, "", "", "")
+                .then(res => {
+                    this.spotData = res.spots[0];
+                    this.reviews = res.review;
+                    this.isLoading = false;
+                    this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)))
+                    this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
+                })
+        },
+        calcRating: function(scores) {
+            var average = 0;
+            scores.forEach(score => average += score);
+            average /= scores.length;
+            return average;
         }
     },
 
     computed: {
         //現在のページに表示するレビューを返す
         sliced_reviews: function() {
-            const start = (this.now_review_page-1) * this.review_num_per_page;
-            const end = start + this.review_num_per_page;
-            return this.reviews.slice(start, end)
+            const start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
+            const end = start + this.REVIEW_NUM_PER_PAGE;
+            const raw_reviews = this.reviews.slice(start, end)
+            // レビューごとにidを振っておかないとv-forでワーニング出るので対応
+            var enumerated_reviews = []
+            for(var i = 0; i < raw_reviews.length; i++) {
+                enumerated_reviews.push({id:i, content:raw_reviews[i]});
+            }
+            return enumerated_reviews;
+        },
+    },
+
+    watch: {
+        showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
+            if(!this.showDialog) return;
+            console.log(this.spot_id)
+            this.updateDetail()
+            this.now_review_page = 1;
         }
     }
-
 }
 </script>

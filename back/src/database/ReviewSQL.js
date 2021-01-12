@@ -7,7 +7,6 @@ const fileLabel = "ReviewSQL"
 const Review = require('../objects/review');
 const util = require('util');
 const utility = require('../utility');
-const { isEmpty } = require('../utility');
 
 module.exports.saveReview = async function(newReview){
     const checkQuery = {
@@ -19,17 +18,17 @@ module.exports.saveReview = async function(newReview){
         values: [newReview.reviewId, newReview.spotId, newReview.comment, newReview.score, newReview.userId]
     };
 
-    if(utility.isEmpty(newReview.spotName)){
+    if(utility.isEmpty(newReview.spotId)){
         error(fileLabel,"ERROR OBJECT:" + util.inspect(newReview.spotId,{showHidden: false, depth: null}));
         error(fileLabel,"Spot name is empty or undefined" + newReview.spotName);
-        return {"success":false,"data":"Spot Id is empty or undefined"};
+        return {"success":false,"data":"Spot Name is empty or undefined"};
     }
     const client = await pool.connect();
     return client.query(checkQuery)
     .then( nullchecker =>{
          if(nullchecker.rowCount == 0){
             client.release();
-            return {"success":false,"data":"This spot does no exist: " + newSpot.spotName};
+            return {"success":false,"data":"This spot does not exist: " + newSpot.spotName};
         }
         return client.query(query)
         .then(() =>{
@@ -55,13 +54,13 @@ module.exports.getReviewBySpotId = async function(spotId){
     return client.query(query).then( result => {
         client.release();
         if (result.rowCount == 0)
-            return {"success":false, "data":"No reviews exist for this spot"};
+            return {"success":false, "review":"No reviews exist for this spot"};
         info(fileLabel,"get review by spot_id: " + util.inspect(spotId,{showHidden: false, depth: null}));
-        return {"success":true, "data":result.rows};
+        return {"success":true, "review":result.rows};
     }).catch((err)=>{
         client.release();
         error(fileLabel,"ERROR OBJECT:" + util.inspect(err,{showHidden: false, depth: null}));
         error(fileLabel,"Error while getting review. " + err);
-        return {"success":false, "data":err};      
+        return {"success":false, "error":err};      
     });
 }

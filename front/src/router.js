@@ -4,7 +4,6 @@ import Signup from './components/Signup/Signup.vue'
 import Login from './components/Login/Login.vue'
 import UserProfile from './components/UserProfile/UserProfile.vue'
 import Map from './components/Map/Map.vue'
-import SpotDetail from './components/SpotDetail/SpotDetail.vue'
 import SpotRegister from './components/SpotRegister/SpotRegister.vue'
 
 
@@ -32,11 +31,6 @@ export default new Router({
         path: '/map',
         name: 'map',
         component: Map
-    },
-    {
-        path: '/spot',
-        name: 'spot',
-        component: SpotDetail
     },
     {
         path: '/register',
