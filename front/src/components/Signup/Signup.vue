@@ -44,6 +44,7 @@
 
 <script>
 import {register} from '../../routes/userRequest'
+const User = require("../../store/user");
 export default {
 
     data: function() {
@@ -80,7 +81,9 @@ export default {
             register(this.username,this.email,this.password)
                 .then(res => {
                     console.log(res)
-                    const userData = {"id":res.userId, "email":res.email, "username":res.userName}
+                    //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
+                    const userData = new User(res.userId, res.userName, res.email, null)
+                    console.log(userData)
                     this.$store.commit("login", userData)
                     this.$router.push('/map')
                 });
