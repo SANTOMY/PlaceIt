@@ -59,7 +59,7 @@ export default {
             editer: false,
             dialogEdit: false,
             user: { // ユーザー仮データ
-                username: this.$store.state.userData.name,
+                username: this.$store.state.userData.userName, 
                 email: this.$store.state.userData.email,
                 password: this.$store.state.userData.password,
                 src: require('@/assets/pose_kuyashii_man.png')
@@ -111,7 +111,6 @@ export default {
         // call getUser(email) from .vue file:
         getUser(this.user.email)
             .then(result => {
-                console.log(result[0])
                 console.log(result[0].username)
                 this.user.username = result[0].username
                 // this.user.password = result[0].password
