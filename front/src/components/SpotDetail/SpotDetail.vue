@@ -48,7 +48,7 @@
                 </v-row>
 
             <v-row>
-                <!-- スポットの評価 -->
+                <!-- スポットの評価(レーダーチャート) -->
                 <v-col>
                     <v-row justify="center">
                         <radarChartDisp

@@ -4,6 +4,7 @@
 
 <script>
     import RadarChart from './RadarChart.js'
+    import {getSpotTypeDict} from "./SpotTypeFunction"
 
     export default {
         components: {
@@ -15,17 +16,19 @@
         },
         data () {
             return {
-
+                review_dict: getSpotTypeDict('review'),
+                spot_types: getSpotTypeDict('type'),
+                color_dict: getSpotTypeDict('color'),
                 fontColor: {
-                    red: 'rgb(255, 99, 132,0.4)',
-                    orange: 'rgb(255, 159, 64,0.4)',
-                    yellow: 'rgb(255, 205, 86,0.4)',
-                    green: 'rgb(75, 192, 192,0.4)',
-                    blue: 'rgb(54, 162, 235,0.4)',
-                    purple: 'rgb(153, 102, 255,0.4)',
-                    grey: 'rgb(201, 203, 207,0.4)',
+                    // グラフの色
+                    red: 'rgb(255, 99, 132, 0.4)',
+                    orange: 'rgb(255, 159, 64, 0.4)',
+                    yellow: 'rgb(255, 205, 86, 0.4)',
+                    green: 'rgb(75, 192, 192, 0.4)',
+                    blue: 'rgb(54, 162, 235, 0.4)',
+                    purple: 'rgb(153, 102, 255, 0.4)',
+                    grey: 'rgb(201, 203, 207, 0.4)',
                 },
-
                 datacollection: null,
                 options: {
                     scale: {
@@ -64,29 +67,17 @@
         },
         methods: {
             RadarChart (type) {
-
                 this.datacollection = {
+                    labels: this.review_dict[type],
                     datasets: [
                         {
-                            backgroundColor: this.fontColor.red, // グラフの色
+                            backgroundColor: this.fontColor[this.color_dict[type]], // グラフの色
                             borderWidth: 1, // グラフの枠線の太さ
                             label: false,
+    
                             data: this.reviewRating
                         },
                     ],
-                }
-                if(type=='restaurant'){
-                    this.datacollection.labels= ["バリエ―ション", "立地", "価格", "おいしさ", "雰囲気"]
-                    // this.datacollection.datasets[0].label = type
-                    this.datacollection.datasets[0].backgroundColor = this.fontColor.red
-                }else if(type=='travel'){
-                    this.datacollection.labels= ["平均評価", "風景", "行きやすさ", "価格帯", "雰囲気"]
-                    // this.datacollection.datasets[0].label = type
-                    this.datacollection.datasets[0].backgroundColor = this.fontColor.green
-                }else if(type=='shopping'){
-                    this.datacollection.labels= ["平均評価", "品揃え", "立地", "価格", "雰囲気"]
-                    // this.datacollection.datasets[0].label = type
-                    this.datacollection.datasets[0].backgroundColor = this.fontColor.blue
                 }
             },
         },
