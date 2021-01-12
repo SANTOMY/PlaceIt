@@ -222,6 +222,7 @@
 
 <script>
 import {editUser} from '../../routes/userRequest'
+const User = require("../../store/user");
 export default {
     props: {
         user: null
@@ -278,12 +279,13 @@ export default {
                 .then(res => {
                     if (res.success) {
                         // 修正成功時にvuexの中身を書き換える
-                        const userData = {  "id":this.$store.state.userData.id,
-                                            "email":!this.model.edit_email ? this.$store.state.userData.email : this.model.edit_email,
-                                            "password":!this.model.edit_password ? this.$store.state.userData.password : this.model.edit_password,
-                                            "username":!this.model.edit_username ? this.$store.state.userData.username : this.model.edit_username
-                                         }
+                        const userData = new User(this.$store.state.userData.userId,
+                                                !this.model.edit_username ? this.$store.state.userData.userName : this.model.edit_username,
+                                                !this.model.edit_email ? this.$store.state.userData.email : this.model.edit_email,
+                                                null
+                                                )
                         this.$store.commit("login", userData)
+
                         this.reLoad() 
                     } else {
                         this.editSuccessed = false;
