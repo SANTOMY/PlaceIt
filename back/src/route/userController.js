@@ -15,18 +15,18 @@ module.exports = class UserController{
     }
     
     async register(req, res){
-        const {userName, email, password} = req.body;
-        if (utility.isEmpty(userName) || utility.isEmpty(email) || utility.isEmpty(password)){
+        const {userName, email, password, university} = req.body;
+        if (utility.isEmpty(userName) || utility.isEmpty(email) || utility.isEmpty(password) || utility.isEmpty(university)){
             return res.status(400).json({"success": false, "error": "Received undefined credentials"});
         }
         //encrypt password
         let salt = bcrypt.genSaltSync(10);
         const encryptedPassword = bcrypt.hashSync(password ,salt);
-        const user = new User(uuidv4(),userName,email, encryptedPassword);
+        const user = new User(uuidv4(), userName, email, encryptedPassword, university);
         return userSQL.saveUser(user).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Registration for " + email);
-                return res.status(200).json({"success": true, "userId": user.userId, "userName": user.userName, "email": user.email});
+                return res.status(200).json({"success": true, "userId": user.userId, "userName": user.userName, "email": user.email, "university": user.university});
             }else{
                 info(fileLabel, "Unsuccessful Registration for " + email +": " + JSON.stringify(result));
                 return res.status(400).json({"success": false, "error": result.data});
