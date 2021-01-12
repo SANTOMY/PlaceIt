@@ -18,7 +18,7 @@ module.exports.saveReview = async function(newReview){
         values: [newReview.reviewId, newReview.spotId, newReview.comment, newReview.score, newReview.userId]
     };
 
-    if(utility.isEmpty(newReview.spotName)){
+    if(utility.isEmpty(newReview.spotId)){
         error(fileLabel,"ERROR OBJECT:" + util.inspect(newReview.spotId,{showHidden: false, depth: null}));
         error(fileLabel,"Spot name is empty or undefined" + newReview.spotName);
         return {"success":false,"data":"Spot Name is empty or undefined"};

@@ -1,7 +1,7 @@
 import {serverIP} from './requestConfig';
 
 async function saveReview(spotId, comment, score, userId){
-    const url = serverIP + '/spot/saveReview';
+    const url = serverIP + '/review/saveReview';
     try{
         let reponse = await fetch(url,{
             mode: 'cors',

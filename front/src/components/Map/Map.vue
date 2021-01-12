@@ -7,10 +7,8 @@
     <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()" v-if='this.$store.state.userData != null'/>
     <!-- 現在地ボタン -->
     <now-loc-button v-on:click.native="setNowLocation()"/>
-    <!--spot-detail 
-    <spot-detail />
-    -->
-  </div>
+    <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
+  </div>  
 </template>
 
 <script lang='js' src='./Map.js' />
