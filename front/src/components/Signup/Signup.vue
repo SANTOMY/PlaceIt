@@ -27,6 +27,12 @@
                     :counter="32"
                     :rules="passwordRules" />
                     
+                <v-text-field label="所属大学"
+                    prepend-icon="mdi-school"
+                    v-model="university" 
+                    :counter="64"
+                    :rules="universityRules"/>
+
                 <v-card-actions>
                     <v-btn @click="createUser">登録</v-btn>
                 </v-card-actions>
@@ -45,6 +51,7 @@ export default {
             username : '',
             email : '',
             password : '',
+            university: '',
 
             showPassword : false,
             usernameRules: [
@@ -59,6 +66,10 @@ export default {
             passwordRules: [
                 v => !!v || "パスワードは必須項目です。",
                 v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
+            ],
+            universityRules: [
+                v => !!v || "所属大学名は必須項目です。",
+                v => (v && v.length <= 64) || "所属大学名は64文字以内で入力してください。",
             ],
         }
     },
