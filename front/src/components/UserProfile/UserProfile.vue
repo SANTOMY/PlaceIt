@@ -134,7 +134,7 @@ export default {
                 this.user.username = result[0].username
                 this.user.user_id = result[0].id
         })
-        // this.getSpotByUserId( "aaa" )
+        // this.getSpotByUserId( "aaa" ) // ToDo userIDからspot情報を取得
     },
     methods:  {
         editProfile: function() {
@@ -143,6 +143,7 @@ export default {
         closeUserEdit: function(){          
             this.dialogEdit = false
         },
+        // ToDo userIDからspot情報を取得する関数
         // getSpotByUserId: function(user_id){
         //     getSpot('', '', '', user_id).then(result => {
         //         console.log( result );
