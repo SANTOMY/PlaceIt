@@ -130,14 +130,14 @@ export default {
         return {
             spot_data: {
                 name: "",
-                x:   this.$route.query.lon,
-                y: this.$route.query.lat,
+                x:  this.$route.query.lon,
+                y:  this.$route.query.lat,
                 photos: "dir",
                 types: "",
-                userId: this.$store.state.userId,
+                userId: this.$store.state.userData.userId,
                 comment: "",
                 score: null,
-                university: this.$store.state.university
+                university: this.$store.state.userData.university
             },
             //ここの記述があんまり良くない
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
