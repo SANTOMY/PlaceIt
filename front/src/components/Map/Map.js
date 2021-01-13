@@ -43,14 +43,19 @@ export default {
         selectedSpotID: "", //クリックして選択しているspotのid
         markers:null,//マーカーリストのレイヤー群
         univFlag:false,//大学別検索の有効化・無効化
+        user:{
+          username: this.$store.state.userData.userName, 
+          email: this.$store.state.userData.email,
+          password: this.$store.state.userData.password,
+          univ:"Kyushu univ",
+        }
       };
     },
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
-      showSpot: async function(type,univFlag){
-        console.log(univFlag)
+      showSpot: async function(type,univ){
         if (type=="reset") type = "";
-        var data = await getSpot("","",type,"");
+        var data = await getSpot("","",type,"",univ);
         if (data.success){
           var spots = data.spots;
           var markerSet = []//マーカーのリスト
@@ -134,14 +139,22 @@ export default {
         this.markers.clearLayers();
         this.marker = [];
         this.nowType = type;
-        await this.showSpot(type,this.univFlag);
+        if(this.univFlag){
+          await this.showSpot(type,this.user.univ);
+        } else{
+          await this.showSpot(type,"");
+        }
       },
       //大学検索の有効化・無効化関数
       updateUniv: async function(){
         this.univFlag = !this.univFlag;
         this.markers.clearLayers();
         this.marker = [];
-        await this.showSpot(this.nowType,this.univFlag);
+        if(this.univFlag){
+          await this.showSpot(this.nowType,this.user.univ);
+        } else{
+          await this.showSpot(this.nowType,"");
+        }
       },
       closeDialog() {
         this.showDialog = false;
@@ -166,7 +179,7 @@ export default {
         //this.map.on("locationfound",this.locationMarker);
 
       //spot表示
-      this.showSpot(this.nowType,this.univFlag);
+      this.showSpot(this.nowType,"");
     }, 
     //現在地追跡のために利用(予定)
     watch: {
