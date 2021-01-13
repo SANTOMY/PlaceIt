@@ -136,7 +136,8 @@ export default {
                 types: "",
                 userId: this.$store.state.userId,
                 comment: "",
-                score: null
+                score: null,
+                university: null
             },
             //ここの記述があんまり良くない
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
@@ -168,9 +169,7 @@ export default {
                 return
             }
             if(this.check_database()) {
-                console.log("Front spotName" + this.spot_data.name)
-                console.log(this.spot_data.x, this.spot_data.y, this.spot_data.photos)
-                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score)
+                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score, this.spot_data.university)
                 //console.log(resp.success)
                 this.create_spot()
                 //this.$router.push('/map')
