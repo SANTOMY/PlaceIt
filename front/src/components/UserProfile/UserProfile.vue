@@ -19,6 +19,18 @@
                     </v-avatar>
                 </v-layout>
             </v-col>
+<!-----------------------特定のユーザーが投稿したスポットを取得するテスト------------->
+            <!-- <v-col>
+                スポットの取得テスト1
+                <h1>{{ user.username }}</h1>
+                
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        @click="getSpotByUserId( 'aaa' )"
+                    >
+                    スポットの取得テスト2
+                    </v-btn> 
+            </v-col> -->
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
                 ユーザー名
@@ -37,6 +49,7 @@
         <SpotListCard 
             v-bind:spot_list="spot"
             v-bind:user_list="user"
+            v-bind:my_spot_list="my_spot"
             color="green"
         ></SpotListCard>
     </v-container>
@@ -47,6 +60,7 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
+// import {getSpot} from '../../routes/spotRequest'
 
 export default {
 
@@ -69,7 +83,7 @@ export default {
                     name: 'マクドナルド',
                     spotId: '000000',
                     type: 'restaurant',
-                    user_id: '000000',
+                    user_id: '2bedc185-298d-49c4-b1e7-20897646dd92',
                     username: 'asada',
                     good: 123,
                     src: require("@/assets/Mac.jpg"),
@@ -104,6 +118,9 @@ export default {
                         { user_id:'000000' }
                     ]
                 }      
+            ],
+            my_spot: [
+                // required attribute: name, src, good
             ]
         }
     },
@@ -113,8 +130,9 @@ export default {
             .then(result => {
                 console.log(result[0].username)
                 this.user.username = result[0].username
-                // this.user.password = result[0].password
-        })  
+                this.user.user_id = result[0].id
+        })
+        // this.getSpotByUserId( "aaa" ) // ToDo userIDからspot情報を取得
     },
     methods:  {
         editProfile: function() {
@@ -123,6 +141,18 @@ export default {
         closeUserEdit: function(){          
             this.dialogEdit = false
         },
+        // ToDo userIDからspot情報を取得する関数
+        // getSpotByUserId: function(user_id){
+        //     getSpot('', '', '', user_id).then(result => {
+        //         console.log( result );
+        //         for( var s in result.spots ){
+        //             var name = result.spots[ s ].spot_name;
+        //             var src = require( "@/assets/Mac.jpg" );
+        //             var good = 1024;
+        //             this.my_spot.push( { "name": name, "src": src, "good": good } );
+        //         }    
+        //     })
+        // }
     }
 };
 </script>
