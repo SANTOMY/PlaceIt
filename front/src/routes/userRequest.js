@@ -1,6 +1,6 @@
 import {serverIP} from './requestConfig';
 
-async function register(userName,email,password){
+async function register(userName, email, password, university){
     const url = serverIP + '/user/register';
     try{
         let reponse = await fetch(url,{
@@ -11,7 +11,7 @@ async function register(userName,email,password){
                 'Content-Type': 'application/json',
                 'Origin': 'http://localhost:8080'
             },
-            body: JSON.stringify({userName: userName, email: email, password: password})
+            body: JSON.stringify({userName: userName, email: email, password: password, university: university})
         });
         return await reponse.json();
     }catch(exception){
