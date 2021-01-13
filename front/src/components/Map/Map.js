@@ -44,10 +44,10 @@ export default {
         markers:null,//マーカーリストのレイヤー群
         univFlag:false,//大学別検索の有効化・無効化
         user:{
-          username: this.$store.state.userData.userName, 
-          email: this.$store.state.userData.email,
-          password: this.$store.state.userData.password,
-          univ:this.$store.state.userData.university,
+          username:null, 
+          email: null,
+          password: null,
+          univ:"",
         }
       };
     },
@@ -163,6 +163,12 @@ export default {
 
     //画面読み込み時の関数
     mounted:async function() {
+      if(this.$store.state.userData!=null){
+        this.user.username = this.$store.state.userData.username;
+        this.user.email = this.$store.state.userData.email;
+        this.user.password = this.$store.state.userData.password;
+        this.user.univ = this.$store.state.userData.university;
+      }
       //Mapオブジェクトの生成
       this.map = L.map('map',{zoom: 10,maxZoom: 18})
       .addLayer(
@@ -177,7 +183,6 @@ export default {
 
       //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
-
       //spot表示
       this.showSpot(this.nowType,"");
     }, 
