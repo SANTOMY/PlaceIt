@@ -19,18 +19,6 @@
                     </v-avatar>
                 </v-layout>
             </v-col>
-<!-----------------------特定のユーザーが投稿したスポットを取得するテスト------------->
-            <v-col>
-                スポットの取得テスト1
-                <h1>{{ user.username }}</h1>
-                
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        @click="getSpotByUserId( 'aaa' )"
-                    >
-                    スポットの取得テスト2
-                    </v-btn> 
-            </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
                 ユーザー名
@@ -49,7 +37,7 @@
         <SpotListCard 
             v-bind:spot_list="spot"
             v-bind:user_list="user"
-            v-bind:my_spot_list="spot_to_show"
+            v-bind:my_spot_list="my_spot"
             color="green"
         ></SpotListCard>
     </v-container>
@@ -149,9 +137,10 @@ export default {
                 console.log(result[0].username)
                 this.user.username = result[0].username
                 this.user.user_id = result[0].id
-        })
-        this.getSpotByUserId( "aaa" ).then( () =>{
-            this.getLatestSpots( 0, 28 )
+                this.getSpotByUserId( this.user.user_id )
+                    .then( () =>{
+                        this.getLatestSpots( 0, 28 )
+                })
         })
     },
     methods:  {
@@ -162,10 +151,12 @@ export default {
             this.dialogEdit = false
         },
         getSpotByUserId: async function(user_id){
+            console.log( "typeof user_id: ", typeof user_id, user_id )
             return getSpot('', '', '', user_id).then(result => {
                 console.log( result );
                 for( var s in result.spots ){
                     var name = result.spots[ s ].spot_name;
+                    // TODO: to get images from DB
                     var src = require( "@/assets/Mac.jpg" );
                     if( Math.random() >= 0.5 ){
                         src = require('@/assets/mos.png');

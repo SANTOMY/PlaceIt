@@ -134,7 +134,7 @@ export default {
                 y: this.$route.query.lat,
                 photos: "dir",
                 types: "",
-                userId: this.$store.state.userId,
+                userId: this.$store.state.userData.userId,
                 comment: "",
                 score: null
             },
@@ -159,6 +159,7 @@ export default {
     },
     mounted(){
         this.all_spot_types = getSpotTypeDict('type')
+        console.log( "$store: ", this.$store )
     },
 
     methods: {
@@ -170,6 +171,7 @@ export default {
             if(this.check_database()) {
                 console.log("Front spotName" + this.spot_data.name)
                 console.log(this.spot_data.x, this.spot_data.y, this.spot_data.photos)
+                console.log( "userId: ", this.spot_data.userId )
                 saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score)
                 //console.log(resp.success)
                 this.create_spot()

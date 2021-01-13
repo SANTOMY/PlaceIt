@@ -181,9 +181,10 @@ export default {
     ChangeCategory: function( i ) {
       console.log( "ChangeCategory is called. ( left, right ): ", this.left, this.right )
       if( i != this.select ){
-        this.left = 0
-        this.right = this.num_per_page
-        this.now_page = 1
+        this.select = i
+        this.jumpSpotPage( 1 )
+        console.log( "left, right, now_page: ", this.left, this.right, this.now_page )
+
       }
       this.select = i
       this.num_page = this.num_page_array[ this.select ]
