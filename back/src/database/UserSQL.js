@@ -128,7 +128,7 @@ async function login(email, password) {
         const isCorrectPassword = bcrypt.compareSync(password, hash);
         info(fileLabel,"authentication by email: " + email);
         if (isCorrectPassword) {
-            return {"success":true, "data":"Password is correct", "email":result.rows[0].email, "id":result.rows[0].id, "username":result.rows[0].username, "password":result.rows[0].password};
+            return {"success":true, "data":"Password is correct", "email":result.rows[0].email, "id":result.rows[0].id, "username":result.rows[0].username, "password":result.rows[0].password, "university":result.rows[0].university};
         } else {
             return {"success":false, "data":"Password is incorrect"};
         }

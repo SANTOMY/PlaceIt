@@ -78,7 +78,7 @@ export default {
     methods: {
         createUser: function() {
             if (!this.$refs.loginForm.validate()) return;
-            register(this.username,this.email,this.password)
+            register(this.username,this.email,this.password,this.university)
                 .then(res => {
                     console.log(res)
                     //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
