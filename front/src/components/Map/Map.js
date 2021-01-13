@@ -47,7 +47,7 @@ export default {
           username: this.$store.state.userData.userName, 
           email: this.$store.state.userData.email,
           password: this.$store.state.userData.password,
-          univ:"九州大学",
+          univ:this.$store.state.userData.university,
         }
       };
     },

@@ -137,7 +137,7 @@ export default {
                 userId: this.$store.state.userId,
                 comment: "",
                 score: null,
-                university: null
+                university: this.$store.state.university
             },
             //ここの記述があんまり良くない
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
