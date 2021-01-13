@@ -159,7 +159,7 @@ export default {
         },
         updateDetail: function() {
             this.isLoading = true;      // データを取得している間はローディング画面を表示する
-            getSpot(this.spot_id, "", "", "")
+            getSpot(this.spot_id, "", "", "", "")
                 .then(res => {
                     this.spotData = res.spots[0];
                     this.reviews = res.review;
