@@ -50,7 +50,7 @@ export default {
       showSpot: async function(type,univFlag){
         console.log(univFlag)
         if (type=="reset") type = "";
-        var data = await getSpot("","",type,"");
+        var data = await getSpot("","",type,"","AKI");
         if (data.success){
           var spots = data.spots;
           var markerSet = []//マーカーのリスト
