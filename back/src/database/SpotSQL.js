@@ -14,8 +14,8 @@ async function saveSpot(newSpot){
         values: [newSpot.spotId, newSpot.spotName, newSpot.picture, newSpot.spotType, newSpot.userId]
     };
     const query2 = {
-        text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5);',
-        values: [newSpot.reviewId, newSpot.spotId, newSpot.comment, newSpot.score, newSpot.userId]
+        text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id, score1, score2, score3, score4, score5) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);',
+        values: [newSpot.reviewId, newSpot.spotId, newSpot.comment, newSpot.score, newSpot.userId, newSpot.score1, newSpot.score2, newSpot.score3, newSpot.score4, newSpot.score5]
     };
     const deleteSpotQuery = {
         text: 'DELETE from spots.spots where spot_id = $1;',
