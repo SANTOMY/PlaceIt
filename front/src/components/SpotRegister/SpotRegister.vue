@@ -61,43 +61,30 @@
                             label text-color="brack">
                             <h3>スコア</h3>
                         </v-chip>
-                        <star-rating
+                        <!-- <star-rating
                             v-model="spot_data.score"
                             @rating-selected="ratingSelected"
                             @current-rating="currentRating"
-                        ></star-rating>
+                        ></star-rating> -->
 
                         <!-- スポットの評価 -->
-                        <v-row v-if="spot_data.types!=''">
-                            <!-- <radarChartDisp
-                                :type="spot_data.types"
-                                :reviewRating="numberData"
-                            />   -->
-                            <v-slider
-                                v-model="ex1.val"
-                                :color="ex1.color"
-                                :label="ex1.label"
-                            ></v-slider>
-                            <v-slider
-                                v-model="ex1.val"
-                                :color="ex1.color"
-                                :label="ex1.label"
-                            ></v-slider>
-                            <v-slider
-                                v-model="ex1.val"
-                                :color="ex1.color"
-                                :label="ex1.label"
-                            ></v-slider>
-                            <v-slider
-                                v-model="ex1.val"
-                                :color="ex1.color"
-                                :label="ex1.label"
-                            ></v-slider>
-                            <v-slider
-                                v-model="ex1.val"
-                                :color="ex1.color"
-                                :label="ex1.label"
-                            ></v-slider>
+                        <v-row 
+                            v-if="spot_data.types!=''"
+                        >
+                            <v-col>
+                                <radarChartDisp
+                                    type="restaurant"
+                                    :reviewRating="numberData"
+                                /> 
+                            </v-col> 
+                            <v-col class="flex-column" cols=3 v-for="n in 5" :key="n">
+                                <v-slider
+                                    v-model="spot_data.score[n-1]"
+                                    :color="ex1.color"
+                                    :label="ex1.label[n-1]"
+                                    :max="5"
+                                ></v-slider>
+                            </v-col>
                         </v-row>                      
                         <!-- <v-row>
                             <v-col 
@@ -167,15 +154,15 @@
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
 import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import {saveSpot} from '../../routes/spotRequest'
-import StarRating from 'vue-star-rating'
-// import radarChartDisp from '../share/RadarChartDisp'
+// import StarRating from 'vue-star-rating'
+import radarChartDisp from '../share/RadarChartDisp'
 
 export default {
 
     components: {
         SpotTypeIcon,
-        StarRating,
-        // radarChartDisp,
+        // StarRating,
+        radarChartDisp,
     },
     data: function() {
         return {
@@ -187,7 +174,7 @@ export default {
                 types: "",
                 userId: this.$store.state.userData.userId,
                 comment: "",
-                score: null,
+                score: [3,3,3,3,3],
                 university: this.$store.state.userData.university
             },
             all_spot_types: {}, // mountedで取得
@@ -197,7 +184,7 @@ export default {
             uploadedFiles: [],
             review_dict: getSpotTypeDict('review'),
             numberData: [1,1,1,1,1],
-            ex1: { label: 'color', val: 5, color: 'orange darken-3' },
+            ex1: { label: ['評価1','評価2','評価3','評価4','評価5'], val: [3,3,3,3,3], color: 'orange darken-3' },
             nameRules: [
                 v => !!v || "スポット名は必須項目です。"
             ],
