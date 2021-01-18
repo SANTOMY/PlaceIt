@@ -75,7 +75,7 @@ export default {
                 .then(res => {
                     console.log(res)
                     if (res.success) {
-                        const userData = new User(res.data.id, res.data.username, res.data.email, null)
+                        const userData = new User(res.data.id, res.data.username, res.data.email, null, res.data.university)
                         this.$store.commit("login", userData)
                         this.$router.push('/map')
                     } else {

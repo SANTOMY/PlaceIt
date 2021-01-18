@@ -5,6 +5,7 @@ import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
+import univButton from './MapButtons/UnivButton.vue'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -21,7 +22,8 @@ export default {
       spotRegButton,
       nowLocButton,
       typeButton,
-      spotDetail
+      spotDetail,
+      univButton
     },
     data: function(){
       return {
@@ -40,13 +42,20 @@ export default {
         showDialog:false, //ダイアログを表示するか
         selectedSpotID: "", //クリックして選択しているspotのid
         markers:null,//マーカーリストのレイヤー群
+        univFlag:false,//大学別検索の有効化・無効化
+        user:{
+          username:null, 
+          email: null,
+          password: null,
+          univ:"",
+        }
       };
     },
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
-      showSpot: async function(type){
+      showSpot: async function(type,univ){
         if (type=="reset") type = "";
-        var data = await getSpot("","",type,"");
+        var data = await getSpot("","",type,"",univ);
         if (data.success){
           var spots = data.spots;
           var markerSet = []//マーカーのリスト
@@ -130,9 +139,23 @@ export default {
         this.markers.clearLayers();
         this.marker = [];
         this.nowType = type;
-        await this.showSpot(type);
+        if(this.univFlag){
+          await this.showSpot(type,this.user.univ);
+        } else{
+          await this.showSpot(type,"");
+        }
       },
-
+      //大学検索の有効化・無効化関数
+      updateUniv: async function(){
+        this.univFlag = !this.univFlag;
+        this.markers.clearLayers();
+        this.marker = [];
+        if(this.univFlag){
+          await this.showSpot(this.nowType,this.user.univ);
+        } else{
+          await this.showSpot(this.nowType,"");
+        }
+      },
       closeDialog() {
         this.showDialog = false;
       }
@@ -140,6 +163,12 @@ export default {
 
     //画面読み込み時の関数
     mounted:async function() {
+      if(this.$store.state.userData!=null){
+        this.user.username = this.$store.state.userData.username;
+        this.user.email = this.$store.state.userData.email;
+        this.user.password = this.$store.state.userData.password;
+        this.user.univ = this.$store.state.userData.university;
+      }
       //Mapオブジェクトの生成
       this.map = L.map('map',{zoom: 10,maxZoom: 18})
       .addLayer(
@@ -154,9 +183,8 @@ export default {
 
       //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
-
       //spot表示
-      this.showSpot(this.nowType);
+      this.showSpot(this.nowType,"");
     }, 
     //現在地追跡のために利用(予定)
     watch: {

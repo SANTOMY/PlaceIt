@@ -18,6 +18,8 @@ module.exports.getSpotQueryBuilder = function(keywords){
         where.push(` spot_type='${keywords.spotType}'`);
     if( !utility.isEmpty(keywords.userId) )
         where.push(` user_id='${keywords.userId}'`);
+    if( !utility.isEmpty(keywords.university) )
+        where.push(` university='${keywords.university}'`);
 
     // confirm that -180 < xMax, xMin < 180 and that -90 < yMax, yMin < 90
     if( !utility.isEmpty(keywords.xMax) ){

@@ -13,8 +13,8 @@ const utility = require('../utility');
  */
 async function saveUser(newUser) {
     const query = {
-        text: 'INSERT INTO users.users(id, username, email, password) VALUES($1, $2, $3, $4)',
-        values: [newUser.userId, newUser.userName, newUser.email, newUser.password]
+        text: 'INSERT INTO users.users(id, username, email, password, university) VALUES($1, $2, $3, $4, $5)',
+        values: [newUser.userId, newUser.userName, newUser.email, newUser.password, newUser.university]
     };
 
     const client = await pool.connect();
@@ -128,7 +128,7 @@ async function login(email, password) {
         const isCorrectPassword = bcrypt.compareSync(password, hash);
         info(fileLabel,"authentication by email: " + email);
         if (isCorrectPassword) {
-            return {"success":true, "data":"Password is correct", "email":result.rows[0].email, "id":result.rows[0].id, "username":result.rows[0].username, "password":result.rows[0].password};
+            return {"success":true, "data":"Password is correct", "email":result.rows[0].email, "id":result.rows[0].id, "username":result.rows[0].username, "password":result.rows[0].password, "university":result.rows[0].university};
         } else {
             return {"success":false, "data":"Password is incorrect"};
         }

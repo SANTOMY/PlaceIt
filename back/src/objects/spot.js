@@ -1,7 +1,7 @@
 const Review = require('../objects/review');
 
 module.exports = class Spot {
-    constructor(spotId, spotName, x, y, picture, spotType, userId, reviewId, comment, score){
+    constructor(spotId, spotName, x, y, picture, spotType, userId, reviewId, comment, score, university){
         
         this.spotId = spotId;
         this.spotName = spotName;
@@ -13,6 +13,7 @@ module.exports = class Spot {
         this.reviewId = reviewId;
         this.comment = comment;
         this.score = score;
+        this.university = university
         this.review = new Review(reviewId, spotId, comment, score, userId);
     }
 }
