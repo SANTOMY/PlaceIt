@@ -11,8 +11,8 @@ module.exports = class ReviewController{
     }
     
     async saveReview(req, res){
-        const {spotId, comment, score, userId} = req.body;
-        const review = new Review(uuidv4(), spotId, comment, score, userId);
+        const {spotId, comment, score, userId, score1, score2, score3, score4, score5} = req.body;
+        const review = new Review(uuidv4(), spotId, comment, score, userId, score1, score2, score3, score4, score5);
         return reviewSQL.saveReview(review).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successful Registration of userId: " + userId);
