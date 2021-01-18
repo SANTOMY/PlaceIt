@@ -52,4 +52,4 @@ var average = function(arr, fn) {
     return sum(arr, fn)/arr.length;
 };
 
-export {saveReview, getReviewBySpotId};
+export {saveReview, getReviewBySpotId, average};

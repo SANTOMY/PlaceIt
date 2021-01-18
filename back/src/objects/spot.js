@@ -13,6 +13,7 @@ module.exports = class Spot {
         this.reviewId = reviewId;
         this.comment = comment;
         this.score = score;
+        this.university = university;
         this.score1 = score1;
         this.score2 = score2;
         this.score3 = score3;
