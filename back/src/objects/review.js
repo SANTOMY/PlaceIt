@@ -5,10 +5,10 @@ module.exports = class Review {
         this.comment = comment;
         this.score = score;
         this.userId = userId;
-        this.score = score1;
-        this.score = score2;
-        this.score = score3;
-        this.score = score4;
-        this.score = score5;
+        this.score1 = score1;
+        this.score2 = score2;
+        this.score3 = score3;
+        this.score4 = score4;
+        this.score5 = score5;
     }
 }
