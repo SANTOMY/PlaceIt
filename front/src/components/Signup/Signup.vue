@@ -27,6 +27,12 @@
                     :counter="32"
                     :rules="passwordRules" />
                     
+                <v-text-field label="所属大学"
+                    prepend-icon="mdi-school"
+                    v-model="university" 
+                    :counter="64"
+                    :rules="universityRules"/>
+
                 <v-card-actions>
                     <v-btn @click="createUser">登録</v-btn>
                 </v-card-actions>
@@ -46,6 +52,7 @@ export default {
             username : '',
             email : '',
             password : '',
+            university: '',
 
             showPassword : false,
             usernameRules: [
@@ -61,17 +68,21 @@ export default {
                 v => !!v || "パスワードは必須項目です。",
                 v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
             ],
+            universityRules: [
+                v => !!v || "所属大学名は必須項目です。",
+                v => (v && v.length <= 64) || "所属大学名は64文字以内で入力してください。",
+            ],
         }
     },
 
     methods: {
         createUser: function() {
             if (!this.$refs.loginForm.validate()) return;
-            register(this.username,this.email,this.password)
+            register(this.username,this.email,this.password,this.university)
                 .then(res => {
                     console.log(res)
                     //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
-                    const userData = new User(res.userId, res.userName, res.email, null)
+                    const userData = new User(res.userId, res.userName, res.email, null, res.university)
                     console.log(userData)
                     this.$store.commit("login", userData)
                     this.$router.push('/map')

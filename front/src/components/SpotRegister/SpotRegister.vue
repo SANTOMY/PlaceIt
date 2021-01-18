@@ -181,13 +181,14 @@ export default {
         return {
             spot_data: {
                 name: "",
-                x:   this.$route.query.lon,
-                y: this.$route.query.lat,
+                x:  this.$route.query.lon,
+                y:  this.$route.query.lat,
                 photos: "dir",
                 types: "",
-                userId: this.$store.state.userId,
+                userId: this.$store.state.userData.userId,
                 comment: "",
-                score: null
+                score: null,
+                university: this.$store.state.userData.university
             },
             all_spot_types: {}, // mountedで取得
             // color_dict: getSpotTypeDict('color'),
@@ -217,9 +218,7 @@ export default {
                 return
             }
             if(this.check_database()) {
-                console.log("Front spotName" + this.spot_data.name)
-                console.log(this.spot_data.x, this.spot_data.y, this.spot_data.photos)
-                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score)
+                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score, this.spot_data.university)
                 //console.log(resp.success)
                 this.create_spot()
                 //this.$router.push('/map')
