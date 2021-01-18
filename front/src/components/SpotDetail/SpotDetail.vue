@@ -94,7 +94,8 @@
                         <v-col cols="5">
                             <spot-review-register  
                                 v-if="this.$store.state.userData != null"
-                                :spot_id="spotData.spot_id" 
+                                :spot_id="spotData.spot_id"
+                                :spot_type="spotData.spot_type" 
                                 @submit="updateDetail()"
                             />
                         </v-col>
