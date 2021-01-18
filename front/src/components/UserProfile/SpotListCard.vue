@@ -161,7 +161,7 @@
                 { title: '作成スポット', icon: 'mdi-account' },
                 { title: 'おすすめスポット', icon: 'mdi-account-group-outline' },
             ],
-            begin: 0, 
+            begin: 0, // show spots from (begin)th to (end)th
             end: 3,
             now_page: 0,
             num_per_page: 3,
