@@ -122,6 +122,7 @@ import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {getSpot} from '../../routes/spotRequest'
+import {average} from '../../routes/reviewRequest'
 
 export default {
     components: {
@@ -136,7 +137,7 @@ export default {
             spotData: {spot_name:"", spot_type:""},
             reviews: [],
             rating: 5,
-            rating5: [0,1,1,1,1],
+            rating5: [0,0,0,0,0],
             photo: require("@/assets/Hakataramen.jpg"),    //仮
             num_page: 0,
             REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
@@ -184,15 +185,20 @@ export default {
                     this.spotData = res.spots[0];
                     this.reviews = res.review;
                     this.isLoading = false;
-                    this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)))
+                    this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
+                    this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
+                                                this.reviews.map(r =>  Number(r.score2)),
+                                                this.reviews.map(r =>  Number(r.score3)),
+                                                this.reviews.map(r =>  Number(r.score4)),
+                                                this.reviews.map(r =>  Number(r.score5)));
                     this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
                 })
         },
         calcRating: function(scores) {
-            var average = 0;
-            scores.forEach(score => average += score);
-            average /= scores.length;
-            return average;
+            return average(scores);
+        },
+        calcFor5Score: function(score1, score2, score3, score4, score5){
+            return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         }
     },
 
