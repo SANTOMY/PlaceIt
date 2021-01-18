@@ -204,6 +204,7 @@ export default {
       for( let i = this.left; i < this.right; i++ ){
         this.spot[ i - this.left ] = this.my_spot_list[ i ]
       }
+      this.spot = this.my_spot_list
     },
     GoodSpotSort: function () { // いいね！したスポットを表示する関数
       let j = 0
