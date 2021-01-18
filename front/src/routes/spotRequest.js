@@ -1,6 +1,6 @@
 import {serverIP} from './requestConfig';
 
-async function saveSpot(spotName, x, y, picture, spotType, userId, comment, score){
+async function saveSpot(spotName, x, y, picture, spotType, userId, comment, score, university){
     const url = serverIP + '/spot/saveSpot';
     try{
         let reponse = await fetch(url,{
@@ -11,7 +11,7 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
                 'Content-Type': 'application/json',
                 'Origin': 'http://localhost:8080'
             },
-            body: JSON.stringify({spotName:spotName, x:x, y:y, picture:picture, spotType:spotType, userId:userId, comment:comment, score:score})
+            body: JSON.stringify({spotName:spotName, x:x, y:y, picture:picture, spotType:spotType, userId:userId, comment:comment, score:score, university:university})
         });
         return await reponse.json();
     }catch(exception){
@@ -29,11 +29,10 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
  * @param {userId} userId
  * @return {spots, review} - spots is list of spot, review is list of review which connect to spot
  */
-async function getSpot(spotId, spotName, spotType, userId){
-    // const url_row = serverIP + '/spot/getSpot?' + "spotId=" + spotId + "&spotName=" + spotName  + "&spotType=" + spotType + "&userId=" + userId;
+async function getSpot(spotId, spotName, spotType, userId, university){
     //TODO: "&xMax=" + xMax + "&xMin=" + xMin + "&yMax" + yMax + "&yMin" + yMin
     //TODO: encode User Id
-    const queryString = '/spot/getSpot?' + "spotId=" + spotId + "&spotName=" + spotName  + "&spotType=" + spotType + "&userId=" + userId;
+    const queryString = '/spot/getSpot?' + "spotId=" + spotId + "&spotName=" + spotName  + "&spotType=" + spotType + "&userId=" + userId + "&university=" + university;
 
     const url = serverIP + queryString;
     try{
