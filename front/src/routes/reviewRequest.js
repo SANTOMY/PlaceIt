@@ -1,7 +1,8 @@
 import {serverIP} from './requestConfig';
 
-async function saveReview(spotId, comment, score, userId){
+async function saveReview(spotId, comment, scores, userId){
     const url = serverIP + '/review/saveReview';
+    console.log(userId)
     try{
         let reponse = await fetch(url,{
             mode: 'cors',
@@ -11,7 +12,8 @@ async function saveReview(spotId, comment, score, userId){
                 'Content-Type': 'application/json',
                 'Origin': 'http://localhost:8080'
             },
-            body: JSON.stringify({spotId:spotId, comment:comment, score:score, userId:userId})
+            body: JSON.stringify({spotId:spotId, comment:comment, userId:userId, score:scores[0], 
+                score1:scores[0], score2:scores[1], score3:scores[2], score4:scores[3], score5:scores[4]})
         });
         return await reponse.json();
     }catch(exception){

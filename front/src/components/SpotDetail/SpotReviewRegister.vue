@@ -40,7 +40,7 @@
                             </v-col>
                             <v-col>
                                 <star-rating
-                                    v-model="review_data.rating[i - 1]"
+                                    v-model="review_data.scores[i - 1]"
                                 />                                
                             </v-col>
 
@@ -77,7 +77,7 @@ export default {
             showDialog: false,
             review_data: {
                 comment: "",
-                rating: [0, 0, 0, 0, 0]
+                scores: [0, 0, 0, 0, 0]
             },
             criteria_list: []
         }
@@ -90,10 +90,10 @@ export default {
         onClickedRegisterButton: function() {
             this.showDialog = false;
             for(var i = 0; i < 5; i++) {
-                console.log(i + ": " + this.review_data.rating[i]);
+                console.log(i + ": " + this.review_data.scores[i]);
             }
             console.log();
-            saveReview(this.spot_id, this.review_data.comment, this.review_data.rating[0], this.$store.state.userData.id)
+            saveReview(this.spot_id, this.review_data.comment, this.review_data.scores, this.$store.state.userData.userId)
                 .then(res => {
                     console.log(res)        // Debug
                     this.$emit('submit')
