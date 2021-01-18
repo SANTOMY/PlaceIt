@@ -38,14 +38,14 @@
                             </template>
                         </v-select>
 
-                        <!-- スポットの評価 -->
-                        <p>スポットの評価</p>
+                        <!-- スポットの評価 --> 
+                        <!-- <p>スポットの評価</p>
                         <star-rating
                         class="mb-5"
                             v-model="spot_data.rating"
                             :increment=0.5
                         >
-                        </star-rating>
+                        </star-rating> -->
 
                         <!-- スポットの説明 -->
                         <v-textarea
@@ -67,6 +67,55 @@
                             @current-rating="currentRating"
                         ></star-rating>
 
+                        <!-- スポットの評価 -->
+                        <v-row v-if="spot_data.types!=''">
+                            <!-- <radarChartDisp
+                                :type="spot_data.types"
+                                :reviewRating="numberData"
+                            />   -->
+                            <v-slider
+                                v-model="ex1.val"
+                                :color="ex1.color"
+                                :label="ex1.label"
+                            ></v-slider>
+                            <v-slider
+                                v-model="ex1.val"
+                                :color="ex1.color"
+                                :label="ex1.label"
+                            ></v-slider>
+                            <v-slider
+                                v-model="ex1.val"
+                                :color="ex1.color"
+                                :label="ex1.label"
+                            ></v-slider>
+                            <v-slider
+                                v-model="ex1.val"
+                                :color="ex1.color"
+                                :label="ex1.label"
+                            ></v-slider>
+                            <v-slider
+                                v-model="ex1.val"
+                                :color="ex1.color"
+                                :label="ex1.label"
+                            ></v-slider>
+                        </v-row>                      
+                        <!-- <v-row>
+                            <v-col 
+                                v-for="value in [0,1,2,3,4]"
+                                :key="value"
+                            >
+                                <v-select
+                                    :rules="typeRules"
+                                    v-model="numberData[value]"
+                                    :items="[1,2,3,4,5]"
+                                    :label="'評価'+str(value+1)"
+                                    solo
+                                    height="60px"
+                                    width="120px"
+                                >{{item}}
+                                </v-select>
+                            </v-col>
+                        </v-row> -->
                         <!-- スポットの画像ファイル -->
                         <v-file-input
                             v-model="uploadedFiles"
@@ -119,12 +168,14 @@ import SpotTypeIcon from "../share/SpotTypeIcon.vue"
 import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import {saveSpot} from '../../routes/spotRequest'
 import StarRating from 'vue-star-rating'
+// import radarChartDisp from '../share/RadarChartDisp'
 
 export default {
 
     components: {
         SpotTypeIcon,
-        StarRating
+        StarRating,
+        // radarChartDisp,
     },
     data: function() {
         return {
@@ -138,16 +189,14 @@ export default {
                 comment: "",
                 score: null
             },
-            //ここの記述があんまり良くない
-            //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
-            //スポットタイプ名のリストをどこかにまとめる方法はないか
-            // =>解決
             all_spot_types: {}, // mountedで取得
-
+            // color_dict: getSpotTypeDict('color'),
             // アップロードされたファイルを一時的に保管する変数
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
             uploadedFiles: [],
-
+            review_dict: getSpotTypeDict('review'),
+            numberData: [1,1,1,1,1],
+            ex1: { label: 'color', val: 5, color: 'orange darken-3' },
             nameRules: [
                 v => !!v || "スポット名は必須項目です。"
             ],
