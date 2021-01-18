@@ -12,7 +12,7 @@ async function saveReview(spotId, comment, scores, userId){
                 'Content-Type': 'application/json',
                 'Origin': 'http://localhost:8080'
             },
-            body: JSON.stringify({spotId:spotId, comment:comment, userId:userId, score:scores[0], 
+            body: JSON.stringify({spotId:spotId, comment:comment, userId:userId, score:average(scores), 
                 score1:scores[0], score2:scores[1], score3:scores[2], score4:scores[3], score5:scores[4]})
         });
         return await reponse.json();
@@ -40,5 +40,16 @@ async function getReviewBySpotId(spotId){
         return {success:false, review:exception};
     }
 }
+var sum  = function(arr) {
+    var sum = 0;
+    arr.forEach(function(elm) {
+        sum += elm;
+    });
+    return sum;
+};
+
+var average = function(arr, fn) {
+    return sum(arr, fn)/arr.length;
+};
 
 export {saveReview, getReviewBySpotId};
