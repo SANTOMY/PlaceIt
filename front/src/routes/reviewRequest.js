@@ -1,6 +1,6 @@
 import {serverIP} from './requestConfig';
 
-async function saveReview(spotId, comment, score, userId){
+async function saveReview(spotId, comment, score, userId, score1, score2, score3, score4, score5){
     const url = serverIP + '/review/saveReview';
     try{
         let reponse = await fetch(url,{
@@ -11,7 +11,7 @@ async function saveReview(spotId, comment, score, userId){
                 'Content-Type': 'application/json',
                 'Origin': 'http://localhost:8080'
             },
-            body: JSON.stringify({spotId:spotId, comment:comment, score:score, userId:userId})
+            body: JSON.stringify({spotId:spotId, comment:comment, score:score, userId:userId, score1:score1, score2:score2, score3:score3, score4:score4, score5:score5})
         });
         return await reponse.json();
     }catch(exception){
