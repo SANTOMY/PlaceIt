@@ -122,9 +122,12 @@ export default {
                 } 
             ],
             my_spot: [
-                    // required attribute: name, src, good
+                // 自分の作成したスポット
+                // required attribute: name, src, good
             ],
             spot_to_show: [
+                // my_spotのうち表示するスポット
+                // いまはまだ必要ないけど，スポット投稿数が多くなると必要かも
 
             ]
         }

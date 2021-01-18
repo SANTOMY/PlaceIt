@@ -147,9 +147,9 @@ export default {
   
   props: {
     color: String,
-    spot_list: null,
-    my_spot_list: null,
-    user_list: null
+    spot_list: null, // おすすめスポット
+    my_spot_list: null, // 自分の作成したスポット
+    user_list: null // 自分のユーザー情報
   },
 
   data: () => ({
@@ -175,10 +175,13 @@ export default {
   },
   methods:  {
     getNumber: function(number){
+      // < 1 2 ... 10 > ←このタイプのボタンから入力を受け取る
       console.log(number)
       this.jumpSpotPage(number)
     },
     ChangeCategory: function( i ) {
+      // カテゴリ（おすすめ，作成，いいね）や表示ページの変更に伴い，
+      // 表示するスポットを更新する
       console.log( "ChangeCategory is called. ( left, right ): ", this.left, this.right )
       if( i != this.select ){
         this.select = i
@@ -224,6 +227,7 @@ export default {
       this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
     },
     changeSpotPage: function( diff, ahead = true ){
+      // < > ←このタイプのボタンが押された時にページ送りする
       let spot_num
       if( this.select == 0 ){
         spot_num = this.spot_list.length
@@ -253,6 +257,7 @@ export default {
       this.ChangeCategory( this.select )
     },
     jumpSpotPage: function( pageToJump ){
+      // < 1 2 ... 10 > ←このタイプのボタンが押された時にページを変える
       console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
       this.now_page = pageToJump
       this.left = ( this.now_page - 1 ) * this.num_per_page
@@ -263,6 +268,7 @@ export default {
       this.ChangeCategory( this.select )
     },
     spot_num: function(){
+      // 現在のカテゴリにあるスポットの数を計算
       if( this.select == 0 ){
         return this.spot_list.length
       }else if( this.select == 1 ){

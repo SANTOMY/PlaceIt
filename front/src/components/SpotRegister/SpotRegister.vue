@@ -159,7 +159,6 @@ export default {
     },
     mounted(){
         this.all_spot_types = getSpotTypeDict('type')
-        console.log( "$store: ", this.$store )
     },
 
     methods: {
