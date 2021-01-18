@@ -166,7 +166,7 @@ export default {
         },
         getSpotByUserId: async function(user_id){
             console.log( "typeof user_id: ", typeof user_id, user_id )
-            return getSpot('', '', '', user_id).then(result => {
+            return getSpot('', '', '', user_id, '').then(result => {
                 console.log( result );
                 for( var s in result.spots ){
                     var name = result.spots[ s ].spot_name;
