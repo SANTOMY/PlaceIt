@@ -161,8 +161,8 @@
                 { title: '作成スポット', icon: 'mdi-account' },
                 { title: 'おすすめスポット', icon: 'mdi-account-group-outline' },
             ],
-            left: 0,
-            right: 3,
+            begin: 0, 
+            end: 3,
             now_page: 0,
             num_per_page: 3,
             num_page: 10,
@@ -182,11 +182,11 @@
             ChangeCategory: function( i ) {
                 // カテゴリ（おすすめ，作成，いいね）や表示ページの変更に伴い，
                 // 表示するスポットを更新する
-                console.log( "ChangeCategory is called. ( left, right ): ", this.left, this.right )
+                console.log( "ChangeCategory is called. ( begin, end ): ", this.begin, this.end )
                 if( i != this.select ){
                     this.select = i
                     this.jumpSpotPage( 1 )
-                    console.log( "left, right, now_page: ", this.left, this.right, this.now_page )
+                    console.log( "begin, end, now_page: ", this.begin, this.end, this.now_page )
                 }
                 this.select = i
                 this.num_page = this.num_page_array[ this.select ]
@@ -200,10 +200,9 @@
                 }
             },
             CreatedSpotSort: function () { // 作ったスポットを表示する関数 
-                for( let i = this.left; i < this.right; i++ ){
-                    this.spot[ i - this.left ] = this.my_spot_list[ i ]
+                for( let i = this.begin; i < this.end; i++ ){
+                    this.spot[ i - this.begin ] = this.my_spot_list[ i ]
                 }
-                this.spot = this.my_spot_list
             },
             GoodSpotSort: function () { // いいね！したスポットを表示する関数
                 let j = 0
@@ -218,8 +217,8 @@
                 }
             },
             RecommendedSpotSort: function () { // おすすめスポットを表示する関数
-                for( let i = this.left; i < this.right; i++ ){
-                    this.spot[ i - this.left ] = this.spot_list[ i ]
+                for( let i = this.begin; i < this.end; i++ ){
+                    this.spot[ i - this.begin ] = this.spot_list[ i ]
                 }
             },
             spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
@@ -238,20 +237,20 @@
                 }
 
                 if( ahead == true ){
-                    if( this.right + diff <= spot_num ){
-                        this.left = this.left + diff
-                        this.right = this.right + diff
+                    if( this.end + diff <= spot_num ){
+                        this.begin = this.begin + diff
+                        this.end = this.end + diff
                     }else{
-                        this.left = spot_num - ( this.right - this.left )
-                        this.right = spot_num
+                        this.begin = spot_num - ( this.end - this.begin )
+                        this.end = spot_num
                     }
                 }else{
-                    if( this.left - diff >= 0 ){
-                        this.left = this.left - diff
-                        this.right = this.right - diff
+                    if( this.begin - diff >= 0 ){
+                        this.begin = this.begin - diff
+                        this.end = this.end - diff
                     }else{
-                        this.right = this.right - this.left
-                        this.left = 0
+                        this.end = this.end - this.begin
+                        this.begin = 0
                     }
                 }
                 this.ChangeCategory( this.select )
@@ -260,10 +259,10 @@
                 // < 1 2 ... 10 > ←このタイプのボタンが押された時にページを変える
                 console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
                 this.now_page = pageToJump
-                this.left = ( this.now_page - 1 ) * this.num_per_page
-                this.right = this.left + this.num_per_page
-                if( this.right > this.spot_num() ){
-                    this.right = this.spot_num()
+                this.begin = ( this.now_page - 1 ) * this.num_per_page
+                this.end = this.begin + this.num_per_page
+                if( this.end > this.spot_num() ){
+                    this.end = this.spot_num()
                 }
                 this.ChangeCategory( this.select )
             },
