@@ -68,7 +68,12 @@ export default {
 
             review_data: {
                 comment: "",
-                rating: 3
+                rating: 3,
+                score1: 1,
+                score2: 2,
+                score3: 3,
+                score4: 4,
+                score5: 5,
             }
 
         }
@@ -79,7 +84,7 @@ export default {
     methods: {
         onClickedRegisterButton: function() {
             this.showDialog = false;
-            saveReview(this.spot_id, this.review_data.comment, this.review_data.rating, this.$store.state.userData.id)
+            saveReview(this.spot_id, this.review_data.comment, this.review_data.rating, this.$store.state.userData.id, this.score1, this.score2, this.score3, this.score4, this.score5)
                 .then(res => {
                     console.log(res)        // Debug
                     this.$emit('submit')
