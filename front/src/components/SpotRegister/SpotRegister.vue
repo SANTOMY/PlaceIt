@@ -69,40 +69,27 @@
 
                         <!-- スポットの評価 -->
                         <v-row 
-                            v-if="spot_data.types!=''"
+                            v-if="chart_disp==true"
                         >
-                            <v-col>
+                            <v-col v-if="chart_disp==true">
                                 <radarChartDisp
-                                    type="restaurant"
-                                    :reviewRating="numberData"
+                                    v-if="chart_disp==true"
+                                    :type="spot_data.types"
+                                    :reviewRating="spot_data.score"
                                 /> 
                             </v-col> 
-                            <v-col class="flex-column" cols=3 v-for="n in 5" :key="n">
-                                <v-slider
-                                    v-model="spot_data.score[n-1]"
-                                    :color="ex1.color"
-                                    :label="ex1.label[n-1]"
-                                    :max="5"
-                                ></v-slider>
+                            <v-col justify="center">
+                                <v-row class="flex-column" cols=3 v-for="n in 5" :key="n">
+                                    <v-slider 
+                                        v-model="spot_data.score[n-1]"
+                                        color="orange darken-3"
+                                        :label="spot_data.label[n-1]"
+                                        :max="5"
+                                    ></v-slider>
+                                </v-row>
                             </v-col>
                         </v-row>                      
-                        <!-- <v-row>
-                            <v-col 
-                                v-for="value in [0,1,2,3,4]"
-                                :key="value"
-                            >
-                                <v-select
-                                    :rules="typeRules"
-                                    v-model="numberData[value]"
-                                    :items="[1,2,3,4,5]"
-                                    :label="'評価'+str(value+1)"
-                                    solo
-                                    height="60px"
-                                    width="120px"
-                                >{{item}}
-                                </v-select>
-                            </v-col>
-                        </v-row> -->
+
                         <!-- スポットの画像ファイル -->
                         <v-file-input
                             v-model="uploadedFiles"
@@ -166,6 +153,7 @@ export default {
     },
     data: function() {
         return {
+            chart_disp: false,
             spot_data: {
                 name: "",
                 x:  this.$route.query.lon,
@@ -175,7 +163,8 @@ export default {
                 userId: this.$store.state.userData.userId,
                 comment: "",
                 score: [3,3,3,3,3],
-                university: this.$store.state.userData.university
+                university: this.$store.state.userData.university,
+                label: [],
             },
             all_spot_types: {}, // mountedで取得
             // color_dict: getSpotTypeDict('color'),
@@ -183,8 +172,6 @@ export default {
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
             uploadedFiles: [],
             review_dict: getSpotTypeDict('review'),
-            numberData: [1,1,1,1,1],
-            ex1: { label: ['評価1','評価2','評価3','評価4','評価5'], val: [3,3,3,3,3], color: 'orange darken-3' },
             nameRules: [
                 v => !!v || "スポット名は必須項目です。"
             ],
@@ -194,8 +181,12 @@ export default {
 
         }
     },
+    computed(){
+
+    },
     mounted(){
         this.all_spot_types = getSpotTypeDict('type')
+        this.$watch()
     },
 
     methods: {
@@ -243,7 +234,23 @@ export default {
                     }
                     reader.readAsDataURL(file)    
                 })
-            }
-        }
+            },
+            'spot_data.types': function(){
+                // this.chart.destroy()
+                console.log('debug1')
+                this.chart_disp = false
+                this.spot_data.label = this.review_dict[this.spot_data.types]
+                this.$nextTick(() => (this.chart_disp = true));
+            },
+            'spot_data.score': function(){
+                // this.chart.destroy()
+                console.log('debug2')
+                this.chart_disp = false
+                // this.spot_data.label = this.review_dict[this.spot_data.types]
+                // this.chart_disp = true
+                this.$nextTick(() => (this.chart_disp = true));
+            },
+            deep: true
+        },
 }
 </script>
