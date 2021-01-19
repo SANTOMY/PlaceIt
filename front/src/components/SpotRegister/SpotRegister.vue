@@ -37,16 +37,23 @@
                                 </v-chip>
                             </template>
                         </v-select>
-
-                        <!-- スポットの評価 -->
-                        <p>スポットの評価</p>
-                        <star-rating
-                        class="mb-5"
-                            v-model="spot_data.rating"
-                            :increment=0.5
-                        >
-                        </star-rating>
-
+                    </v-col>
+                </v-row>
+                <v-row justify="space-between" align="center">
+                    <!-- 評価ボタン -->
+                    <v-col cols="6">
+                        <v-row v-for="i in 5" :key="i" align="center">
+                            <v-col>
+                                <h3>{{criteria_list[i - 1]}}</h3>
+                            </v-col>
+                            <v-col>
+                                <star-rating
+                                    v-model="spot_data.scores[i - 1]"
+                                />                                
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                    <v-col cols="5">
                         <!-- スポットの説明 -->
                         <v-textarea
                             v-model="spot_data.comment"
@@ -54,18 +61,6 @@
                             name="input-7-4"
                             label="コメント"
                         ></v-textarea>
-
-                        <!-- スポットの点数 -->
-                        <v-chip 
-                            class = "mb-5"
-                            label text-color="brack">
-                            <h3>スコア</h3>
-                        </v-chip>
-                        <star-rating
-                            v-model="spot_data.score"
-                            @rating-selected="ratingSelected"
-                            @current-rating="currentRating"
-                        ></star-rating>
 
                         <!-- スポットの画像ファイル -->
                         <v-file-input
@@ -85,8 +80,6 @@
                             </template>
                         </v-file-input>
                     </v-col>
-                </v-row>
-                <v-row>
                     <!-- ブラウザから選択された写真の一覧 -->
                     <v-col v-for="photo in spot_data.photos" :key="photo"
                         cols="4"
@@ -136,9 +129,10 @@ export default {
                 types: "",
                 userId: this.$store.state.userData.userId,
                 comment: "",
-                score: null,
+                scores: [0,0,0,0,0],
                 university: this.$store.state.userData.university
             },
+            criteria_list: [],
             //ここの記述があんまり良くない
             //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
             //スポットタイプ名のリストをどこかにまとめる方法はないか
@@ -159,7 +153,7 @@ export default {
         }
     },
     mounted(){
-        this.all_spot_types = getSpotTypeDict('type')
+        this.all_spot_types = getSpotTypeDict('type');
     },
 
     methods: {
@@ -169,7 +163,7 @@ export default {
                 return
             }
             if(this.check_database()) {
-                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score, this.spot_data.university)
+                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.scores, this.spot_data.university)
                 //console.log(resp.success)
                 this.create_spot()
                 //this.$router.push('/map')
@@ -178,7 +172,6 @@ export default {
                     console.log("failed to send database")
                 }
             //TODO: スポットをデータベースに登録する処理
-            console.log(this.spot_data)     // Debug
             this.$router.push('/map')
         },
         check_database: function() {
@@ -207,7 +200,10 @@ export default {
                     }
                     reader.readAsDataURL(file)    
                 })
+            },
+            'spot_data.types': function() {
+                this.criteria_list = getSpotTypeDict('review')[this.spot_data.types];
             }
-        }
+        },
 }
 </script>

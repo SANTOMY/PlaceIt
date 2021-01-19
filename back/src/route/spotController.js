@@ -12,9 +12,9 @@ module.exports = class SpotController{
     }
     
     async saveSpot(req, res){
-        const {spotName, x, y, picture, spotType, userId, comment, score, university} = req.body;
+        const {spotName, x, y, picture, spotType, userId, comment, score, university, score1, score2, score3, score4, score5} = req.body;
         info(fileLabel,"Save spot information:" + util.inspect(spotName,{showHidden: false, depth: null}));
-        const spot = new Spot(uuidv4(), spotName, x, y, picture, spotType, userId, uuidv4(), comment, score, university);
+        const spot = new Spot(uuidv4(), spotName, x, y, picture, spotType, userId, uuidv4(), comment, score, university, score1, score2, score3, score4, score5);
         return SpotSQL.saveSpot(spot).then((result)=>{
             if(result.success){
                 info(fileLabel, "Successful Registration for " + util.inspect(spotName,{showHidden: false, depth: null}));
