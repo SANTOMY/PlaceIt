@@ -167,7 +167,7 @@ export default {
         getSpotByUserId: async function(user_id){
             console.log( "typeof user_id: ", typeof user_id, user_id )
             return getSpot('', '', '', user_id, '').then(result => {
-                console.log( result );
+                console.log( "result of getSpot: ", result );
                 for( var s in result.spots ){
                     var name = result.spots[ s ].spot_name;
                     // TODO: to get images from DB
@@ -179,6 +179,8 @@ export default {
                     this.my_spot.push( { "name": name, "src": src, "good": good } );
                 }
                 return true   
+            }).catch((exception) => {
+                console.log( "Error in getSpotByUserId: ", exception );
             })
         },
         getLatestSpots: function( left = 0, right ){
