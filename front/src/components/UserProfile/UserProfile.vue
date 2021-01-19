@@ -60,7 +60,7 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
-// import {getSpot} from '../../routes/spotRequest'
+import {getSpot} from '../../routes/spotRequest'
 
 export default {
 
@@ -73,7 +73,8 @@ export default {
             editer: false,
             dialogEdit: false,
             user: { // ユーザー仮データ
-                username: this.$store.state.userData.userName, 
+                user_id: 'default_id',
+                username: this.$store.state.userData.userName,
                 email: this.$store.state.userData.email,
                 password: this.$store.state.userData.password,
                 src: require('@/assets/pose_kuyashii_man.png')
@@ -117,10 +118,28 @@ export default {
                         { user_id:'000002' },
                         { user_id:'000000' }
                     ]
-                }      
+                },
+                {
+                    name: 'Lotteria',
+                    spotId: '000003',
+                    type: 'restaurant',
+                    user_id: '000003',
+                    username: 'nakamura',
+                    good: 99,
+                    src: require('@/assets/lotteria.png'), 
+                    review:[
+                        { user_id:'000002' },
+                        { user_id:'000000' }
+                    ]
+                } 
             ],
             my_spot: [
+                // 自分の作成したスポット
                 // required attribute: name, src, good
+            ],
+            spot_to_show: [
+                // my_spotのうち表示するスポット
+                // いまはまだ必要ないけど，スポット投稿数が多くなると必要かも
             ]
         }
     },
@@ -128,11 +147,15 @@ export default {
         // call getUser(email) from .vue file:
         getUser(this.user.email)
             .then(result => {
+                console.log(result[0])
                 console.log(result[0].username)
                 this.user.username = result[0].username
                 this.user.user_id = result[0].id
+                this.getSpotByUserId( this.user.user_id )
+                    .then( () =>{
+                        this.getLatestSpots( 0, 28 )
+                })
         })
-        // this.getSpotByUserId( "aaa" ) // ToDo userIDからspot情報を取得
     },
     methods:  {
         editProfile: function() {
@@ -141,18 +164,29 @@ export default {
         closeUserEdit: function(){          
             this.dialogEdit = false
         },
-        // ToDo userIDからspot情報を取得する関数
-        // getSpotByUserId: function(user_id){
-        //     getSpot('', '', '', user_id).then(result => {
-        //         console.log( result );
-        //         for( var s in result.spots ){
-        //             var name = result.spots[ s ].spot_name;
-        //             var src = require( "@/assets/Mac.jpg" );
-        //             var good = 1024;
-        //             this.my_spot.push( { "name": name, "src": src, "good": good } );
-        //         }    
-        //     })
-        // }
+        getSpotByUserId: async function(user_id){
+            console.log( "typeof user_id: ", typeof user_id, user_id )
+            return getSpot('', '', '', user_id, '').then(result => {
+                console.log( "result of getSpot: ", result );
+                for( var s in result.spots ){
+                    var name = result.spots[ s ].spot_name;
+                    // TODO: to get images from DB
+                    var src = require( "@/assets/Mac.jpg" );
+                    if( Math.random() >= 0.5 ){
+                        src = require('@/assets/mos.png');
+                    }
+                    var good = 1024;
+                    this.my_spot.push( { "name": name, "src": src, "good": good } );
+                }
+                return true   
+            }).catch((exception) => {
+                console.log( "Error in getSpotByUserId: ", exception );
+            })
+        },
+        getLatestSpots: function( left = 0, right ){
+            console.log( "latestSpots", ( this.my_spot ).slice( left, right ) )
+            this.spot_to_show = ( this.my_spot ).slice( left, right )
+        }
     }
 };
 </script>
