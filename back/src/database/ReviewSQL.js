@@ -14,8 +14,8 @@ module.exports.saveReview = async function(newReview){
         values: [newReview.spotId]
     };
     const query = {
-        text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5);',
-        values: [newReview.reviewId, newReview.spotId, newReview.comment, newReview.score, newReview.userId]
+        text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id, score1, score2, score3, score4, score5) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);',
+        values: [newReview.reviewId, newReview.spotId, newReview.comment, newReview.score, newReview.userId, newReview.score1, newReview.score2, newReview.score3, newReview.score4, newReview.score5]
     };
 
     if(utility.isEmpty(newReview.spotId)){
