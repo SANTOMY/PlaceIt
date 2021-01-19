@@ -16,7 +16,6 @@
         },
         data () {
             return {
-                Chart: null,
                 review_dict: getSpotTypeDict('review'),
                 spot_types: getSpotTypeDict('type'),
                 color_dict: getSpotTypeDict('color'),
@@ -82,14 +81,6 @@
                 }
             },
         },
-        // watch: {
-        //     datacollection: function() {
-        //         // console.log('debug2')
-        //         // this.Chart.destroy();
-        //     //this.renderChart(this.data, this.options);
-        //     // this.renderLineChart();
-        //     }
-        // }
     }
 </script>
 
