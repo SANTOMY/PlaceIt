@@ -71,14 +71,16 @@
                         <v-row 
                             v-if="chart_disp==true"
                         >
-                            <v-col v-if="chart_disp==true">
+                            <!-- レーダーチャート表示 -->
+                            <v-col justify="center">
                                 <radarChartDisp
                                     v-if="chart_disp==true"
                                     :type="spot_data.types"
                                     :reviewRating="spot_data.score"
                                 /> 
                             </v-col> 
-                            <v-col justify="center">
+                            <!-- レーダーチャートパラメータ -->
+                            <v-col justify="center" align-content="center">
                                 <v-row class="flex-column" cols=3 v-for="n in 5" :key="n">
                                     <v-slider 
                                         v-model="spot_data.score[n-1]"
@@ -166,12 +168,12 @@ export default {
                 university: this.$store.state.userData.university,
                 label: [],
             },
-            all_spot_types: {}, // mountedで取得
-            // color_dict: getSpotTypeDict('color'),
+            all_spot_types: getSpotTypeDict('type'), //spot typeを取得
+            review_dict: getSpotTypeDict('review'), // spot typeに対するレビュー5項目を取得
+
             // アップロードされたファイルを一時的に保管する変数
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
             uploadedFiles: [],
-            review_dict: getSpotTypeDict('review'),
             nameRules: [
                 v => !!v || "スポット名は必須項目です。"
             ],
@@ -180,13 +182,6 @@ export default {
             ]
 
         }
-    },
-    computed(){
-
-    },
-    mounted(){
-        this.all_spot_types = getSpotTypeDict('type')
-        this.$watch()
     },
 
     methods: {
@@ -235,19 +230,13 @@ export default {
                     reader.readAsDataURL(file)    
                 })
             },
-            'spot_data.types': function(){
-                // this.chart.destroy()
-                console.log('debug1')
+            'spot_data.types': function(){ // spot type を変えた時の処理
                 this.chart_disp = false
                 this.spot_data.label = this.review_dict[this.spot_data.types]
                 this.$nextTick(() => (this.chart_disp = true));
             },
-            'spot_data.score': function(){
-                // this.chart.destroy()
-                console.log('debug2')
+            'spot_data.score': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
                 this.chart_disp = false
-                // this.spot_data.label = this.review_dict[this.spot_data.types]
-                // this.chart_disp = true
                 this.$nextTick(() => (this.chart_disp = true));
             },
             deep: true
