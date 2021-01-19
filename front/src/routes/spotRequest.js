@@ -1,6 +1,7 @@
 import {serverIP} from './requestConfig';
+import { average } from './reviewRequest';
 
-async function saveSpot(spotName, x, y, picture, spotType, userId, comment, score, university){
+async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scores, university){
     const url = serverIP + '/spot/saveSpot';
     try{
         let reponse = await fetch(url,{
@@ -11,7 +12,7 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
                 'Content-Type': 'application/json',
                 'Origin': 'http://localhost:8080'
             },
-            body: JSON.stringify({spotName:spotName, x:x, y:y, picture:picture, spotType:spotType, userId:userId, comment:comment, score:score, university:university})
+            body: JSON.stringify({spotName:spotName, x:x, y:y, picture:picture, spotType:spotType, userId:userId, comment:comment, score:average(scores), university:university, score1:scores[0], score2:scores[1], score3:scores[2], score4:scores[3], score5:scores[4]})
         });
         return await reponse.json();
     }catch(exception){

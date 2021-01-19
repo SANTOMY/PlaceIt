@@ -69,7 +69,7 @@ export default {
             });
             this.markers = L.layerGroup(markerSet).addTo(this.map)
           } else {
-            alert('Spot cannot get.')
+            alert('Spot does not exist.')
           }
       },
 
