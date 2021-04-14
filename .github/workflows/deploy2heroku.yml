@@ -10,8 +10,8 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-        - uses: akhileshns/heroku-deploy@v3.7.8
-        - name: push-back
+        - name: push-front
+          uses: akhileshns/heroku-deploy@v3.7.8
           with:
             heroku_api_key: ${{secrets.HEROKU_API_KEY}}
             heroku_app_name: "place-it-front"
@@ -22,8 +22,8 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-        - uses: akhileshns/heroku-deploy@v3.7.8
         - name: push-back
+          uses: akhileshns/heroku-deploy@v3.7.8
           with:
             heroku_api_key: ${{secrets.HEROKU_API_KEY}}
             heroku_app_name: "place-it-back"
