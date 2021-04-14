@@ -44,7 +44,7 @@ export default {
     props: {
         user_name: String,
         comment: String,
-        score: String
+        score: Number, // 警告文解消
     }
 }
 </script>
