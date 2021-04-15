@@ -13,6 +13,6 @@ module.exports = {
     //public: '0.0.0.0:8080',
     host: 'https://place-it-front.herokuapp.com',
     //port: process.env.PORT　|| "8080",
-    //disableHostCheck: true
+    disableHostCheck: true
   },
 }
