@@ -10,7 +10,7 @@ async function saveReview(spotId, comment, scores, userId){
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Origin': 'https://place-it-front.herokuapp.com'
+                'Origin': '0.0.0.0'
             },
             body: JSON.stringify({spotId:spotId, comment:comment, userId:userId, score:average(scores), 
                 score1:scores[0], score2:scores[1], score3:scores[2], score4:scores[3], score5:scores[4]})
