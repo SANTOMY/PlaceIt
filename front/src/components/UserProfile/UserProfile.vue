@@ -48,6 +48,7 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
+import {uploadProfileImage} from "../../routes/imageRequest"
 import AvatarRegister from "./AvatarRegister.vue"
 
 export default {
@@ -128,7 +129,21 @@ export default {
         },
         editAvatarImage: function(image) {
             this.user.src = image;
-        }
+            const imageFile = this.createImageFile(image, "hoge.jpeg"); //あとで別の名前に変化されるから適当な名前で
+            uploadProfileImage(imageFile, 12345)
+                .then(result => {
+                    console.log(result)
+                })
+        },
+
+        createImageFile: function(base64image, name) {
+            var bin = atob(base64image.replace(/^.*,/, ''));
+            var buffer = new Uint8Array(bin.length);
+            for (var i = 0; i < bin.length; i++) {
+                buffer[i] = bin.charCodeAt(i);
+            }
+        return new File([buffer.buffer], name, {type: "image/jpeg"});
+        },
     }
 };
 </script>

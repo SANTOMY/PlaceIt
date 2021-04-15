@@ -158,7 +158,6 @@ export default {
             this.croppedImage = ""
         },
         submitImage: function() {
-            console.log(this.croppedImage); //TODO: データベースに登録
             this.$emit('submit', this.croppedImage);
             this.showDialog = false;
             this.croppedImage = "";
