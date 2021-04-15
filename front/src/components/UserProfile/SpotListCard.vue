@@ -87,7 +87,7 @@
               
                         <v-spacer></v-spacer>
 
-                        <v-icon class="mr-1">mdi-heart</v-icon>
+                        <v-icon class="mr-1">mdi-star</v-icon>
 
                         <span class="subheading mr-2">{{card.good}}</span>
 
@@ -148,6 +148,7 @@
         props: {
             color: String,
             spot_list: null, // おすすめスポット
+            good_spot_list: null, // 自分の評価したスポット
             my_spot_list: null, // 自分の作成したスポット
             user_list: null // 自分のユーザー情報
         },
@@ -181,7 +182,7 @@
             },
             ChangeCategory: function( i ) {
                 // カテゴリ（おすすめ，作成，いいね）や表示ページの変更に伴い，
-                // 表示するスポットを更新する
+                // 表示するスポットを更新する          
                 console.log( "ChangeCategory is called. ( begin, end ): ", this.begin, this.end )
                 if( i != this.select ){
                     this.select = i
@@ -205,15 +206,8 @@
                 }
             },
             GoodSpotSort: function () { // いいね！したスポットを表示する関数
-                let j = 0
-                for (let i = 0; i < this.spot_list.length; i++){
-                    for (let k = 0; k < this.spot_list[i].review.length; k++){
-                        if (this.spot_list[i].review[k].user_id==this.user.user_id){
-                            this.spot[j] = this.spot_list[i]
-                            j++;
-                            continue;
-                        }
-                    }
+                for( let i = this.begin; i < this.end; i++ ){
+                    this.spot[ i - this.begin ] = this.good_spot_list[ i ]
                 }
             },
             RecommendedSpotSort: function () { // おすすめスポットを表示する関数
@@ -229,7 +223,7 @@
                 // < > ←このタイプのボタンが押された時にページ送りする
                 let spot_num
                 if( this.select == 0 ){
-                    spot_num = this.spot_list.length
+                    spot_num = this.good_spot_list.length
                 }else if( this.select == 1 ){
                     spot_num = this.my_spot_list.length
                 }else{
@@ -269,7 +263,7 @@
             spot_num: function(){
                 // 現在のカテゴリにあるスポットの数を計算
                 if( this.select == 0 ){
-                    return this.spot_list.length
+                    return this.good_spot_list.length
                 }else if( this.select == 1 ){
                     return this.my_spot_list.length
                 }else{

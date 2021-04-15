@@ -50,6 +50,7 @@
             v-bind:spot_list="spot"
             v-bind:user_list="user"
             v-bind:my_spot_list="my_spot"
+            v-bind:good_spot_list="good_spot"
             color="green"
         ></SpotListCard>
     </v-container>
@@ -61,6 +62,8 @@ import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
 import {getSpot} from '../../routes/spotRequest'
+import { average } from '../../routes/reviewRequest';
+import {getReviewByUserId} from '../../routes/reviewRequest'
 
 export default {
 
@@ -140,6 +143,9 @@ export default {
             spot_to_show: [
                 // my_spotのうち表示するスポット
                 // いまはまだ必要ないけど，スポット投稿数が多くなると必要かも
+            ],
+            good_spot: [
+                // 自分が評価したスポット
             ]
         }
     },
@@ -155,6 +161,10 @@ export default {
                     .then( () =>{
                         this.getLatestSpots( 0, 28 )
                 })
+                this.getSpotYouReviewed( this.user.user_id )
+                    .then( () =>{
+                        return
+                    } )
         })
     },
     methods:  {
@@ -175,13 +185,67 @@ export default {
                     if( Math.random() >= 0.5 ){
                         src = require('@/assets/mos.png');
                     }
-                    var good = 1024;
+                    var scores = [];
+                    for( var r in result.review ){
+                        if( result.spots[ s ].spot_id == result.review[ r ].spot_id ){
+                            scores.push( result.review[ r ].score );
+                        }
+                    }
+                    var good = average( scores );
                     this.my_spot.push( { "name": name, "src": src, "good": good } );
                 }
                 return true   
             }).catch((exception) => {
                 console.log( "Error in getSpotByUserId: ", exception );
             })
+        },
+        getSpotYouReviewed: async function( user_id ){
+            console.log( "typeof user_id: ", typeof user_id, user_id )
+            return getReviewByUserId( user_id ).then( result => {
+                console.log( 'result of getReviewByUserId: ', result );
+                for( let r of result.review ){
+                    var reviewd_spot_id = r.spot_id
+                    getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
+                        for( var s of result.spots ){
+                            var name = s.spot_name;
+                            // TODO: to get images from DB
+                            var src = require( "@/assets/Mac.jpg" );
+                            if( Math.random() >= 0.5 ){
+                                src = require('@/assets/mos.png');
+                            }
+                            var scores = [];
+                            for( var re in result.review ){
+                                if( s.spot_id == result.review[ re ].spot_id ){
+                                    scores.push( result.review[ re ].score );
+                                }
+                            }
+                            var good = average( scores );
+                            this.good_spot.push( { "name": name, "src": src, "good": good } );
+                        }
+                    } ).catch((exception) => {
+                        console.log( "Error in getSpotByUserId: ", exception );
+                    })
+                }
+                return true
+            } ).catch((exception) => {
+                console.log( "Error in getSpotYouReviewed: ", exception );
+            })
+            // return getSpot('', '', '', '', '').then(result => {
+            //     console.log( "result of getSpot2: ", result );
+            //     for( var s in result.spots ){
+            //         var name = result.spots[ s ].spot_name;
+            //         // TODO: to get images from DB
+            //         var src = require( "@/assets/Mac.jpg" );
+            //         if( Math.random() >= 0.5 ){
+            //             src = require('@/assets/mos.png');
+            //         }
+            //         var good = result.review[ s ].score;
+            //         this.spot.push( { "name": name, "src": src, "good": good } );
+            //     }
+            //     return true   
+            // }).catch((exception) => {
+            //     console.log( "Error in getSpotByUserId: ", exception );
+            // })
         },
         getLatestSpots: function( left = 0, right ){
             console.log( "latestSpots", ( this.my_spot ).slice( left, right ) )
