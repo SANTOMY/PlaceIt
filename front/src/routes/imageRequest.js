@@ -19,4 +19,16 @@ async function uploadProfileImage(imageFile, userId){
     }
 }
 
-export {uploadProfileImage}
+async function getProfileImage(userId){
+    const url = serverIP + '/upload/profile-image/' + userId;
+    try{
+        let response = await fetch(url,);
+        let responseBlob = await response.blob();
+        return responseBlob;
+    } catch(exception){
+        console.log(exception);
+        return {success:false, review:exception};
+    }
+}
+
+export {uploadProfileImage, getProfileImage}

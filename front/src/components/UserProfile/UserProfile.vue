@@ -48,7 +48,7 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
-import {uploadProfileImage} from "../../routes/imageRequest"
+import {uploadProfileImage, getProfileImage} from "../../routes/imageRequest"
 import AvatarRegister from "./AvatarRegister.vue"
 
 export default {
@@ -66,7 +66,7 @@ export default {
                 username: this.$store.state.userData.userName, 
                 email: this.$store.state.userData.email,
                 password: this.$store.state.userData.password,
-                src: require('@/assets/pose_kuyashii_man.png')
+                src: ""
             },
             spot: [ // spot仮データ
                 {
@@ -119,6 +119,16 @@ export default {
                 this.user.username = result[0].username
                 // this.user.password = result[0].password
         })  
+
+        getProfileImage(this.$store.state.userData.userId)
+            .then(blob => {
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    this.user.src =  e.target.result;
+                };
+                reader.readAsDataURL(blob);
+            })
+
     },
     methods:  {
         editProfile: function() {
