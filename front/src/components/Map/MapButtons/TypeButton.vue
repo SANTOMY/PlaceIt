@@ -67,7 +67,7 @@ export default {
         //選ばれたジャンルタイプをMapに送信
         changeSearchType(type){
             this.nowType = type;
-            this.$emit('update-type',this.nowType);
+            this.$emit('change-search-type',this.nowType);
         },
         
     }

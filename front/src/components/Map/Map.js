@@ -6,6 +6,7 @@ import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
 import univButton from './MapButtons/UnivButton.vue'
+import searchDialog2 from './MapButtons/SearchDialog2.vue'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -23,7 +24,8 @@ export default {
       nowLocButton,
       typeButton,
       spotDetail,
-      univButton
+      univButton,
+      searchDialog2
     },
     data: function(){
       return {

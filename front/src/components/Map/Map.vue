@@ -2,7 +2,10 @@
 <!-- mapレイヤのような形で生成される -->
   <div id='map'>
     <!-- spot種別検索メニュー -->
+    <!--
     <type-button @update-type="updateType"/>
+    -->
+    <search-dialog-2 @update-type="updateType" />
     <!-- 大学名検索ボタン -->
     <univ-button :univFlag="univFlag" v-on:click.native="updateUniv()" v-if='this.$store.state.userData != null'/>
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
@@ -10,6 +13,7 @@
     <!-- 現在地ボタン -->
     <now-loc-button v-on:click.native="setNowLocation()"/>
     <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
+    
   </div>  
 </template>
 
