@@ -66,7 +66,7 @@ export default {
                 username: this.$store.state.userData.userName, 
                 email: this.$store.state.userData.email,
                 password: this.$store.state.userData.password,
-                src: ""
+                src: require('@/assets/pose_kuyashii_man.png')
             },
             spot: [ // spot仮データ
                 {
@@ -121,12 +121,17 @@ export default {
         })  
 
         getProfileImage(this.$store.state.userData.userId)
-            .then(blob => {
+            .then(result => {
+                console.log(result)
+
+                if(!result.success) {
+                    return;
+                }
                 const reader = new FileReader()
                 reader.onload = (e) => {
                     this.user.src =  e.target.result;
                 };
-                reader.readAsDataURL(blob);
+                reader.readAsDataURL(result.blob);
             })
 
     },
