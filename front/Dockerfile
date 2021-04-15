@@ -10,6 +10,7 @@ COPY ./src /app/src
 
 RUN apk update && \
     apk add --no-cache nodejs npm && \
-    npm install
+    npm install && \
+    npm run build
 
 CMD ["npm","run","serve"]

@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+app.use(serveStatic(__dirname + "/dist"));
 let port = process.env.PORT　|| "5000"
 
 const bodyParser = require('body-parser')
