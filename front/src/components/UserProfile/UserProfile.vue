@@ -130,8 +130,7 @@ export default {
         editAvatarImage: function(image) {
             this.user.src = image;
             const imageFile = this.createImageFile(image, "hoge.jpeg"); //あとで別の名前に変えられるから適当な名前で
-            console.log(this.$store.state.userData.userId)
-            uploadProfileImage(imageFile, 12345)
+            uploadProfileImage(imageFile, this.$store.state.userData.userId)
                 .then(result => {
                     console.log(result)
                 })
