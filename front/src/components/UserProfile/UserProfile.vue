@@ -66,7 +66,7 @@ export default {
                 username: this.$store.state.userData.userName, 
                 email: this.$store.state.userData.email,
                 password: this.$store.state.userData.password,
-                src: require('@/assets/pose_kuyashii_man.png')
+                src: require('@/assets/default-icon.jpeg')
             },
             spot: [ // spot仮データ
                 {
