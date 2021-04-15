@@ -10,9 +10,9 @@ module.exports = {
   },
   transpileDependencies: vuetifyOptional.length > 0 ? ["vuetify"] : [],
   devServer: {
-    //public: '0.0.0.0:8080',
-    host: '0.0.0.0',
-    port: process.env.PORT　|| "8080",
-    disableHostCheck: true
+    public: 'https://place-it-front.herokuapp.com',
+    //host: '0.0.0.0',
+    //port: process.env.PORT　|| "8080",
+    //disableHostCheck: true
   },
 }
