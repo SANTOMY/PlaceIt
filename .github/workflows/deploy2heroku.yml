@@ -2,7 +2,7 @@ name: heroku
 on:
   push:
     branches:
-      - TestForDeploy
+      - deploy
   workflow_dispatch:
 
 jobs: 
