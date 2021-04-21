@@ -175,7 +175,6 @@ export default {
             this.dialogEdit = false
         },
         getSpotByUserId: async function(user_id){
-            console.log( "typeof user_id: ", typeof user_id, user_id )
             return getSpot('', '', '', user_id, '').then(result => {
                 console.log( "result of getSpot: ", result );
                 for( var s in result.spots ){
@@ -200,28 +199,31 @@ export default {
             })
         },
         getSpotYouReviewed: async function( user_id ){
-            console.log( "typeof user_id: ", typeof user_id, user_id )
             return getReviewByUserId( user_id ).then( result => {
                 console.log( 'result of getReviewByUserId: ', result );
+                var reviewd_spot_ids = new Set()
                 for( let r of result.review ){
-                    var reviewd_spot_id = r.spot_id
+                    reviewd_spot_ids.add( r.spot_id );
+                }
+                console.log( 'reviewed_spot_ids: ', reviewd_spot_ids )
+                for( let reviewd_spot_id of reviewd_spot_ids ){
                     getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
-                        for( var s of result.spots ){
-                            var name = s.spot_name;
-                            // TODO: to get images from DB
-                            var src = require( "@/assets/Mac.jpg" );
-                            if( Math.random() >= 0.5 ){
-                                src = require('@/assets/mos.png');
-                            }
-                            var scores = [];
-                            for( var re in result.review ){
-                                if( s.spot_id == result.review[ re ].spot_id ){
-                                    scores.push( result.review[ re ].score );
-                                }
-                            }
-                            var good = average( scores );
-                            this.good_spot.push( { "name": name, "src": src, "good": good } );
+                        console.log( 'results of getSpot', result )
+                        var s = result.spots[ 0 ];
+                        var name = s.spot_name;
+                        // TODO: to get images from DB
+                        var src = require( "@/assets/Mac.jpg" );
+                        if( Math.random() >= 0.5 ){
+                            src = require('@/assets/mos.png');
                         }
+                        var scores = [];
+                        for( var re in result.review ){
+                            if( s.spot_id == result.review[ re ].spot_id ){
+                                scores.push( result.review[ re ].score );
+                            }
+                        }
+                        var good = average( scores );
+                        this.good_spot.push( { "name": name, "src": src, "good": good } );
                     } ).catch((exception) => {
                         console.log( "Error in getSpotByUserId: ", exception );
                     })
@@ -230,22 +232,6 @@ export default {
             } ).catch((exception) => {
                 console.log( "Error in getSpotYouReviewed: ", exception );
             })
-            // return getSpot('', '', '', '', '').then(result => {
-            //     console.log( "result of getSpot2: ", result );
-            //     for( var s in result.spots ){
-            //         var name = result.spots[ s ].spot_name;
-            //         // TODO: to get images from DB
-            //         var src = require( "@/assets/Mac.jpg" );
-            //         if( Math.random() >= 0.5 ){
-            //             src = require('@/assets/mos.png');
-            //         }
-            //         var good = result.review[ s ].score;
-            //         this.spot.push( { "name": name, "src": src, "good": good } );
-            //     }
-            //     return true   
-            // }).catch((exception) => {
-            //     console.log( "Error in getSpotByUserId: ", exception );
-            // })
         },
         getLatestSpots: function( left = 0, right ){
             console.log( "latestSpots", ( this.my_spot ).slice( left, right ) )

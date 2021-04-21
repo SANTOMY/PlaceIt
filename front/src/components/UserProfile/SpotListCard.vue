@@ -158,7 +158,7 @@
             select: 2, //The default is a recommended spot.
             drawer: false,
             items: [
-                { title: 'いいね！したスポット', icon: 'mdi-home-city' },
+                { title: 'レビューしたスポット', icon: 'mdi-home-city' },
                 { title: '作成スポット', icon: 'mdi-account' },
                 { title: 'おすすめスポット', icon: 'mdi-account-group-outline' },
             ],
@@ -181,8 +181,8 @@
                 this.jumpSpotPage(number)
             },
             ChangeCategory: function( i ) {
-                // カテゴリ（おすすめ，作成，いいね）や表示ページの変更に伴い，
-                // 表示するスポットを更新する          
+                // カテゴリ（おすすめ，作成，レビュー）や表示ページの変更に伴い，
+                // 表示するスポットを更新する
                 console.log( "ChangeCategory is called. ( begin, end ): ", this.begin, this.end )
                 if( i != this.select ){
                     this.select = i
@@ -205,7 +205,7 @@
                     this.spot[ i - this.begin ] = this.my_spot_list[ i ]
                 }
             },
-            GoodSpotSort: function () { // いいね！したスポットを表示する関数
+            GoodSpotSort: function () { // レビューしたスポットを表示する関数
                 for( let i = this.begin; i < this.end; i++ ){
                     this.spot[ i - this.begin ] = this.good_spot_list[ i ]
                 }
