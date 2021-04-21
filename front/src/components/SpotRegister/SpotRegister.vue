@@ -37,16 +37,6 @@
                                 </v-chip>
                             </template>
                         </v-select>
-
-                        <!-- スポットの評価 -->
-                        <p>スポットの評価</p>
-                        <star-rating
-                        class="mb-5"
-                            v-model="spot_data.rating"
-                            :increment=0.5
-                        >
-                        </star-rating>
-
                         <!-- スポットの説明 -->
                         <v-textarea
                             v-model="spot_data.comment"
@@ -55,17 +45,47 @@
                             label="コメント"
                         ></v-textarea>
 
-                        <!-- スポットの点数 -->
                         <v-chip 
                             class = "mb-5"
                             label text-color="brack">
                             <h3>スコア</h3>
                         </v-chip>
-                        <star-rating
-                            v-model="spot_data.score"
-                            @rating-selected="ratingSelected"
-                            @current-rating="currentRating"
-                        ></star-rating>
+
+                        <v-row v-if="chart_disp==true">
+                            <!-- レーダーチャート表示 -->
+                            <v-col cols="5" justify="center">
+                                <radarChartDisp
+                                    v-if="chart_disp==true"
+                                    :type="spot_data.types"
+                                    :reviewRating="spot_data.scores"
+                                /> 
+                            </v-col>
+                            <!-- レーダーチャートパラメータ -->
+                            <v-col cols="6" justify="center">
+                                <v-row v-for="i in 5" :key="i" align="center">
+                                    <v-col>
+                                        <h3>{{criteria_list[i - 1]}}</h3>
+                                    </v-col>
+                                    <v-col>
+                                        <star-rating
+                                            v-model="spot_data.scores[i - 1]"
+                                        />                                
+                                    </v-col>
+                                </v-row>
+                            </v-col>
+                            
+                            <!-- v-sliderでのパラメータ設定 -->
+                            <!-- <v-col cols=5 justify="center" align-content="center">
+                                <v-row class="flex-column" v-for="n in 5" :key="n">
+                                    <v-slider 
+                                        v-model="spot_data.scores[n-1]"
+                                        color="orange darken-3"
+                                        :label="criteria_list[n-1]"
+                                        :max="5"
+                                    ></v-slider>
+                                </v-row>
+                            </v-col> -->
+                        </v-row>
 
                         <!-- スポットの画像ファイル -->
                         <v-file-input
@@ -119,35 +139,35 @@ import SpotTypeIcon from "../share/SpotTypeIcon.vue"
 import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import {saveSpot} from '../../routes/spotRequest'
 import StarRating from 'vue-star-rating'
+import radarChartDisp from '../share/RadarChartDisp'
 
 export default {
 
     components: {
         SpotTypeIcon,
-        StarRating
+        StarRating,
+        radarChartDisp,
     },
     data: function() {
         return {
+            chart_disp: false,
             spot_data: {
                 name: "",
-                x:   this.$route.query.lon,
-                y: this.$route.query.lat,
+                x:  this.$route.query.lon,
+                y:  this.$route.query.lat,
                 photos: "dir",
                 types: "",
-                userId: this.$store.state.userId,
+                userId: this.$store.state.userData.userId,
                 comment: "",
-                score: null
+                scores: [0,0,0,0,0],
+                university: this.$store.state.userData.university,
             },
-            //ここの記述があんまり良くない
-            //新しいタイプが追加されると他に書き換えるところが出てくる(SpotTypeIcon.vueなど)
-            //スポットタイプ名のリストをどこかにまとめる方法はないか
-            // =>解決
-            all_spot_types: {}, // mountedで取得
+            criteria_list: [],
+            all_spot_types: getSpotTypeDict('type'), //spot typeを取得
 
             // アップロードされたファイルを一時的に保管する変数
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
             uploadedFiles: [],
-
             nameRules: [
                 v => !!v || "スポット名は必須項目です。"
             ],
@@ -157,9 +177,6 @@ export default {
 
         }
     },
-    mounted(){
-        this.all_spot_types = getSpotTypeDict('type')
-    },
 
     methods: {
         onClickedRegisterButton: function() {
@@ -168,9 +185,7 @@ export default {
                 return
             }
             if(this.check_database()) {
-                console.log("Front spotName" + this.spot_data.name)
-                console.log(this.spot_data.x, this.spot_data.y, this.spot_data.photos)
-                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.score)
+                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.scores, this.spot_data.university)
                 //console.log(resp.success)
                 this.create_spot()
                 //this.$router.push('/map')
@@ -179,7 +194,6 @@ export default {
                     console.log("failed to send database")
                 }
             //TODO: スポットをデータベースに登録する処理
-            console.log(this.spot_data)     // Debug
             this.$router.push('/map')
         },
         check_database: function() {
@@ -195,20 +209,30 @@ export default {
         this.$emit('rating-selected',val)
         },
         currentRating: function (val) {
-            this.$emit('current-rating',val)}
-        },
-
-        watch: {
-            uploadedFiles: function() {
-                this.spot_data.photos = []
-                this.uploadedFiles.forEach(file => {
-                    const reader = new FileReader()         //ファイルリーダを用意
-                    reader.onload = (e) => {                //読み込みが完了したら配列に追加
-                        this.spot_data.photos.push(e.target.result)
-                    }
-                    reader.readAsDataURL(file)    
-                })
-            }
+            this.$emit('current-rating',val)
         }
+    },
+
+    watch: {
+        uploadedFiles: function() {
+            this.spot_data.photos = []
+            this.uploadedFiles.forEach(file => {
+                const reader = new FileReader()         //ファイルリーダを用意
+                reader.onload = (e) => {                //読み込みが完了したら配列に追加
+                    this.spot_data.photos.push(e.target.result)
+                }
+                reader.readAsDataURL(file)    
+            })
+        },
+        'spot_data.types': function(){ // spot type を変えた時の処理
+            this.chart_disp = false
+            this.criteria_list = getSpotTypeDict('review')[this.spot_data.types];
+            this.$nextTick(() => (this.chart_disp = true));
+        },
+        'spot_data.scores': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
+            this.chart_disp = false
+            this.$nextTick(() => (this.chart_disp = true));
+        },
+    },
 }
 </script>

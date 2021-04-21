@@ -1,5 +1,6 @@
 <template>
     <v-app-bar app>
+        <!-- アプリタイトル -->
         <v-toolbar-title
             class="px-5"
         >
@@ -7,7 +8,7 @@
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
-
+        <!-- マップボタン -->
         <v-btn 
             to="/map"
             class="px-10 mx-2"
@@ -23,10 +24,10 @@
             </v-icon>
             Map
         </v-btn>
-        
+        <!-- ユーザーボタン -->
         <v-menu 
-          offset-y :close-on-click="clockseOnClick"
-          close-on-content-click=false
+          offset-y 
+          :close-on-click="clockseOnClick"
           v-if="isLoggedIn"
           
         >
@@ -39,9 +40,9 @@
             <v-list>
                 <v-list-item>
                     <v-btn to="/user" class="px-8 mb-2">
-                    <v-icon left large color="gray" class="px-5"> mdi-account-circle</v-icon>
-                    Profile
-                </v-btn>
+                        <v-icon left large color="gray" class="px-5"> mdi-account-circle</v-icon>
+                        Profile
+                    </v-btn>
                 </v-list-item>
                 <v-list-item>
                     <v-btn @click="logout" class="px-8">
@@ -51,7 +52,7 @@
                 </v-list-item>
             </v-list>
         </v-menu>
-
+        <!-- サインアップボタン -->
         <v-btn
             to="/signup"
             class="px-10 mx-2"
@@ -68,7 +69,7 @@
             </v-icon>
             Sign Up
         </v-btn>
-        
+        <!-- ログインボタン -->
         <v-btn
             to="/login"
             class="px-10 mx-2"
@@ -93,10 +94,12 @@
 export default {
     
     data (){
-        return {items: [
+        return { 
+            items: [
                 {option: 'Profile', src: '/user'},
                 {option: 'Logout', src: '/map'}
-            ]
+            ],
+            clockseOnClick:true
         }
     },
     computed: {

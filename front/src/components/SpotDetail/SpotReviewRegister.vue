@@ -1,7 +1,7 @@
 <template>
     <v-dialog
       v-model="showDialog"
-      width="800"
+      width="1000"
     >
         <!-- ダイアログを開くボタン -->
         <template v-slot:activator="{ on, attrs }">
@@ -31,14 +31,31 @@
                     ></v-textarea>
                 </v-form>
 
-                <!-- 評価ボタン -->
-                <v-row justify="space-between">
-                    <v-col cols="5">
-                        <star-rating
-                            v-model="review_data.rating"
-                        />
+                <v-row justify="space-between" align="center">
+                    <!-- 評価ボタン -->
+                    <v-col cols="5" justify="center">
+                        <radarChartDisp
+                            v-if="chart_disp==true"
+                            :type="spot_type"
+                            :reviewRating="review_data.scores"
+                        /> 
                     </v-col>
-                    <v-col cols="5">
+                    <v-col cols="6">
+                        <v-row v-for="i in 5" :key="i" align="center">
+                            <v-col>
+                                <h3>{{criteria_list[i - 1]}}</h3>
+                            </v-col>
+                            <v-col>
+                                <star-rating
+                                    v-model="review_data.scores[i - 1]"
+                                />                                
+                            </v-col>
+
+                        </v-row>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col justify="center">
                     <!-- 投稿ボタン -->
                         <v-btn 
                             block
@@ -58,33 +75,55 @@
 <script>
 import starRating from 'vue-star-rating'
 import { saveReview } from '../../routes/reviewRequest';
+import { getSpotTypeDict } from '../share/SpotTypeFunction';
+import radarChartDisp from '../share/RadarChartDisp'
+
 export default {
     components: {
-        starRating
+        starRating,
+        radarChartDisp,
     },
     data: function() {
         return {
             showDialog: false,
-
             review_data: {
                 comment: "",
-                rating: 3
-            }
-
+                scores: [0, 0, 0, 0, 0]
+            },
+            criteria_list: [],
+            chart_disp: true
         }
     },
     props: {
-        spot_id: String
+        spot_id: String,
+        spot_type: String
     },
     methods: {
         onClickedRegisterButton: function() {
             this.showDialog = false;
-            saveReview(this.spot_id, this.review_data.comment, this.review_data.rating, this.$store.state.userData.id)
+            for(var i = 0; i < 5; i++) {
+                console.log(i + ": " + this.review_data.scores[i]);
+            }
+            console.log();
+            saveReview(this.spot_id, this.review_data.comment, this.review_data.scores, this.$store.state.userData.userId)
                 .then(res => {
                     console.log(res)        // Debug
                     this.$emit('submit')
                 })
-        }
+        },
+
+    },
+
+    mounted: function() {
+        this.criteria_list = getSpotTypeDict('review')[this.spot_type];
+        console.log(this.criteria_list)
+    },
+
+    watch:{
+        'review_data.scores': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
+            this.chart_disp = false
+            this.$nextTick(() => (this.chart_disp = true));
+        },        
     }
     
 }

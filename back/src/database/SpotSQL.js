@@ -10,12 +10,12 @@ const utility = require('../utility');
 
 async function saveSpot(newSpot){
     const query1 = {
-        text: `INSERT INTO spots.spots(spot_id, spot_name, x, y, geom, picture, spot_type, user_id) VALUES($1, $2, ${newSpot.x}, ${newSpot.y}, ST_GeomFromText('POINT(${newSpot.x} ${newSpot.y})', 4326), $3, $4, $5);`,
-        values: [newSpot.spotId, newSpot.spotName, newSpot.picture, newSpot.spotType, newSpot.userId]
+        text: `INSERT INTO spots.spots(spot_id, spot_name, x, y, geom, picture, spot_type, user_id, university) VALUES($1, $2, ${newSpot.x}, ${newSpot.y}, ST_GeomFromText('POINT(${newSpot.x} ${newSpot.y})', 4326), $3, $4, $5, $6);`,
+        values: [newSpot.spotId, newSpot.spotName, newSpot.picture, newSpot.spotType, newSpot.userId, newSpot.university]
     };
     const query2 = {
-        text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id) VALUES($1, $2, $3, $4, $5);',
-        values: [newSpot.reviewId, newSpot.spotId, newSpot.comment, newSpot.score, newSpot.userId]
+        text: 'INSERT INTO spots.review(review_id, spot_id, comment, score, user_id, score1, score2, score3, score4, score5) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);',
+        values: [newSpot.reviewId, newSpot.spotId, newSpot.comment, newSpot.score, newSpot.userId, newSpot.score1, newSpot.score2, newSpot.score3, newSpot.score4, newSpot.score5]
     };
     const deleteSpotQuery = {
         text: 'DELETE from spots.spots where spot_id = $1;',
