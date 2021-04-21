@@ -62,8 +62,8 @@ import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
 import {getSpot} from '../../routes/spotRequest'
-import { average } from '../../routes/reviewRequest';
-import {getReviewByUserId} from '../../routes/reviewRequest'
+import {average} from '../../routes/reviewRequest';
+import {getReviewByUserId} from '../../routes/reviewRequest';
 
 export default {
 
@@ -162,9 +162,7 @@ export default {
                         this.getLatestSpots( 0, 28 )
                 })
                 this.getSpotYouReviewed( this.user.user_id )
-                    .then( () =>{
-                        return
-                    } )
+                // TODO: ↑が終わるまで表示を待機させたい
         })
     },
     methods:  {
