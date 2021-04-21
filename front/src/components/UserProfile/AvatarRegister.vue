@@ -136,11 +136,11 @@ export default {
         }
     },
     methods: {
-        cropImage: function() {
+        cropImage: function() {  //切り取りウィンドウで指定した領域に画像を切り取る
             const raw_size_image = this.$refs.cropper.getCroppedCanvas().toDataURL();
             this.resizeImage(raw_size_image);
         },
-        resizeImage: function(base64image) {       
+        resizeImage: function(base64image) {  //切り取った画像をリサイズする    
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = this.AVATAR_SIZE;
@@ -148,16 +148,16 @@ export default {
             var image = new Image();
             image.crossOrigin = "Anonymous";
             image.onload = (event) => {
-                console.log(event)
+                console.log(event);
                 ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, this.AVATAR_SIZE, this.AVATAR_SIZE);
-                this.croppedImage = canvas.toDataURL('image/jpeg');
+                this.croppedImage = canvas.toDataURL('image/jpeg'); //最終的にcroppedImageにbase64の画像データが入る
             };
             image.src = base64image;
         },
-        cancelCrop: function() {
+        cancelCrop: function() {  //切り取り中止
             this.croppedImage = ""
         },
-        submitImage: function() {
+        submitImage: function() {  //設定するボタンを押した時の動作
             this.$emit('submit', this.croppedImage);
             this.showDialog = false;
             this.croppedImage = "";
