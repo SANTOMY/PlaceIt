@@ -61,12 +61,9 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
-<<<<<<< HEAD
 import {uploadProfileImage, getProfileImage} from "../../routes/imageRequest"
 import AvatarRegister from "./AvatarRegister.vue"
-=======
 import {getSpot} from '../../routes/spotRequest'
->>>>>>> develop
 
 export default {
 
