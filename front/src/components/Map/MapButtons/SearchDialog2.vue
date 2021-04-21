@@ -1,14 +1,17 @@
 <template>
+  <div>
   <!-- 検索ダイアログ -->
   <v-dialog 
   v-model="dialog"
+  width="500"
   >
-  <template v-slot:activator="{ on }">
+  <template v-slot:activator="{ on,attrs }">
   <!--ダイアログ呼び出しのボタン-->
   <v-btn
   id="search-button"
   class="mx-15 my-5"
   fab
+  v-bind="attrs"
   v-on="on"
   >
     <v-icon
@@ -22,6 +25,7 @@
   <!-- ダイアログの中身 -->
   <v-card>
     <!-- スポットタイプ検索 -->
+    <v-container>
     <v-btn-toggle
       v-model="nowType"
       group
@@ -48,26 +52,37 @@
             {{featureIcons["restaurant"]}}
           </v-icon>
         </v-btn>
-      <!--
-      <v-btn
-      v-for="(type,index) in types"
-      :key="index"
-      value=""
-      class="mx-auto"
-      >
-        <v-icon>
-          {{featureIcons[type]}}
-        </v-icon>
-      </v-btn>
-      -->
     </v-btn-toggle>
+    </v-container>
+    <v-container>
+    <!-- 大学別検索 -->
+    
+    <v-btn-toggle
+      v-model="nowUniv"
+      group
+      mandatory
+      >
+        <v-btn value="false" class="mx-auto" fab >
+          <v-icon>
+            mdi-alpha-a-circle-outline
+          </v-icon>
+        </v-btn>
+        <v-btn value="true" class="mx-auto" fab >
+          <v-icon>
+            mdi-account-cowboy-hat
+          </v-icon>
+        </v-btn>
+    </v-btn-toggle>
+    
+    </v-container>
     <v-card-actions>
-      <v-btn @click="Search()">
+      <v-btn @click="Search(); dialog=false">
         Search
-      </v-btn>
+      </v-btn> 
     </v-card-actions>
     </v-card>
   </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -81,7 +96,10 @@ export default {
       nowType:'reset',//スポット検索の種別
       featureIcons: getSpotTypeDict('icon'), // iconを格納するオブジェクト -> mountedでデータ追加
       types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
-      typeNameList: getSpotTypeDict('type') //spot type object のkey配列作成 -> mountedで'reset'追加
+      typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
+      nowUniv:"",//現在の大学
+      myUniv:this.$store.state.userData.university,//所属大学
+      dialog:false//検索ダイアログ表示管理
     }
   },
   components: {
@@ -94,6 +112,7 @@ export default {
     mounted(){
         this.types.push(... this.typeNameList ) // typesにtype name listを追加
         this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
+        console.log(this.nowUniv)
     },
 
     //props: ['regFlag']
@@ -101,6 +120,7 @@ export default {
       Search(){
         //選ばれたジャンルタイプをMapに送信
         this.$emit('update-type',this.nowType);
+        this.$emit('update-type',this.nowUniv);
       },
     }
     

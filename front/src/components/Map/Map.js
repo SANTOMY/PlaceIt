@@ -146,6 +146,7 @@ export default {
         } else{
           await this.showSpot(type,"");
         }
+
       },
       //大学検索の有効化・無効化関数
       updateUniv: async function(){
