@@ -115,18 +115,13 @@ export default {
         // call getUser(email) from .vue file:
         getUser(this.user.email)
             .then(result => {
-                console.log(result[0].username)
                 this.user.username = result[0].username
                 // this.user.password = result[0].password
         })  
 
         getProfileImage(this.$store.state.userData.userId)
             .then(result => {
-                console.log(result)
-
-                if(!result.success) {
-                    return;
-                }
+                if(!result.success) return;
                 const reader = new FileReader()
                 reader.onload = (e) => {
                     this.user.src =  e.target.result;
@@ -144,11 +139,8 @@ export default {
         },
         editAvatarImage: function(image) {
             this.user.src = image;
-            const imageFile = this.createImageFile(image, "hoge.jpeg"); //あとで別の名前に変えられるから適当な名前で
+            const imageFile = this.createImageFile(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
             uploadProfileImage(imageFile, this.$store.state.userData.userId)
-                .then(result => {
-                    console.log(result)
-                })
         },
 
         createImageFile: function(base64image, name) {
