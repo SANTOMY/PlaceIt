@@ -4,12 +4,9 @@ ENV NODE_ENV development
 
 #RUN mkdir app
 WORKDIR /app
-ADD package.json .
-
-COPY ./src /app/src
+ADD ./ ./
 
 RUN apk update && \
-    apk add --no-cache nodejs npm && \
-    npm install
+    apk add --no-cache nodejs npm
 
 CMD ["npm","run","serve"]
