@@ -83,7 +83,7 @@ async function uploadSpotPicture(newImage){
 
 async function getSpotPicture(spotId){
     const query = {
-        text: `SELECT * from images.spot where userid='${spotId}'`
+        text: `SELECT * from images.spot where spotid='${spotId}'`
     };
 
     const client = await pool.connect();
