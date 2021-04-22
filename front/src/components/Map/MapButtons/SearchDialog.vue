@@ -54,8 +54,8 @@
     </v-btn-toggle>
     </v-container>
     <v-container>
-    <!-- 大学別検索 -->
     
+    <!-- 大学別検索 -->
     <v-btn-toggle
       v-model="nowUniv"
       group
