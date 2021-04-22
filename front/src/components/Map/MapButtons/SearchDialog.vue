@@ -1,69 +1,88 @@
 <template>
-<!-- 検索メニュー表示 -->
-    <v-menu
-    v-model="menu"
-    id="search-dialog"
-    bottom
-    offset-x
-    >
-    <!-- 検索ボタン-->
-    <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          id = "dialog-button"
-          class="mx-10 my-5"
-          v-bind="attrs"
-          fab
-          v-on="on"
-        >
-        <v-icon
-        v-if="!regFlag"
-        class="px-5"
-        large
-        >
-        mdi-card-search-outline
-        </v-icon>
+  <div>
+  <!-- 検索ダイアログ -->
+  <v-dialog 
+  v-model="dialog"
+  width="500"
+  >
+  <template v-slot:activator="{ on,attrs }">
+  <!--ダイアログ呼び出しのボタン-->
+  <v-btn
+  id="search-button"
+  class="mx-15 my-5"
+  fab
+  v-bind="attrs"
+  v-on="on"
+  >
+    <v-icon
+      class="px-5"
+      large
+      >
+      mdi-card-search-outline
+    </v-icon>
+  </v-btn>
+  </template>
+  <!-- ダイアログの中身 -->
+  <v-card>
+    <!-- スポットタイプ検索 -->
+    <v-container>
+    <v-btn-toggle
+      v-model="nowType"
+      group
+      mandatory
+      >
+        <!-- v-forとか使ってまとめたい(SATD) -->
+        <v-btn value="reset" class="mx-auto" fab >
+          <v-icon>
+            {{featureIcons["reset"]}}
+          </v-icon>
         </v-btn>
-      </template>
-      <!-- ボタンの中身 -->
-        <template>
-          <!-- スポットタイプ検索 -->
-          <v-menu
-            id='feature-menu'
-            >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                id='feature-button'
-                v-bind="attrs"
-                v-on="on" 
-              >
-                <!-- 現在の検索種別のアイコンを表示 -->
-                <v-icon
-                  class="px-5"
-                  large
-                  >
-                    {{featureIcons[nowType]}}
-                </v-icon>
-              </v-btn>
-            </template>
-            <!-- 検索メニュー -->
-            <v-list 
-              id='feature-list' 
-              absolute
-              >
-                <v-list-item
-                  v-for="(type,index) in types"
-                  :key="index"
-                  link
-                  >
-                  <v-list-item-title
-                    v-on:click="changeSearchType(type)"
-                  >{{ type }}</v-list-item-title>
-                </v-list-item>
-            </v-list>
-          </v-menu>
-        </template>
-
-     </v-menu>
+        <v-btn value="travel" class="mx-auto" fab>
+          <v-icon>
+            {{featureIcons["travel"]}}
+          </v-icon>
+        </v-btn>
+        <v-btn value="shopping" class="mx-auto" fab>
+          <v-icon>
+            {{featureIcons["shopping"]}}
+          </v-icon>
+        </v-btn>
+        <v-btn value="restaurant" class="mx-auto" fab>
+          <v-icon>
+            {{featureIcons["restaurant"]}}
+          </v-icon>
+        </v-btn>
+    </v-btn-toggle>
+    </v-container>
+    <v-container>
+    <!-- 大学別検索 -->
+    
+    <v-btn-toggle
+      v-model="nowUniv"
+      group
+      mandatory
+      >
+        <v-btn value="false" class="mx-auto" fab >
+          <v-icon>
+            mdi-alpha-a-circle-outline
+          </v-icon>
+        </v-btn>
+        <v-btn value="true" class="mx-auto" fab >
+          <v-icon>
+            mdi-account-cowboy-hat
+          </v-icon>
+        </v-btn>
+    </v-btn-toggle>
+    
+    </v-container>
+    <v-card-actions>
+      <v-btn @click="Search(); dialog=false">
+        Search
+      </v-btn> 
+    </v-card-actions>
+    </v-card>
+  </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -73,10 +92,14 @@ import {getSpotTypeDict} from "../../share/SpotTypeFunction"
 export default {
   data: function(){
     return {
+      flag:true,
       nowType:'reset',//スポット検索の種別
       featureIcons: getSpotTypeDict('icon'), // iconを格納するオブジェクト -> mountedでデータ追加
       types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
-      typeNameList: getSpotTypeDict('type') //spot type object のkey配列作成 -> mountedで'reset'追加
+      typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
+      nowUniv:"",//現在の大学
+      myUniv:this.$store.state.userData.university,//所属大学
+      dialog:false//検索ダイアログ表示管理
     }
   },
   components: {
@@ -89,14 +112,15 @@ export default {
     mounted(){
         this.types.push(... this.typeNameList ) // typesにtype name listを追加
         this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
+        console.log(this.nowUniv)
     },
 
     //props: ['regFlag']
     methods:{
-      changeSearchType(type){
+      Search(){
         //選ばれたジャンルタイプをMapに送信
-        this.nowType = type;
-        this.$emit('update-type',type);
+        this.$emit('update-type',this.nowType);
+        //this.$emit('update-type',this.nowUniv);
       },
     }
     
@@ -104,12 +128,7 @@ export default {
 </script>
 
 <style>
-#v-list-item,
-#feature-menu,
-#feature-button,
-#feature-list,
-#dialog-button,
-#search-dialog{
+#search-button{
   z-index: 1000;
 }
 </style>
