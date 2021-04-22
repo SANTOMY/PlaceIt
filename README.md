@@ -83,6 +83,4 @@ $ git pull origin deploy
 ```
 $ git push origin deploy
 ```
-- 4.Check a heroku webpage( you need to login)
-- 5.Click "Open App" in place-it-front
-- 5.
+- 4.Check https://place-it-front.herokuapp.com/
