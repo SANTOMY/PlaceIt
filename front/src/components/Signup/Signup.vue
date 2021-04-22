@@ -28,11 +28,18 @@
                     :rules="passwordRules" />
 
                 <v-select 
-                    v-model="university"
                     label="所属大学"
+                    v-model="university"
                     prepend-icon="mdi-school"
                     item-text="university"
                     :items="universities"/>
+                
+                <v-text-field label="所属大学を入力してください"
+                    v-model="addedUniversity" 
+                    prepend-icon="mdi-fountain-pen-tip"
+                    :counter="64"
+                    :rules="universityRules"
+                    v-if='this.university == "その他"'/>
 
                 <v-card-actions>
                     <v-btn @click="createUser">登録</v-btn>
@@ -55,6 +62,7 @@ export default {
             email : '',
             password : '',
             university: '',
+            addedUniversity: '',
 
             showPassword : false,
             usernameRules: [
@@ -81,15 +89,16 @@ export default {
         // call getUser(email) from .vue file:
         getAllUniversities()
             .then(result => {
-                console.log(result)
                 this.universities = result
-                console.log(this.universities)
+                this.universities.push({"university": "その他"})
         })
     },
 
     methods: {
         createUser: function() {
             if (!this.$refs.loginForm.validate()) return;
+            if (this.university == "その他")
+                this.university = this.addedUniversity
             register(this.username,this.email,this.password,this.university)
                 .then(res => {
                     console.log(res)
