@@ -116,7 +116,7 @@ export default {
 
     mounted: function() {
         this.criteria_list = getSpotTypeDict('review')[this.spot_type]; // レーダーチャートパラメータの項目リスト
-        console.log('Item list of radar chart parameters:',this.criteria_list)
+        // console.log('Item list of radar chart parameters:',this.criteria_list) //レーダーチャートパラメータの項目リストdebug
     },
 
     watch:{
