@@ -33,6 +33,13 @@
 
                 <v-row justify="space-between" align="center">
                     <!-- 評価ボタン -->
+                    <v-col cols="5" justify="center">
+                        <radarChartDisp
+                            v-if="chart_disp==true"
+                            :type="spot_type"
+                            :reviewRating="review_data.scores"
+                        /> 
+                    </v-col>
                     <v-col cols="6">
                         <v-row v-for="i in 5" :key="i" align="center">
                             <v-col>
@@ -46,7 +53,9 @@
 
                         </v-row>
                     </v-col>
-                    <v-col cols="5">
+                </v-row>
+                <v-row>
+                    <v-col justify="center">
                     <!-- 投稿ボタン -->
                         <v-btn 
                             block
@@ -67,10 +76,12 @@
 import starRating from 'vue-star-rating'
 import { saveReview } from '../../routes/reviewRequest';
 import { getSpotTypeDict } from '../share/SpotTypeFunction';
+import radarChartDisp from '../share/RadarChartDisp'
 
 export default {
     components: {
-        starRating
+        starRating,
+        radarChartDisp,
     },
     data: function() {
         return {
@@ -79,7 +90,8 @@ export default {
                 comment: "",
                 scores: [0, 0, 0, 0, 0]
             },
-            criteria_list: []
+            criteria_list: [],
+            chart_disp: true
         }
     },
     props: {
@@ -98,12 +110,20 @@ export default {
                     console.log(res)        // Debug
                     this.$emit('submit')
                 })
-        }
+        },
+
     },
 
     mounted: function() {
         this.criteria_list = getSpotTypeDict('review')[this.spot_type];
         console.log(this.criteria_list)
+    },
+
+    watch:{
+        'review_data.scores': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
+            this.chart_disp = false
+            this.$nextTick(() => (this.chart_disp = true));
+        },        
     }
     
 }

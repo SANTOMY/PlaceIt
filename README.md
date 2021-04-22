@@ -69,3 +69,18 @@ $ npm install
 ```
 $ npm run serve
 ```
+
+## Run on deployed server
+- 1.Checkout the branch which you want to run
+```
+$ git checkout ${YOUR BRANCH}
+```
+- 2.Pull deploy branch
+```
+$ git pull origin deploy
+```
+- 3.Push your change to deploy branch
+```
+$ git push origin deploy
+```
+- 4.Check https://place-it-front.herokuapp.com/
