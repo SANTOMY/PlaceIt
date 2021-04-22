@@ -220,7 +220,7 @@ export default {
                                 scores.push( result.review[ re ].score );
                             }
                         }
-                        var good = average( scores );
+                        var good = Math.round( 10 * average( scores ) ) / 10;
                         this.good_spot.push( { "name": name, "src": src, "good": good } );
                     } ).catch((exception) => {
                         console.log( "Error in getSpotByUserId: ", exception );
