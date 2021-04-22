@@ -209,18 +209,20 @@ export default {
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         },
         get_user_information: function() {//レヴューからユーザー名を取得する関数
-            this.user_list = []
+            this.user_list = Array(this.reviews.length).fill(undefined)
+            let j = 0
             for(let i = 0; i < this.reviews.length; i++) {
                 // console.log('i:',i)
                 // console.log('user_list:',this.user_list)
                 getUserById(this.reviews[i].user_id)
                     .then(result => {
-                        this.user_list.push(result[0]);
+                        j += 1
+                        this.user_list[i]=result[0];
                         
-                        // console.log('i:',i)
+                        console.log('i:',i)
                         // console.log('result:',result[0])
-                        // console.log('user_list:',this.user_list[0].username)
-                        if(i == (this.reviews.length-1)){
+                        console.log('user_list:',this.user_list[i].username)
+                        if(j == (this.reviews.length)){
                             this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
                         }
                 })
@@ -237,16 +239,16 @@ export default {
             const end = start + this.REVIEW_NUM_PER_PAGE;
             const raw_reviews = this.reviews.slice(start, end)
             const raw_users = this.user_list.slice(start, end)
-            console.log('review_data:',raw_reviews)
-            console.log('user_list:',this.user_list)
-            console.log('user_data:',raw_users)
+            // console.log('review_data:',raw_reviews)
+            // console.log('user_list:',this.user_list)
+            // console.log('user_data:',raw_users)
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
             for(var i = 0; i < raw_reviews.length; i++) {
                 var pert_of_reviews = {id:i, content:raw_reviews[i]}
                 enumerated_reviews.push(Object.assign(raw_users[i],pert_of_reviews));
             }
-            console.log('enumerated_reviews:',enumerated_reviews)
+            // console.log('enumerated_reviews:',enumerated_reviews)
             return enumerated_reviews;
         },
 
