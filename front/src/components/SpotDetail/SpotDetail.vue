@@ -156,14 +156,8 @@ export default {
         showDialog: Boolean
     },
     methods: {
-        // change_page: function(dir) {
-        //     const next_page = this.now_review_page + dir
-        //     const max_page = (this.reviews.length ) / this.review_num_per_page
-        //     if(next_page < 1 || next_page > max_page) return
-        //     else this.now_review_page = next_page
-        // },
         change_page: function(number){
-            console.log('change review page to ',number)
+            console.log('(change review page)change review page to ',number)
             return this.now_review_page = number
         },
         sum: function(arr){ // 配列の要素の合計を計算
@@ -193,7 +187,7 @@ export default {
                                                 this.reviews.map(r =>  Number(r.score4)),
                                                 this.reviews.map(r =>  Number(r.score5)));
                     this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
-                    console.log('(getSpot)review:',this.reviews)
+                    // console.log('(getSpot)review:',this.reviews)
                     
                 }).then(one => {
                     console.log(one)
@@ -209,26 +203,23 @@ export default {
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         },
         get_user_information: function() {//レヴューからユーザー名を取得する関数
-            this.user_list = Array(this.reviews.length).fill(undefined)
+            this.user_list = Array(this.reviews.length).fill(undefined) // 初期値
             let j = 0
             for(let i = 0; i < this.reviews.length; i++) {
-                // console.log('i:',i)
-                // console.log('user_list:',this.user_list)
                 getUserById(this.reviews[i].user_id)
                     .then(result => {
                         j += 1
                         this.user_list[i]=result[0];
                         
                         console.log('i:',i)
-                        // console.log('result:',result[0])
-                        console.log('user_list:',this.user_list[i].username)
+                        console.log('reviewer name:',this.user_list[i].username)
+
                         if(j == (this.reviews.length)){
                             this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
                         }
                 })
             }
-            console.log('get username by Id result:',this.user_list)
-            // return user_data;
+            // console.log('get username by Id result:',this.user_list)
         },
     },
 
