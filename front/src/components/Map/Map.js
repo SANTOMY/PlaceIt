@@ -40,7 +40,7 @@ export default {
         nowType:'reset',//スポット検索の種別 "reset" "restaurant" "travel" "shopping"
         time:0,//タイマー用変数
         showDialog:false, //ダイアログを表示するか
-        selectedSpotID: "", //クリックして選択しているspotのid
+        selectedSpot: "", //クリックして選択しているspotのid
         markers:null,//マーカーリストのレイヤー群
         univFlag:false,//大学別検索の有効化・無効化
         user:{
@@ -102,7 +102,7 @@ export default {
       markerClickEvent(event){
         this.showDialog = true;
         this.getWindow()
-        this.selectedSpotID = event.target.spot_id
+        this.selectedSpot = event.target
       },
 
       //現在地アイコンを更新する関数(予定)

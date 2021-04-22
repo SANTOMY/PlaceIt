@@ -150,10 +150,25 @@ export default {
             isLoading: false
         }
     },
-    props: {
-        spot_id: String,
-        showDialog: Boolean
-    },
+    props: ["spot", "showDialog"],
+        // spot_id: String,
+        // spotName: String,
+        // x: Number,
+        // y = Number,
+        // picture: String,
+        // spotType: String,
+        // userId: String,
+        // reviewId: String,
+        // comment: String,
+        // score: Number,
+        // university: String,
+        // score1: Number,
+        // score2: Number,
+        // score3: Number,
+        // score4: Number,
+    //     // score5: Number,
+    //     showDialog: Boolean
+    // },
     methods: {
         // change_page: function(dir) {
         //     const next_page = this.now_review_page + dir
@@ -179,11 +194,12 @@ export default {
             this.$emit("close");
         },
         updateDetail: function() {
+            console.log(this.spot.spot_id);
             this.isLoading = true;      // データを取得している間はローディング画面を表示する
-            getSpot(this.spot_id, "", "", "", "")
+            getSpot(this.spot.spot_id, "", "", "", "")
                 .then(res => {
                     this.spotData = res.spots[0];
-                    this.reviews = res.review;
+                    // this.reviews = res.review;
                     this.isLoading = false;
                     this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
                     this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
@@ -220,7 +236,6 @@ export default {
     watch: {
         showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
-            console.log(this.spot_id)
             this.updateDetail()
             this.now_review_page = 1;
         }
