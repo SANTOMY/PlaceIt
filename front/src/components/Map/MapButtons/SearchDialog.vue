@@ -1,5 +1,4 @@
 <template>
-  <div>
   <!-- 検索ダイアログ -->
   <v-dialog 
   v-model="dialog"
@@ -82,7 +81,6 @@
     </v-card-actions>
     </v-card>
   </v-dialog>
-  </div>
 </template>
 
 <script>
@@ -119,7 +117,7 @@ export default {
     methods:{
       Search(){
         //選ばれたジャンルタイプをMapに送信
-        this.$emit('update-type',this.nowType);
+        this.$emit('update-type',this.nowType,this.nowUniv);
         //this.$emit('update-type',this.nowUniv);
       },
     }

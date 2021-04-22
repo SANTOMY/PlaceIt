@@ -5,7 +5,6 @@ import nowLocButton from './MapButtons/NowLocButton.vue'
 import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
-import univButton from './MapButtons/UnivButton.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
 
 //アイコンをロード
@@ -24,7 +23,6 @@ export default {
       nowLocButton,
       typeButton,
       spotDetail,
-      univButton,
       searchDialog
     },
     data: function(){
@@ -56,6 +54,7 @@ export default {
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
       showSpot: async function(type,univ){
+        console.log(univ);
         if (type=="reset") type = "";
         var data = await getSpot("","",type,"",univ);
         if (data.success){
@@ -137,11 +136,13 @@ export default {
       },
 
       //検索ジャンルを更新するメソッド(TypeButton.vueから呼ばれる)
-      updateType: async function(type){
+      updateType: async function(...args){
+        const [type,univ] = args
+        console.log(args)
         this.markers.clearLayers();
         this.marker = [];
         this.nowType = type;
-        if(this.univFlag){
+        if(univ=="true"){
           await this.showSpot(type,this.user.univ);
         } else{
           await this.showSpot(type,"");
