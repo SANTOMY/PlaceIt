@@ -6,34 +6,26 @@ const fileLabel = "ImageSQL"
 
 
 async function uploadProfilePicture(newImage){
-    info(fileLabel,"Inside upload");
     var query;
     const client = await pool.connect();
     var userExist = await getProfilePicture(newImage.userId);
-    var oldPath;
     if (userExist.success){
         info(fileLabel,"User already exist. Updating picture");
         query = {
-            text: 'Update images.profile set path=$1 where userid=$2',
-            values: [newImage.path,newImage.userId]
+            text: 'Update images.profile set image=$1 where userid=$2',
+            values: [newImage.image,newImage.userId]
         };
-        //need old picture path to delete from filesystem
-        oldPath = userExist.data[userExist.data.length - 1].path
-
     } else{
-        info(fileLabel,"Inside else statement");
         query = {
-            text: 'INSERT INTO images.profile(userid, path) VALUES($1, $2)',
-            values: [newImage.userId, newImage.path]
+            text: 'INSERT INTO images.profile(userid, image) VALUES($1, $2)',
+            values: [newImage.userId, newImage.image]
         };
     }
-    console.log(query);
     return client.query(query).then((result)=>{
-        info(fileLabel,"Inside query");
         console.log(query);
         client.release();
-        info(fileLabel,"Saved image: " + newImage.path);
-        return {"success":true,"data":oldPath};
+        info(fileLabel,"Saved profile image");
+        return {"success":true};
     }).catch((exception) => {
         client.release();
         error(fileLabel,"Error while saving image." + exception);
@@ -65,7 +57,56 @@ async function getProfilePicture(userId){
     });
 }
 
+
+async function uploadSpotPicture(newImage){
+    var query;
+    const client = await pool.connect();
+
+    query = {
+        text: 'INSERT INTO images.spot(spotid, image) VALUES($1, $2)',
+        values: [newImage.spotId, newImage.image]
+    };
+
+    return client.query(query).then((result)=>{
+        info(fileLabel,"Inside query");
+        //console.log(query);
+        client.release();
+        info(fileLabel,"Saved spot image");
+        return {"success":true};
+    }).catch((exception) => {
+        client.release();
+        error(fileLabel,"Error while saving image." + exception);
+        return {"success":false, "data":exception}; 
+    });
+}
+
+
+async function getSpotPicture(spotId){
+    const query = {
+        text: `SELECT * from images.spot where spotid='${spotId}'`
+    };
+
+    const client = await pool.connect();
+    return client.query(query).then((result)=>{
+        client.release();
+        if (result.rowCount == 0){
+            info(fileLabel,"There are no pictures for this spot");
+            return {"success":false};
+        }
+        else{
+            info(fileLabel,"Found image for spot: " + spotId);
+            return {"success":true, "data": result.rows};
+        }
+    }).catch((exception) => {
+        client.release();
+        error(fileLabel,"Error while getting image. " + exception);
+        return {"success":false, "data":exception}; 
+    });
+}
+
 module.exports = {
     uploadProfilePicture:uploadProfilePicture,
-    getProfilePicture: getProfilePicture
+    getProfilePicture: getProfilePicture,
+    uploadSpotPicture:uploadSpotPicture,
+    getSpotPicture:getSpotPicture
 };
