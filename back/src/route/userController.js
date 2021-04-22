@@ -12,6 +12,7 @@ module.exports = class UserController{
         this.getUserByEmail.bind(this);
         this.editUser.bind(this);
         this.getUserById.bind(this);
+        this.getAllUniversities.bind(this);
     }
     
     async register(req, res){
@@ -108,6 +109,21 @@ module.exports = class UserController{
             }
         }).catch((exception)=>{
             error(fileLabel,"Error while getting user "+ userId + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
+
+    async getAllUniversities(req,res){
+        return userSQL.getAllUniversities().then((result) =>{
+            if(result.success){
+                debug(fileLabel,"Successfully get universities");
+                return res.status(200).json({"success": true, "data": result.data});
+            } else{
+                info(fileLabel, "Could not get universities: " + JSON.stringify(result));
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+        }).catch((exception)=>{
+            error(fileLabel,"Error while getting universities: " + exception);
             return res.status(400).json({"success": false, "error": exception});
         });
     }
