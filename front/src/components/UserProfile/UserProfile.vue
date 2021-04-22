@@ -70,7 +70,7 @@ export default {
     },
     data() {
         return {
-            editer: false,
+            editer: false, // User profile edit UI ON/OFF(true/false)
             dialogEdit: false,
             user: { // ユーザー仮データ
                 user_id: 'default_id',
@@ -147,8 +147,8 @@ export default {
         // call getUser(email) from .vue file:
         getUser(this.user.email)
             .then(result => {
-                console.log(result[0])
-                console.log(result[0].username)
+                console.log('getUserByEmail result:',result[0])
+                console.log('getUserByEmail username:',result[0].username)
                 this.user.username = result[0].username
                 this.user.user_id = result[0].id
                 this.getSpotByUserId( this.user.user_id )

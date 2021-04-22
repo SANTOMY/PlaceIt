@@ -21,8 +21,29 @@ async function register(userName, email, password, university){
 }
 
 
-async function getUser(email){
+async function getUser(email){ 
+    // get user information by user email
+    // TODO: edit function name [getUserByEmail]
     const url = serverIP + '/user/getUserByEmail/' + email;
+
+    try{
+        let response = await fetch(url,);
+        let responseJson = await response.json();
+        //Should probably use status code instead of this
+        if (responseJson.success){
+            return responseJson.data;
+        } else{
+            return responseJson.error;
+        }
+
+    } catch(exception){
+        console.log(exception);
+        return {success:false, data:exception};
+    }
+}
+
+async function getUserById(userId){ // get user information by user id
+    const url = serverIP + '/user/getUserById/' + userId;
 
     try{
         let response = await fetch(url,);
@@ -78,4 +99,4 @@ async function login(email,password){
         return{success:false, data:exception};
     }
 }
-export {register,getUser,editUser,login};
+export {register,getUser,getUserById,editUser,login};
