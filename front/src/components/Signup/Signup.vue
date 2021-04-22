@@ -26,12 +26,13 @@
                     v-model="password"
                     :counter="32"
                     :rules="passwordRules" />
-                    
-                <v-text-field label="所属大学"
+
+                <v-select 
+                    v-model="university"
+                    label="所属大学"
                     prepend-icon="mdi-school"
-                    v-model="university" 
-                    :counter="64"
-                    :rules="universityRules"/>
+                    item-text="university"
+                    :items="universities"/>
 
                 <v-card-actions>
                     <v-btn @click="createUser">登録</v-btn>
@@ -44,6 +45,7 @@
 
 <script>
 import {register} from '../../routes/userRequest'
+import {getAllUniversities} from '../../routes/userRequest'
 const User = require("../../store/user");
 export default {
 
@@ -72,7 +74,17 @@ export default {
                 v => !!v || "所属大学名は必須項目です。",
                 v => (v && v.length <= 64) || "所属大学名は64文字以内で入力してください。",
             ],
+            universities: [], 
         }
+    },
+    mounted: function(){
+        // call getUser(email) from .vue file:
+        getAllUniversities()
+            .then(result => {
+                console.log(result)
+                this.universities = result
+                console.log(this.universities)
+        })
     },
 
     methods: {
@@ -87,7 +99,7 @@ export default {
                     this.$store.commit("login", userData)
                     this.$router.push('/map')
                 });
-        }
+        },
     }
     
 }
