@@ -188,7 +188,7 @@ export default {
                             scores.push( result.review[ r ].score );
                         }
                     }
-                    var good = average( scores );
+                    var good = Math.round( 10 * average( scores ) ) / 10;
                     this.my_spot.push( { "name": name, "src": src, "good": good } );
                 }
                 return true   
