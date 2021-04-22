@@ -54,7 +54,6 @@ export default {
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
       showSpot: async function(type,univ){
-        console.log(univ);
         if (type=="reset") type = "";
         var data = await getSpot("","",type,"",univ);
         if (data.success){
@@ -148,17 +147,6 @@ export default {
           await this.showSpot(type,"");
         }
 
-      },
-      //大学検索の有効化・無効化関数
-      updateUniv: async function(){
-        this.univFlag = !this.univFlag;
-        this.markers.clearLayers();
-        this.marker = [];
-        if(this.univFlag){
-          await this.showSpot(this.nowType,this.user.univ);
-        } else{
-          await this.showSpot(this.nowType,"");
-        }
       },
       closeDialog() {
         this.showDialog = false;
