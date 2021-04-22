@@ -25,33 +25,21 @@
   <v-card>
     <!-- スポットタイプ検索 -->
     <v-container>
-    <v-btn-toggle
-      v-model="nowType"
-      group
-      mandatory
+      <v-btn-toggle
+        v-model="nowType"
+        group
+        mandatory
       >
         <!-- v-forとか使ってまとめたい(SATD) -->
-        <v-btn value="reset" class="mx-auto" fab >
+        <v-btn
+          v-for="type in types"
+          :key="type" 
+          :value="type" class="mx-auto" fab >
           <v-icon>
-            {{featureIcons["reset"]}}
+            {{featureIcons[type]}}
           </v-icon>
         </v-btn>
-        <v-btn value="travel" class="mx-auto" fab>
-          <v-icon>
-            {{featureIcons["travel"]}}
-          </v-icon>
-        </v-btn>
-        <v-btn value="shopping" class="mx-auto" fab>
-          <v-icon>
-            {{featureIcons["shopping"]}}
-          </v-icon>
-        </v-btn>
-        <v-btn value="restaurant" class="mx-auto" fab>
-          <v-icon>
-            {{featureIcons["restaurant"]}}
-          </v-icon>
-        </v-btn>
-    </v-btn-toggle>
+      </v-btn-toggle>
     </v-container>
     <v-container>
     
