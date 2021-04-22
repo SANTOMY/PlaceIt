@@ -136,13 +136,13 @@ export default {
       },
 
       //検索ジャンルを更新するメソッド(TypeButton.vueから呼ばれる)
-      updateType: async function(...args){
+      search: async function(...args){
         const [type,univ] = args
         console.log(args)
         this.markers.clearLayers();
         this.marker = [];
         this.nowType = type;
-        if(univ=="true"){
+        if(univ){
           await this.showSpot(type,this.user.univ);
         } else{
           await this.showSpot(type,"");

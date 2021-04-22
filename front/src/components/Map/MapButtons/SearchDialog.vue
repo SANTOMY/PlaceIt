@@ -95,7 +95,7 @@ export default {
       featureIcons: getSpotTypeDict('icon'), // iconを格納するオブジェクト -> mountedでデータ追加
       types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
       typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
-      nowUniv:"",//現在の大学
+      nowUniv:false,//現在の大学
       myUniv:this.$store.state.userData.university,//所属大学
       dialog:false//検索ダイアログ表示管理
     }
@@ -110,15 +110,14 @@ export default {
     mounted(){
         this.types.push(... this.typeNameList ) // typesにtype name listを追加
         this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
-        console.log(this.nowUniv)
     },
 
     //props: ['regFlag']
     methods:{
       Search(){
-        //選ばれたジャンルタイプをMapに送信
-        this.$emit('update-type',this.nowType,this.nowUniv);
-        //this.$emit('update-type',this.nowUniv);
+        //選ばれた検索条件をMapに送信
+        var univFlag = (this.nowUniv=="true" ? true : false);
+        this.$emit('search',this.nowType,univFlag);
       },
     }
     

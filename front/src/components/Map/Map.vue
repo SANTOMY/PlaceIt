@@ -5,9 +5,7 @@
     <!--
     <type-button @update-type="updateType"/>
     -->
-    <search-dialog @update-type="updateType" />
-    <!-- 大学名検索ボタン -->
-    <univ-button :univFlag="univFlag" v-on:click.native="updateUniv()" v-if='this.$store.state.userData != null'/>
+    <search-dialog @search="search" />
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
     <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()" v-if='this.$store.state.userData != null'/>
     <!-- 現在地ボタン -->
