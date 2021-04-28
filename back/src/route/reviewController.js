@@ -44,4 +44,21 @@ module.exports = class ReviewController{
             return res.status(400).json({"success": false, "error": exception});
         })
     }
+
+    async getReviewByUserId(req, res){
+        const userId = req.params.userId;
+        return reviewSQL.getReviewByUserId(userId).then((results)=>{
+            if(results.success){
+                info(fileLabel, "Loaded Successfully");
+                return res.status(200).json({"success": true, "review": results.review});
+            }else{
+                info(fileLabel, "Loaded Unsuccessfully: " + JSON.stringify(results));
+                return res.status(400).json({"success": false, "error": results.review});
+            }
+        }).catch((exception)=>{
+            info(fileLabel, "ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}) +": " + JSON.stringify(result));
+            error(fileLabel, "Error in attempt to load: " + exception )
+            return res.status(400).json({"success": false, "error": exception});
+        })
+    }
 }

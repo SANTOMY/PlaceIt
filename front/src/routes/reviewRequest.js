@@ -40,6 +40,26 @@ async function getReviewBySpotId(spotId){
         return {success:false, review:exception};
     }
 }
+
+async function getReviewByUserId(userId){
+    const url = serverIP + '/review/getReviewByUserId/' + userId;
+
+    try{
+        let response = await fetch(url,);
+        let responseJson = await response.json();
+        //Should probably use status code instead of this
+        if (responseJson.success){
+            return {review:responseJson.review};
+        } else{
+            return responseJson.error;
+        }
+
+    } catch(exception){
+        console.log(exception);
+        return {success:false, review:exception};
+    }
+}
+
 var sum  = function(arr) {
     var sum = 0;
     arr.forEach(function(elm) {
@@ -52,4 +72,4 @@ var average = function(arr, fn) {
     return sum(arr, fn)/arr.length;
 };
 
-export {saveReview, getReviewBySpotId, average};
+export {saveReview, getReviewBySpotId, getReviewByUserId, average};
