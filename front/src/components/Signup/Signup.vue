@@ -81,6 +81,7 @@ export default {
             universityRules: [
                 v => !!v || "所属大学名は必須項目です。",
                 v => (v && v.length <= 64) || "所属大学名は64文字以内で入力してください。",
+                v => !(v == "その他") || "大学名を正しく入力してください。"
             ],
             universities: [], 
         }
