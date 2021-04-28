@@ -64,7 +64,9 @@
     </v-container>
     <v-card-actions>
       <v-btn @click="Search(); dialog=false">
-        Search
+        <v-icon>
+        mdi-card-search
+        </v-icon>
       </v-btn> 
     </v-card-actions>
     </v-card>
