@@ -1,5 +1,11 @@
 <template>
-    <v-container>
+<!-- ローディング画面 -->
+    <v-skeleton-loader
+        v-if="isLoading"
+        type="list-item-avatar-three-line, image"
+        class="mx-auto"
+    ></v-skeleton-loader>
+    <v-container v-else>
         <h1>ユーザープロファイル</h1>
 <!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
         <v-dialog v-model="dialogEdit" width=500>
@@ -19,18 +25,6 @@
                     </v-avatar>
                 </v-layout>
             </v-col>
-<!-----------------------特定のユーザーが投稿したスポットを取得するテスト------------->
-            <!-- <v-col>
-                スポットの取得テスト1
-                <h1>{{ user.username }}</h1>
-                
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        @click="getSpotByUserId( 'aaa' )"
-                    >
-                    スポットの取得テスト2
-                    </v-btn> 
-            </v-col> -->
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
                 ユーザー名
@@ -50,6 +44,7 @@
             v-bind:spot_list="spot"
             v-bind:user_list="user"
             v-bind:my_spot_list="my_spot"
+            v-bind:good_spot_list="good_spot"
             color="green"
         ></SpotListCard>
     </v-container>
@@ -61,6 +56,8 @@ import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
 import {getSpot} from '../../routes/spotRequest'
+import {average} from '../../routes/reviewRequest';
+import {getReviewByUserId} from '../../routes/reviewRequest';
 
 export default {
 
@@ -140,7 +137,11 @@ export default {
             spot_to_show: [
                 // my_spotのうち表示するスポット
                 // いまはまだ必要ないけど，スポット投稿数が多くなると必要かも
-            ]
+            ],
+            good_spot: [
+                // 自分が評価したスポット
+            ],
+            isLoading: true
         }
     },
     mounted: function(){
@@ -155,6 +156,10 @@ export default {
                     .then( () =>{
                         this.getLatestSpots( 0, 28 )
                 })
+                this.getSpotYouReviewed( this.user.user_id )
+                    .then( () => {
+                        this.isLoading = false;
+                    } )
         })
     },
     methods:  {
@@ -165,22 +170,62 @@ export default {
             this.dialogEdit = false
         },
         getSpotByUserId: async function(user_id){
-            console.log( "typeof user_id: ", typeof user_id, user_id )
             return getSpot('', '', '', user_id, '').then(result => {
-                console.log( "result of getSpot: ", result );
-                for( var s in result.spots ){
-                    var name = result.spots[ s ].spot_name;
+                // console.log( "result of getSpot: ", result );
+                for( var spt of result.spots ){
+                    var name = spt.spot_name;
                     // TODO: to get images from DB
                     var src = require( "@/assets/Mac.jpg" );
                     if( Math.random() >= 0.5 ){
                         src = require('@/assets/mos.png');
                     }
-                    var good = 1024;
+                    var scores = [];
+                    for( var rev of result.review ){
+                        if( spt.spot_id == rev.spot_id ){
+                            scores.push( rev.score );
+                        }
+                    }
+                    var good = Math.round( 10 * average( scores ) ) / 10;
                     this.my_spot.push( { "name": name, "src": src, "good": good } );
                 }
                 return true   
             }).catch((exception) => {
                 console.log( "Error in getSpotByUserId: ", exception );
+            })
+        },
+        getSpotYouReviewed: async function( user_id ){
+            return getReviewByUserId( user_id ).then( result => {
+                // console.log( 'result of getReviewByUserId: ', result );
+                var reviewd_spot_ids = new Set()
+                for( let rev of result.review ){
+                    reviewd_spot_ids.add( rev.spot_id );
+                }
+                // console.log( 'reviewed_spot_ids: ', reviewd_spot_ids )
+                for( let reviewd_spot_id of reviewd_spot_ids ){
+                    getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
+                        // console.log( 'results of getSpot', result )
+                        var spt = result.spots[ 0 ];
+                        var name = spt.spot_name;
+                        // TODO: to get images from DB
+                        var src = require( "@/assets/Mac.jpg" );
+                        if( Math.random() >= 0.5 ){
+                            src = require('@/assets/mos.png');
+                        }
+                        var scores = [];
+                        for( var rev of result.review ){
+                            if( spt.spot_id == rev.spot_id ){
+                                scores.push( rev.score );
+                            }
+                        }
+                        var good = Math.round( 10 * average( scores ) ) / 10;
+                        this.good_spot.push( { "name": name, "src": src, "good": good } );
+                    } ).catch((exception) => {
+                        console.log( "Error in getSpotByUserId: ", exception );
+                    })
+                }
+                return true
+            } ).catch((exception) => {
+                console.log( "Error in getSpotYouReviewed: ", exception );
             })
         },
         getLatestSpots: function( left = 0, right ){
