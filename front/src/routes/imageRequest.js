@@ -23,12 +23,11 @@ async function getProfileImage(userId){
     const url = serverIP + '/upload/profile-image/' + userId;
     try{
         let response = await fetch(url,);
-        if(!response.ok) return {success:false, blob:null}
-        let responseBlob = await response.blob();
-        return {success:true, blob:responseBlob};
+        let responseJson = await response.json();
+        return {success:true, data:responseJson.image[0]}
     } catch(exception){
         console.log(exception);
-        return {success:false, blob:null};
+        return {success:false};
     }
 }
  

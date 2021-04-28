@@ -164,11 +164,8 @@ export default {
         getProfileImage(this.$store.state.userData.userId)
             .then(result => {
                 if(!result.success) return;
-                const reader = new FileReader()
-                reader.onload = (e) => {
-                    this.user.src =  e.target.result;
-                };
-                reader.readAsDataURL(result.blob);
+                console.log(result.data.image);
+                this.user.src = "data:image/jpeg;base64," + result.data.image;
             })
 
     },
