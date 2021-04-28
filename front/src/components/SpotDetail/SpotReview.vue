@@ -23,7 +23,7 @@
                 >
                     mdi-account-circle
                 </v-icon>
-                <h2> {{ user_name }} </h2>
+                <v-btn @click="usernameClickEvent()"> {{ user_name }} </v-btn>
             </v-row>
             <v-row class="mx-5 mt-2">
                 {{ comment }}
@@ -36,15 +36,41 @@
                 {{ score }}
             </v-row>
         </v-container>
+        <user-profile-dialog :showDialog="showUserDialog" :user="user_data" @close="closeDialog()"/>
     </v-card>
+    
 </template>
 
 <script>
+import UserProfileDialog from '../share/UserProfileDialog.vue'
+
 export default {
+    components: {
+        UserProfileDialog
+    },
     props: {
         user_name: String,
         comment: String,
         score: Number, // 警告文解消
+        user_id: String,
+    },
+    data: function() {
+        return {
+            user_data: { // ユーザー仮データ
+                user_id: this.user_id,
+                username: this.user_name,
+                src: require('@/assets/pose_kuyashii_man.png')
+            },
+            showUserDialog: false,
+        }
+    },
+    methods:{
+        closeDialog() {
+            this.showUserDialog = false;
+        },
+        usernameClickEvent() {
+            this.showUserDialog = true;
+        },
     }
 }
 </script>

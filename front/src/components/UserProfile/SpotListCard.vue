@@ -10,7 +10,6 @@
             :color="color"
             dark
         >
-
             <v-app-bar-nav-icon @click="drawer = true">
             </v-app-bar-nav-icon>
 
@@ -18,6 +17,7 @@
 
             <v-spacer></v-spacer>
 
+            <!-- TODO: 検索ボタン -->
             <v-btn icon>
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>
@@ -98,22 +98,6 @@
             </v-row>
             <!-- スポットのページ送り -->
             <v-card-actions>
-                <!-- <v-row class="mt-1">
-                    <v-icon
-                        class="ml-8"
-                        large
-                        @click="changeSpotPage( 3, ahead = false )"
-                    >
-                        mdi-chevron-left
-                    </v-icon>
-                    <v-icon
-                        class="ml-6"
-                        large
-                        @click="changeSpotPage( 3 )"
-                    >
-                        mdi-chevron-right
-                    </v-icon>
-                </v-row> -->
                 <v-col>
                     <v-row justify="center">
                         <v-col cols="8">
@@ -129,22 +113,6 @@
                     </v-row>
                 </v-col>
             </v-card-actions>
-
-            <!-- スポットのページ変更 -->
-            <!-- <v-col>
-                <v-row justify="center">
-                    <v-col cols="8">
-                        <v-container class="max-width">
-                            <v-pagination                                
-                                @input="getNumber"
-                                v-model="now_page"
-                                :length="num_page"
-                                :total-visible="7"
-                            ></v-pagination>
-                        </v-container>
-                    </v-col>
-                </v-row>
-            </v-col> -->
 
         </v-container>
   

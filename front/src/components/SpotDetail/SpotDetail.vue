@@ -4,6 +4,7 @@
       width="1200"
       persistent
     >
+
         <v-card>
             <!-- ローディング画面 -->
             <v-skeleton-loader
@@ -131,7 +132,7 @@ export default {
         spotReviewList,
         spotTypeIcon,
         spotReviewRegister,
-        radarChartDisp
+        radarChartDisp,   
     },
     data: function() {
         return {
@@ -212,7 +213,8 @@ export default {
                         this.user_list[i]=result[0];
                         
                         console.log('i:',i)
-                        console.log('reviewer name:',this.user_list[i].username)
+                        // console.log('reviewer name:',this.user_list[i].username)
+                        console.log('reviewer name:',this.user_list[i])
 
                         if(j == (this.reviews.length)){
                             this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
@@ -236,13 +238,11 @@ export default {
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
             for(var i = 0; i < raw_reviews.length; i++) {
-                var pert_of_reviews = {id:i, content:raw_reviews[i]}
-                enumerated_reviews.push(Object.assign(raw_users[i],pert_of_reviews));
+                enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
             }
             // console.log('enumerated_reviews:',enumerated_reviews)
             return enumerated_reviews;
         },
-
 
     },
 
