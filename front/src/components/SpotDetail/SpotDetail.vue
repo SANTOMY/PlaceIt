@@ -150,31 +150,8 @@ export default {
         }
     },
     props: ["spot", "showDialog"],
-        // spot_id: String,
-        // spotName: String,
-        // x: Number,
-        // y = Number,
-        // picture: String,
-        // spotType: String,
-        // userId: String,
-        // reviewId: String,
-        // comment: String,
-        // score: Number,
-        // university: String,
-        // score1: Number,
-        // score2: Number,
-        // score3: Number,
-        // score4: Number,
-    //     // score5: Number,
-    //     showDialog: Boolean
-    // },
+
     methods: {
-        // change_page: function(dir) {
-        //     const next_page = this.now_review_page + dir
-        //     const max_page = (this.reviews.length ) / this.review_num_per_page
-        //     if(next_page < 1 || next_page > max_page) return
-        //     else this.now_review_page = next_page
-        // },
         change_page: function(number){
             console.log(number)
             return this.now_review_page = number
