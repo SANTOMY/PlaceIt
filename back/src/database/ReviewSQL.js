@@ -64,3 +64,24 @@ module.exports.getReviewBySpotId = async function(spotId){
         return {"success":false, "error":err};      
     });
 }
+
+module.exports.getReviewByUserId = async function(userId){
+    // get reviews posted by the user
+    // userId -> {"success":true, "review":[{"review_id":XX, "comment":YY, ...}]}
+    const query = {
+        text: `SELECT * FROM spots.review WHERE user_id='${userId}'`
+    };
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+        client.release();
+        if (result.rowCount == 0)
+            return {"success":false, "review":"No reviews exist by this user"};
+        info(fileLabel,"get review by user_id: " + util.inspect(userId,{showHidden: false, depth: null}));
+        return {"success":true, "review":result.rows};
+    }).catch((err)=>{
+        client.release();
+        error(fileLabel,"ERROR OBJECT:" + util.inspect(err,{showHidden: false, depth: null}));
+        error(fileLabel,"Error while getting review. " + err);
+        return {"success":false, "error":err};      
+    });
+}
