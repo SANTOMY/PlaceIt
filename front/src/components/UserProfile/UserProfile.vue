@@ -1,5 +1,11 @@
 <template>
-    <v-container>
+<!-- ローディング画面 -->
+    <v-skeleton-loader
+        v-if="isLoading"
+        type="list-item-avatar-three-line, image"
+        class="mx-auto"
+    ></v-skeleton-loader>
+    <v-container v-else>
         <h1>ユーザープロファイル</h1>
 <!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
         <v-dialog v-model="dialogEdit" width=500>
@@ -19,18 +25,6 @@
                     </v-avatar>
                 </v-layout>
             </v-col>
-<!-----------------------特定のユーザーが投稿したスポットを取得するテスト------------->
-            <!-- <v-col>
-                スポットの取得テスト1
-                <h1>{{ user.username }}</h1>
-                
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        @click="getSpotByUserId( 'aaa' )"
-                    >
-                    スポットの取得テスト2
-                    </v-btn> 
-            </v-col> -->
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
                 ユーザー名
@@ -146,7 +140,8 @@ export default {
             ],
             good_spot: [
                 // 自分が評価したスポット
-            ]
+            ],
+            isLoading: true
         }
     },
     mounted: function(){
@@ -162,7 +157,9 @@ export default {
                         this.getLatestSpots( 0, 28 )
                 })
                 this.getSpotYouReviewed( this.user.user_id )
-                // TODO: ↑が終わるまで表示を待機させたい
+                    .then( () => {
+                        this.isLoading = false;
+                    } )
         })
     },
     methods:  {
@@ -174,18 +171,18 @@ export default {
         },
         getSpotByUserId: async function(user_id){
             return getSpot('', '', '', user_id, '').then(result => {
-                console.log( "result of getSpot: ", result );
-                for( var s in result.spots ){
-                    var name = result.spots[ s ].spot_name;
+                // console.log( "result of getSpot: ", result );
+                for( var spt of result.spots ){
+                    var name = spt.spot_name;
                     // TODO: to get images from DB
                     var src = require( "@/assets/Mac.jpg" );
                     if( Math.random() >= 0.5 ){
                         src = require('@/assets/mos.png');
                     }
                     var scores = [];
-                    for( var r in result.review ){
-                        if( result.spots[ s ].spot_id == result.review[ r ].spot_id ){
-                            scores.push( result.review[ r ].score );
+                    for( var rev of result.review ){
+                        if( spt.spot_id == rev.spot_id ){
+                            scores.push( rev.score );
                         }
                     }
                     var good = Math.round( 10 * average( scores ) ) / 10;
@@ -198,26 +195,26 @@ export default {
         },
         getSpotYouReviewed: async function( user_id ){
             return getReviewByUserId( user_id ).then( result => {
-                console.log( 'result of getReviewByUserId: ', result );
+                // console.log( 'result of getReviewByUserId: ', result );
                 var reviewd_spot_ids = new Set()
-                for( let r of result.review ){
-                    reviewd_spot_ids.add( r.spot_id );
+                for( let rev of result.review ){
+                    reviewd_spot_ids.add( rev.spot_id );
                 }
-                console.log( 'reviewed_spot_ids: ', reviewd_spot_ids )
+                // console.log( 'reviewed_spot_ids: ', reviewd_spot_ids )
                 for( let reviewd_spot_id of reviewd_spot_ids ){
                     getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
-                        console.log( 'results of getSpot', result )
-                        var s = result.spots[ 0 ];
-                        var name = s.spot_name;
+                        // console.log( 'results of getSpot', result )
+                        var spt = result.spots[ 0 ];
+                        var name = spt.spot_name;
                         // TODO: to get images from DB
                         var src = require( "@/assets/Mac.jpg" );
                         if( Math.random() >= 0.5 ){
                             src = require('@/assets/mos.png');
                         }
                         var scores = [];
-                        for( var re in result.review ){
-                            if( s.spot_id == result.review[ re ].spot_id ){
-                                scores.push( result.review[ re ].score );
+                        for( var rev of result.review ){
+                            if( spt.spot_id == rev.spot_id ){
+                                scores.push( rev.score );
                             }
                         }
                         var good = Math.round( 10 * average( scores ) ) / 10;
