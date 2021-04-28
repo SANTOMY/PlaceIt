@@ -17,6 +17,7 @@
     "core-js": "^3.6.5",
     "leaflet": "^1.7.1",
     "vue": "^2.6.12",
+    "vue-cropperjs": "^4.2.0",
     "vue-chartjs": "^3.5.1",
     "vue-router": "^3.4.7",
     "vue-select": "^3.11.2",
