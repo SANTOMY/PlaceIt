@@ -121,7 +121,6 @@ import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
 import radarChartDisp from '../share/RadarChartDisp'
-import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
 
 export default {
@@ -194,21 +193,17 @@ export default {
             this.$emit("close");
         },
         updateDetail: function() {
-            console.log(this.spot.spot_id);
-            this.isLoading = true;      // データを取得している間はローディング画面を表示する
-            getSpot(this.spot.spot_id, "", "", "", "")
-                .then(res => {
-                    this.spotData = res.spots[0];
-                    // this.reviews = res.review;
-                    this.isLoading = false;
-                    this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
-                    this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
-                                                this.reviews.map(r =>  Number(r.score2)),
-                                                this.reviews.map(r =>  Number(r.score3)),
-                                                this.reviews.map(r =>  Number(r.score4)),
-                                                this.reviews.map(r =>  Number(r.score5)));
-                    this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
-                })
+            // this.isLoading = true;      // データを取得している間はローディング画面を表示する
+            this.spotData = this.spot;
+            this.isLoading = false;
+            
+            this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
+            this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
+                                        this.reviews.map(r =>  Number(r.score2)),
+                                        this.reviews.map(r =>  Number(r.score3)),
+                                        this.reviews.map(r =>  Number(r.score4)),
+                                        this.reviews.map(r =>  Number(r.score5)));
+            this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ
         },
         calcRating: function(scores) {
             return average(scores);

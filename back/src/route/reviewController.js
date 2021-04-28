@@ -8,6 +8,7 @@ const reviewSQL = require("../database/ReviewSQL");
 module.exports = class ReviewController{
     constructor(){
         this.saveReview.bind(this);
+        this.getReviewBySpotId.bind(this)
     }
     
     async saveReview(req, res){
@@ -30,6 +31,7 @@ module.exports = class ReviewController{
 
     async getReviewBySpotId(req, res){
         const spotId = req.params.spotId;
+        console.log(spotId)
         return reviewSQL.getReviewBySpotId(spotId).then((results)=>{
             if(results.success){
                 info(fileLabel, "Loaded Successfully");

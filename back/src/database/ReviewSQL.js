@@ -48,7 +48,7 @@ module.exports.saveReview = async function(newReview){
 
 module.exports.getReviewBySpotId = async function(spotId){
     const query = {
-        text: `SELECT * FROM spots.review WHERE spot_id='${spotId}'`
+        text: `select r.*, u.username from spots.review as r, users.users as u where u.id = r.user_id and r.spot_id='${spotId}'`
     };
     const client = await pool.connect();
     return client.query(query).then( result => {
