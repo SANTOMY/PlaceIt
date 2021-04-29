@@ -24,6 +24,7 @@
                         <img v-bind:src="user.src">
                     </v-avatar>
                 </v-layout>
+                <avatar-register @submit="editAvatarImage"/>
             </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
@@ -55,6 +56,8 @@
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {getUser} from '../../routes/userRequest'
+import {uploadProfileImage, getProfileImage} from "../../routes/imageRequest"
+import AvatarRegister from "./AvatarRegister.vue"
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest';
 import {getReviewByUserId} from '../../routes/reviewRequest';
@@ -63,7 +66,8 @@ export default {
 
     components: {
         SpotListCard,
-        UserEdit
+        UserEdit,
+        AvatarRegister
     },
     data() {
         return {
@@ -74,7 +78,7 @@ export default {
                 username: this.$store.state.userData.userName,
                 email: this.$store.state.userData.email,
                 password: this.$store.state.userData.password,
-                src: require('@/assets/pose_kuyashii_man.png')
+                src: require('@/assets/default-icon.jpeg')
             },
             spot: [ // spot仮データ
                 {
@@ -161,6 +165,14 @@ export default {
                         this.isLoading = false;
                     } )
         })
+
+        getProfileImage(this.$store.state.userData.userId)
+            .then(result => {
+                if(!result.success) return;
+                console.log(result.data.image);
+                this.user.src = "data:image/jpeg;base64," + result.data.image;
+            })
+
     },
     methods:  {
         editProfile: function() {
@@ -168,6 +180,20 @@ export default {
         },
         closeUserEdit: function(){          
             this.dialogEdit = false
+        },
+        editAvatarImage: function(image) {
+            this.user.src = image;
+            const imageFile = this.createImageFile(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
+            uploadProfileImage(imageFile, this.$store.state.userData.userId)
+        },
+
+        createImageFile: function(base64image, name) {
+            var bin = atob(base64image.replace(/^.*,/, ''));
+            var buffer = new Uint8Array(bin.length);
+            for (var i = 0; i < bin.length; i++) {
+                buffer[i] = bin.charCodeAt(i);
+            }
+        return new File([buffer.buffer], name, {type: "image/jpeg"});
         },
         getSpotByUserId: async function(user_id){
             return getSpot('', '', '', user_id, '').then(result => {

@@ -188,8 +188,7 @@ export default {
                                                 this.reviews.map(r =>  Number(r.score5)));
                     this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
                     
-                }).then( one => {
-                    console.log(one)
+                }).then( () => {
                     return this.getUserInformation() //レヴューからユーザー名を取得する関数
                 })
                 

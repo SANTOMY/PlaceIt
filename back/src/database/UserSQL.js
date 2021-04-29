@@ -139,5 +139,23 @@ async function login(email, password) {
     });
 }
 
+async function getAllUniversities() {
+    const query = {
+        text: `SELECT DISTINCT university FROM users.users WHERE university IS NOT NULL`
+    };
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+        client.release();
+        console.log(result.rows);
+        if (result.rowCount == 0)
+            return {"success":false, "data":"University is not exist"};
+        return {"success":true, "data":result.rows};
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while get universities. " + exception);
+        return {"success":false, "data":exception};      
+    });
+}
+
 module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser,
-     login:login, getUserById:getUserById};
+     login:login, getUserById:getUserById, getAllUniversities:getAllUniversities};
