@@ -59,7 +59,14 @@
 
         <!-- スポット表示 -->
         <v-container fluid>
-            <v-row dense justify="center">
+            <v-card v-if="showNoCard" height="300">
+                <v-card-text>
+                    <p class="display-1 text--primary">
+                        選択されたスポットは存在しません。
+                    </p>
+                </v-card-text>
+            </v-card>
+            <v-row dense justify="center" v-if="!showNoCard">
                 <v-col
                     v-for="(card, index) in spot"
                     :key="index"
@@ -122,7 +129,6 @@
 <script>
 
     export default {
-    
         props: {
             color: String,
             spot_list: null, // おすすめスポット
@@ -146,6 +152,7 @@
             num_per_page: 3, // 1ページの表示スポット数
             num_page: 1, // ページ数
             // num_page_array: [ 1, 1, 1 ]
+            showNoCard: false,
         }),
         mounted() {
             this.spot = this.spot_list
@@ -162,17 +169,17 @@
         methods:  {
             getNumber: function(number){
                 // < 1 2 ... 10 > ←このタイプのボタンから入力を受け取る
-                console.log(number)
+                // console.log(number)
                 this.jumpSpotPage(number)
             },
             ChangeCategory: function( i ) {
                 // カテゴリ（おすすめ，作成，レビュー）や表示ページの変更に伴い，
                 // 表示するスポットを更新する
-                console.log( "ChangeCategory is called. ( begin, end ): ", this.begin, this.end )
+                // console.log( "ChangeCategory is called. ( begin, end ): ", this.begin, this.end )
                 if( i != this.CategorySelect ){
                     this.CategorySelect = i
                     this.jumpSpotPage( 1 )
-                    console.log( "begin, end, now_page: ", this.begin, this.end, this.now_page )
+                    // console.log( "begin, end, now_page: ", this.begin, this.end, this.now_page )
                 }
                 this.CategorySelect = i
                 this.num_page = this.SpotCategories[ this.CategorySelect ].num_page
@@ -184,8 +191,14 @@
                 }else if(i==2){
                     this.RecommendedSpotSort() // おすすめスポット表示
                 }
-                
+
+                if(this.spot.length==0) {
+                    this.showNoCard = true;
+                }else{
+                    this.showNoCard = false;
+                }
             },
+            // TODO: 以下3つの関数は似た形なので、1つにまとめる
             CreatedSpotSort: function () { // 作ったスポットを表示する関数 
                 for( let i = this.begin; i < this.end; i++ ){
                     this.spot[ i - this.begin ] = this.my_spot_list[ i ]
@@ -201,14 +214,15 @@
                     this.spot[ i - this.begin ] = this.spot_list[ i ]
                 }
             },
-            spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
+
+            spotInformationPage: function(value) { // TODO: spotのカードをクリックしたときに動く関数
                 console.log(this.spot_list[value].spotId) // Debug
                 this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
             },
 
             jumpSpotPage: function( pageToJump ){
                 // < 1 2 ... 10 > ←このタイプのボタンが押された時にページを変える
-                console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
+                // console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
                 this.now_page = pageToJump
                 this.begin = ( this.now_page - 1 ) * this.num_per_page
                 this.end = this.begin + this.num_per_page
