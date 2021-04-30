@@ -169,7 +169,6 @@ export default {
                 if(!result.success) return;
                 // console.log(result.data.image);
                 this.user.src = "data:image/jpeg;base64," + result.data.image;
-                this.show_count += 1
             })
 
     },
@@ -263,8 +262,8 @@ export default {
     },
     watch:  {
         show_count: function() {
-            if(this.show_count!=3) return;
-            if(this.show_count==3) this.isLoading=false
+            if(this.show_count!=2) return;
+            if(this.show_count==2) this.isLoading=false
         }
 
     }

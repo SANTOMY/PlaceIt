@@ -59,7 +59,7 @@
 
         <!-- スポット表示 -->
         <v-container fluid>
-            <v-card v-if="showNoCard" height="300">
+            <v-card v-if="showNoCard" height="350">
                 <v-card-text>
                     <p class="display-1 text--primary">
                         選択されたスポットは存在しません。
