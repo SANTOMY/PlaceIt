@@ -30,7 +30,6 @@
         group
         mandatory
       >
-        <!-- v-forとか使ってまとめたい(SATD) -->
         <v-btn
           v-for="type in types"
           :key="type" 
