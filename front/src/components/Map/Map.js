@@ -132,10 +132,9 @@ export default {
         //現在地マーカーを設置
       },
 
-      //検索ジャンルを更新するメソッド(TypeButton.vueから呼ばれる)
+      //検索ジャンルを更新するメソッド
       search: async function(...args){
         const [type,univ] = args
-        console.log(args)
         this.markers.clearLayers();
         this.marker = [];
         this.nowType = type;

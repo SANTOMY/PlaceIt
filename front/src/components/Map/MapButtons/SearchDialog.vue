@@ -73,7 +73,6 @@
 </template>
 
 <script>
-//import typeButton from './TypeButton.vue'
 import {getSpotTypeDict} from "../../share/SpotTypeFunction"
 
 export default {
@@ -85,7 +84,6 @@ export default {
       types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
       typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
       nowUniv:false,//現在の大学
-      myUniv:this.$store.state.userData.university,//所属大学
       dialog:false//検索ダイアログ表示管理
     }
   },
