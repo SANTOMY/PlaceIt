@@ -157,11 +157,13 @@ export default {
             .then( () =>{
                 this.getLatestSpots( 0, 28 )
                 this.show_count += 1
+                console.log('my_spot',this.my_spot)
         })
 
         this.getSpotYouReviewed( this.$store.state.userData.userId )
             .then( () =>{
                 this.show_count += 1
+                console.log('good_spot',this.good_spot)
             })
 
         getProfileImage(this.$store.state.userData.userId)
@@ -204,6 +206,7 @@ export default {
                     if( Math.random() >= 0.5 ){
                         src = require('@/assets/mos.png');
                     }
+                    // レビューの計算
                     var scores = [];
                     for( var rev of result.review ){
                         if( spt.spot_id == rev.spot_id ){
@@ -237,6 +240,7 @@ export default {
                         if( Math.random() >= 0.5 ){
                             src = require('@/assets/mos.png');
                         }
+                        // レビューの計算
                         var scores = [];
                         for( var rev of result.review ){
                             if( spt.spot_id == rev.spot_id ){
