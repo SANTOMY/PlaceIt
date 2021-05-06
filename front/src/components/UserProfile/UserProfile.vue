@@ -55,7 +55,6 @@
 
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
-// import {getUser} from '../../routes/userRequest'
 import {uploadProfileImage, getProfileImage} from "../../routes/imageRequest"
 import AvatarRegister from "./AvatarRegister.vue"
 import {getSpot} from '../../routes/spotRequest'
@@ -157,13 +156,13 @@ export default {
             .then( () =>{
                 this.getLatestSpots( 0, 28 )
                 this.show_count += 1
-                console.log('my_spot',this.my_spot)
+                console.log('my_spot length',this.my_spot.length)
         })
 
         this.getSpotYouReviewed( this.$store.state.userData.userId )
             .then( () =>{
                 this.show_count += 1
-                console.log('good_spot',this.good_spot)
+                console.log('good_spot length',this.good_spot.length)
             })
 
         getProfileImage(this.$store.state.userData.userId)
@@ -197,7 +196,6 @@ export default {
         },
         getSpotByUserId: async function(user_id){
             return getSpot('', '', '', user_id, '').then(result => {
-                console.log('getSpot result: ',result)
                 // console.log( "result of getSpot: ", result );
                 for( var spt of result.spots ){
                     var name = spt.spot_name;
@@ -223,7 +221,6 @@ export default {
         },
         getSpotYouReviewed: async function( user_id ){
             return getReviewByUserId( user_id ).then( result => {
-                console.log('getReviewByUserId result: ',result)
                 // console.log( 'result of getReviewByUserId: ', result );
                 var reviewd_spot_ids = new Set()
                 for( let rev of result.review ){

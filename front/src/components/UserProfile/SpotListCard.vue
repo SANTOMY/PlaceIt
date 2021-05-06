@@ -142,28 +142,20 @@
             CategorySelect: 2, //Spot list select. The default is a recommended spot.
             drawer: false,
             SpotCategories: [
-                { title: 'レビューしたスポット', icon: 'mdi-home-city', num_page: 1, num_spot:0 },
-                { title: '作成スポット', icon: 'mdi-account', num_page: 1, num_spot:0 },
-                { title: 'おすすめスポット', icon: 'mdi-account-group-outline', num_page: 1, num_spot:0 },
+                { title: 'レビューしたスポット', icon: 'mdi-home-city'},
+                { title: '作成スポット', icon: 'mdi-account'},
+                { title: 'おすすめスポット', icon: 'mdi-account-group-outline'},
             ],
             begin: 0, // show spots from (begin)th to (end)th
             end: 3,
             now_page: 0, // 初期ページ
             num_per_page: 3, // 1ページの表示スポット数
             num_page: 1, // ページ数
-            // num_page_array: [ 1, 1, 1 ]
             showNoCard: false,
         }),
         mounted() {
             this.spot = this.spot_list
-            // this.user = this.user_list
             // カテゴリ（おすすめ，作成，いいね）毎のページ数計算
-            this.SpotCategories[0].num_page = Math.ceil(this.good_spot_list.length/this.num_per_page) 
-            this.SpotCategories[1].num_page = Math.ceil(this.my_spot_list.length/this.num_per_page)
-            this.SpotCategories[2].num_page = Math.ceil(this.spot_list.length/this.num_per_page)
-            this.SpotCategories[0].num_spot = this.good_spot_list.length 
-            this.SpotCategories[1].num_spot = this.my_spot_list.length
-            this.SpotCategories[2].num_spot = this.spot_list.length
             this.ChangeCategory( this.CategorySelect )
         },
         methods:  {
@@ -182,7 +174,7 @@
                     // console.log( "begin, end, now_page: ", this.begin, this.end, this.now_page )
                 }
                 this.CategorySelect = i
-                this.num_page = this.SpotCategories[ this.CategorySelect ].num_page
+                this.num_page = this.page_num(this.CategorySelect)
                 this.spot = [];
                 if(i==0){
                     this.GoodSpotSort() // いいねしたスポット表示
@@ -226,11 +218,31 @@
                 this.now_page = pageToJump
                 this.begin = ( this.now_page - 1 ) * this.num_per_page
                 this.end = this.begin + this.num_per_page
-                if( this.end > this.SpotCategories[this.CategorySelect].num_spot ){ 
+                if( this.end > this.spot_num(this.CategorySelect) ){ 
                     // 最終ページがnum_per_pageで割り切れない数だった時の処理
-                    this.end = this.SpotCategories[this.CategorySelect].num_spot
+                    this.end = this.spot_num(this.CategorySelect)
                 }
                 this.ChangeCategory( this.CategorySelect )
+            },
+            spot_num: function(){
+                // 現在のカテゴリにあるスポットの数を計算
+                if( this.CategorySelect == 0 ){
+                    return this.good_spot_list.length
+                }else if( this.CategorySelect == 1 ){
+                    return this.my_spot_list.length
+                }else{
+                    return this.spot_list.length
+                }
+            },
+            page_num: function(){
+                // 現在のカテゴリにあるスポットの数を計算
+                if( this.CategorySelect == 0 ){
+                    return Math.ceil(this.good_spot_list.length/this.num_per_page)
+                }else if( this.CategorySelect == 1 ){
+                    return Math.ceil(this.my_spot_list.length/this.num_per_page)
+                }else{
+                    return Math.ceil(this.spot_list.length/this.num_per_page)
+                }
             },
         }
     };
