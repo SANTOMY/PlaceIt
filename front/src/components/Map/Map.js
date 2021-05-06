@@ -2,7 +2,6 @@ import  'leaflet/dist/leaflet.css'
 import  L from 'leaflet'
 import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
-import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
@@ -21,7 +20,6 @@ export default {
     components:{
       spotRegButton,
       nowLocButton,
-      typeButton,
       spotDetail,
       searchDialog
     },

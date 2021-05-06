@@ -1,10 +1,7 @@
 <template>
 <!-- mapレイヤのような形で生成される -->
   <div id='map'>
-    <!-- spot種別検索メニュー -->
-    <!--
-    <type-button @update-type="updateType"/>
-    -->
+    <!-- 検索ダイアログー -->
     <search-dialog @search="search" />
     <!-- 通常モードとスポット登録モードの切り替えボタン -->
     <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()" v-if='this.$store.state.userData != null'/>
