@@ -32,21 +32,21 @@
 
 # How To Run
 ## For Docker
-- 1.Copy .env (Check discord)
-- 2.Make docker image
+1.Copy .env (Check discord)
+2.Make docker image
 ```
 $ docker-compose build
 ```
-- 3.Run container
+3.Run container
 ```
 $ docker run -it -p 5000:5000 pbl2-back
 ```
 ## Connect to DB from console
-- 1.Connect
+1.Connect
 ```
 $ psql -hec2-3-218-112-22.compute-1.amazonaws.com -Ujbkfxlthkrasiq -dd63cdmlbgnj93n
 ```
-- 2.Insert example data
+2.Insert example data
 ```
 d63cdmlbgnj93n=# INSERT INTO sample_point(name,geom)
 d63cdmlbgnj93n-# VALUES ('point1',ST_GeomFromText('POINT(35.67 139.75)',4326));
@@ -56,31 +56,33 @@ d63cdmlbgnj93n-# VALUES ('point1',ST_GeomFromText('POINT(35.67 139.75)',4326));
 $ docker-compose exec front sh
 ```
 ## Run front application
-- 1.Install Vue CLI
+1.Install Vue CLI
 ```
 $ npm install -g @vue/cli-service
 ```
-- 2.Create node_modules
+2.Create node_modules
 ```
 $ cd front
 $ npm install
 ```
-- 3.Run application
+3.Run application
 ```
 $ npm run serve
 ```
 
 ## Run on deployed server
-- 1.Checkout the branch which you want to run
+1.Checkout the branch which you want to run
 ```
 $ git checkout ${YOUR BRANCH}
 ```
-- 2.Pull deploy branch
+2.Pull deploy branch
 ```
 $ git pull origin deploy
 ```
-- 3.Push your change to deploy branch
+3.Push your change to deploy branch
 ```
 $ git push origin deploy
 ```
-- 4.Check https://place-it-front.herokuapp.com/
+4.Check https://place-it-front.herokuapp.com/
+
+## Main Options
