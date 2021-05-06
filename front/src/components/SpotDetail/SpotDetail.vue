@@ -74,7 +74,7 @@
                     <v-row justify="center">
                         <!-- レビューリスト -->
                         <v-col cols="11">
-                            <spot-review-list :reviews="sliced_reviews" />
+                            <spot-review-list :reviews="slicedReviews" />
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -82,7 +82,7 @@
                         <v-col cols="8">
                             <v-container class="max-width">
                                 <v-pagination                                
-                                    @input="change_page"
+                                    @input="changePage"
                                     v-model="now_review_page"
                                     :length="num_page"
                                     :total-visible="7"
@@ -157,8 +157,8 @@ export default {
         showDialog: Boolean
     },
     methods: {
-        change_page: function(number){
-            console.log('(change review page)change review page to ',number)
+        changePage: function(number){
+            // console.log('(change review page)change review page to ',number)
             return this.now_review_page = number
         },
         sum: function(arr){ // 配列の要素の合計を計算
@@ -188,11 +188,9 @@ export default {
                                                 this.reviews.map(r =>  Number(r.score4)),
                                                 this.reviews.map(r =>  Number(r.score5)));
                     this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
-                    // console.log('(getSpot)review:',this.reviews)
                     
-                }).then(one => {
-                    console.log(one)
-                    return this.get_user_information() //レヴューからユーザー名を取得する関数
+                }).then( () => {
+                    return this.getUserInformation() //レヴューからユーザー名を取得する関数
                 })
                 
 
@@ -203,44 +201,37 @@ export default {
         calcFor5Score: function(score1, score2, score3, score4, score5){
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         },
-        get_user_information: function() {//レヴューからユーザー名を取得する関数
+        getUserInformation: function() {//レヴューからユーザー名を取得する関数
             this.user_list = Array(this.reviews.length).fill(undefined) // 初期値
             let j = 0
             for(let i = 0; i < this.reviews.length; i++) {
                 getUserById(this.reviews[i].user_id)
                     .then(result => {
                         j += 1
-                        this.user_list[i]=result[0];
-                        
-                        console.log('i:',i)
-                        // console.log('reviewer name:',this.user_list[i].username)
-                        console.log('reviewer name:',this.user_list[i])
+                        this.user_list[i]=result[0];            
 
                         if(j == (this.reviews.length)){
                             this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
                         }
                 })
             }
-            // console.log('get username by Id result:',this.user_list)
         },
     },
 
     computed: {
         //現在のページに表示するレビューを返す
-        sliced_reviews: function() {
+        slicedReviews: function() {
             const start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
             const end = start + this.REVIEW_NUM_PER_PAGE;
             const raw_reviews = this.reviews.slice(start, end)
             const raw_users = this.user_list.slice(start, end)
-            // console.log('review_data:',raw_reviews)
-            // console.log('user_list:',this.user_list)
-            // console.log('user_data:',raw_users)
+
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
             for(var i = 0; i < raw_reviews.length; i++) {
                 enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
             }
-            // console.log('enumerated_reviews:',enumerated_reviews)
+
             return enumerated_reviews;
         },
 

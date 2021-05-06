@@ -5,5 +5,6 @@ const reviewController = new ReviewController();
 
 router.post("/saveReview",reviewController.saveReview);
 router.get("/getReviewBySpotId/:spotId" ,reviewController.getReviewBySpotId)
+router.get("/getReviewByUserId/:userId", reviewController.getReviewByUserId)
 
 module.exports = router;
