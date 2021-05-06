@@ -104,7 +104,6 @@ export default {
             for(var i = 0; i < 5; i++) {
                 console.log(i + ": " + this.review_data.scores[i]);
             }
-            console.log();
             saveReview(this.spot_id, this.review_data.comment, this.review_data.scores, this.$store.state.userData.userId)
                 .then(res => {
                     console.log(res)        // Debug
@@ -116,7 +115,6 @@ export default {
 
     mounted: function() {
         this.criteria_list = getSpotTypeDict('review')[this.spot_type];
-        console.log(this.criteria_list)
     },
 
     watch:{

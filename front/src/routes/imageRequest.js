@@ -4,7 +4,6 @@ async function uploadProfileImage(imageFile, userId){
     const url = serverIP + '/upload/profile-image/' + userId;
     try{
         const formData = new FormData();
-        console.log(imageFile)
         formData.append("file", imageFile);
 
         let reponse = await fetch(url,{
@@ -14,7 +13,6 @@ async function uploadProfileImage(imageFile, userId){
         });
         return await reponse.json();
     }catch(exception){
-        console.log(exception);
         return{success:false, data:exception};
     }
 }
@@ -26,8 +24,7 @@ async function getProfileImage(userId){
         let responseJson = await response.json();
         return {success:true, data:responseJson.image[0]}
     } catch(exception){
-        console.log(exception);
-        return {success:false};
+        return {success:false, data:exception};
     }
 }
  

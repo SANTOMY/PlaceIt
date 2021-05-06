@@ -22,7 +22,6 @@ async function uploadProfilePicture(newImage){
         };
     }
     return client.query(query).then((result)=>{
-        console.log(query);
         client.release();
         info(fileLabel,"Saved profile image");
         return {"success":true};
@@ -69,7 +68,6 @@ async function uploadSpotPicture(newImage){
 
     return client.query(query).then((result)=>{
         info(fileLabel,"Inside query");
-        //console.log(query);
         client.release();
         info(fileLabel,"Saved spot image");
         return {"success":true};

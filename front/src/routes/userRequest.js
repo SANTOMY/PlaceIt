@@ -15,7 +15,6 @@ async function register(userName, email, password, university){
         });
         return await reponse.json();
     }catch(exception){
-        console.log(exception);
         return{success:false, data:exception};
     }
 }
@@ -35,7 +34,6 @@ async function getUser(email){
         }
 
     } catch(exception){
-        console.log(exception);
         return {success:false, data:exception};
     }
 }
@@ -55,7 +53,6 @@ async function editUser(currentEmail,newEmail,newPassword,newUserName){
         });
         return await reponse.json();
     }catch(exception){
-        console.log(exception);
         return{success:false, data:exception};
     }
 }
@@ -74,7 +71,6 @@ async function login(email,password){
         });
         return await reponse.json();
     }catch(exception){
-        console.log(exception);
         return{success:false, data:exception};
     }
 }
@@ -93,7 +89,6 @@ async function getAllUniversities(){
         }
 
     } catch(exception){
-        console.log(exception);
         return {success:false, data:exception};
     }
 }

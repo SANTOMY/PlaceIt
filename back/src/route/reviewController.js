@@ -31,7 +31,6 @@ module.exports = class ReviewController{
 
     async getReviewBySpotId(req, res){
         const spotId = req.params.spotId;
-        console.log(spotId)
         return reviewSQL.getReviewBySpotId(spotId).then((results)=>{
             if(results.success){
                 info(fileLabel, "Loaded Successfully");

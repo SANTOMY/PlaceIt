@@ -152,8 +152,6 @@ export default {
         // call getUser(email) from .vue file:
         getUser(this.user.email)
             .then(result => {
-                console.log(result[0])
-                console.log(result[0].username)
                 this.user.username = result[0].username
                 this.user.user_id = result[0].id
                 this.getSpotByUserId( this.user.user_id )
@@ -169,7 +167,6 @@ export default {
         getProfileImage(this.$store.state.userData.userId)
             .then(result => {
                 if(!result.success) return;
-                console.log(result.data.image);
                 this.user.src = "data:image/jpeg;base64," + result.data.image;
             })
 
@@ -197,7 +194,6 @@ export default {
         },
         getSpotByUserId: async function(user_id){
             return getSpot('', '', '', user_id, '').then(result => {
-                // console.log( "result of getSpot: ", result );
                 for( var spt of result.spots ){
                     var name = spt.spot_name;
                     // TODO: to get images from DB
@@ -221,15 +217,12 @@ export default {
         },
         getSpotYouReviewed: async function( user_id ){
             return getReviewByUserId( user_id ).then( result => {
-                // console.log( 'result of getReviewByUserId: ', result );
                 var reviewd_spot_ids = new Set()
                 for( let rev of result.review ){
                     reviewd_spot_ids.add( rev.spot_id );
                 }
-                // console.log( 'reviewed_spot_ids: ', reviewd_spot_ids )
                 for( let reviewd_spot_id of reviewd_spot_ids ){
                     getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
-                        // console.log( 'results of getSpot', result )
                         var spt = result.spots[ 0 ];
                         var name = spt.spot_name;
                         // TODO: to get images from DB

@@ -177,7 +177,6 @@
         methods:  {
             getNumber: function(number){
                 // < 1 2 ... 10 > ←このタイプのボタンから入力を受け取る
-                console.log(number)
                 this.jumpSpotPage(number)
             },
             ChangeCategory: function( i ) {
@@ -216,7 +215,6 @@
                 }
             },
             spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
-                console.log(this.spot_list[value].spotId) // Debug
                 this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
             },
             changeSpotPage: function( diff, ahead = true ){

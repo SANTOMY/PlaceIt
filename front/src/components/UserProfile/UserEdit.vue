@@ -268,11 +268,6 @@ export default {
 
     methods: {
         editUserInformation: function() { // edit user information関数
-            // Debug //
-            console.log(this.user.email); // 変更前のemail
-            console.log(this.model.edit_email); // 変更後のemail
-            console.log(this.model.edit_password); // 変更後のpassword
-            console.log(this.model.edit_username); // 変更後のusername
 
             // backendのデータの修正処理
             editUser(this.user.email,this.model.edit_email,this.model.edit_password,this.model.edit_username)

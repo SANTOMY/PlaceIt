@@ -153,7 +153,6 @@ export default {
 
     methods: {
         change_page: function(number){
-            console.log(number)
             return this.now_review_page = number
         },
         sum: function(arr){ // 配列の要素の合計を計算

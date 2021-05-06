@@ -80,7 +80,6 @@ export default {
         var east = mapframe.getEast()
         var north = mapframe.getNorth()
         var south = mapframe.getSouth()
-        console.log([west,east,north,south])
         
       },
     //Map上のどこかををクリックした時に起動する関数

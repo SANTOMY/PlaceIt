@@ -148,7 +148,6 @@ export default {
             var image = new Image();
             image.crossOrigin = "Anonymous";
             image.onload = (event) => {
-                console.log(event);
                 ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, this.AVATAR_SIZE, this.AVATAR_SIZE);
                 this.croppedImage = canvas.toDataURL('image/jpeg'); //最終的にcroppedImageにbase64の画像データが入る
             };

@@ -146,7 +146,6 @@ async function getAllUniversities() {
     const client = await pool.connect();
     return client.query(query).then( result => {
         client.release();
-        console.log(result.rows);
         if (result.rowCount == 0)
             return {"success":false, "data":"University is not exist"};
         return {"success":true, "data":result.rows};
