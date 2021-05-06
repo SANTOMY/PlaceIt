@@ -26,12 +26,20 @@
                     v-model="password"
                     :counter="32"
                     :rules="passwordRules" />
-                    
-                <v-text-field label="所属大学"
+
+                <v-select 
+                    label="所属大学"
+                    v-model="university"
                     prepend-icon="mdi-school"
-                    v-model="university" 
+                    item-text="university"
+                    :items="universities"/>
+                
+                <v-text-field label="所属大学を入力してください"
+                    v-model="addedUniversity" 
+                    prepend-icon="mdi-fountain-pen-tip"
                     :counter="64"
-                    :rules="universityRules"/>
+                    :rules="universityRules"
+                    v-if='this.university == "その他"'/>
 
                 <v-card-actions>
                     <v-btn @click="createUser">登録</v-btn>
@@ -44,6 +52,7 @@
 
 <script>
 import {register} from '../../routes/userRequest'
+import {getAllUniversities} from '../../routes/userRequest'
 const User = require("../../store/user");
 export default {
 
@@ -53,6 +62,7 @@ export default {
             email : '',
             password : '',
             university: '',
+            addedUniversity: '',
 
             showPassword : false,
             usernameRules: [
@@ -71,13 +81,25 @@ export default {
             universityRules: [
                 v => !!v || "所属大学名は必須項目です。",
                 v => (v && v.length <= 64) || "所属大学名は64文字以内で入力してください。",
+                v => !(v == "その他") || "大学名を正しく入力してください。"
             ],
+            universities: [], 
         }
+    },
+    mounted: function(){
+        // call getUser(email) from .vue file:
+        getAllUniversities()
+            .then(result => {
+                this.universities = result
+                this.universities.push({"university": "その他"})
+        })
     },
 
     methods: {
         createUser: function() {
             if (!this.$refs.loginForm.validate()) return;
+            if (this.university == "その他")
+                this.university = this.addedUniversity
             register(this.username,this.email,this.password,this.university)
                 .then(res => {
                     console.log(res)
@@ -87,7 +109,7 @@ export default {
                     this.$store.commit("login", userData)
                     this.$router.push('/map')
                 });
-        }
+        },
     }
     
 }
