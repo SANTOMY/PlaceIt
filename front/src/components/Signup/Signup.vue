@@ -132,7 +132,6 @@ export default {
         getAllUniversities()
             .then(result => {
                 this.universities = result
-                this.universities.push({"university": "その他"})
         })
     },
 
