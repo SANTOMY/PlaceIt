@@ -6,6 +6,7 @@ const fileLabel = "UserSQL"
 const util = require('util');
 const bcrypt = require('bcryptjs');
 const utility = require('../utility');
+const { exception } = require('console');
 
 
 /**
@@ -115,6 +116,39 @@ async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     });
 }
 
+async function deleteUser(userId, password) {
+    const confirmQuery = {
+        text: `SELECT * from users.users WHERE id='${userId}'`
+    }
+    const deleteQuery = {
+        text: `DELETE FROM users.users WHERE id='${userId}'`
+    };
+    const client = await pool.connect();
+    return client.query(confirmQuery).then( result1 => {
+        if (result1.rowCount == 0){
+            throw "User does not exist";
+        }
+        const hash = result1.rows[0].password;
+        const isCorrectPassword = bcrypt.compareSync(password, hash);
+        if(!isCorrectPassword){
+           throw "Password is incorrect";
+        }else{
+            return client.query(deleteQuery).then( result2 => {
+                client.release();
+                return {"success":true, "data":"Successfully deleted", "userId":userId};
+            }).catch((exception)=>{
+                client.release();
+                error(fileLabel,"Error while deleting user. " + exception);
+                return {"success":false, "data":exception};
+            });
+        }
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while confirming user. " + exception);
+        return {"success":false, "data":exception};
+    });
+}
+
 async function login(email, password) {
     const query = {
         text: `SELECT * FROM users.users WHERE email='${email}'`
@@ -156,5 +190,5 @@ async function getAllUniversities() {
     });
 }
 
-module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser,
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser, deleteUser:deleteUser,
      login:login, getUserById:getUserById, getAllUniversities:getAllUniversities};
