@@ -174,7 +174,7 @@
                     // console.log( "begin, end, now_page: ", this.begin, this.end, this.now_page )
                 }
                 this.CategorySelect = i
-                this.num_page = this.page_num(this.CategorySelect)
+                this.num_page = this.page_num()
                 this.spot = [];
                 if(i==0){
                     this.GoodSpotSort() // いいねしたスポット表示
@@ -218,9 +218,9 @@
                 this.now_page = pageToJump
                 this.begin = ( this.now_page - 1 ) * this.num_per_page
                 this.end = this.begin + this.num_per_page
-                if( this.end > this.spot_num(this.CategorySelect) ){ 
+                if( this.end > this.spot_num() ){ 
                     // 最終ページがnum_per_pageで割り切れない数だった時の処理
-                    this.end = this.spot_num(this.CategorySelect)
+                    this.end = this.spot_num()
                 }
                 this.ChangeCategory( this.CategorySelect )
             },
