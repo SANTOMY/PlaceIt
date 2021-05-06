@@ -51,11 +51,20 @@ export default {
     },
     methods: {
     //Map上に検索条件にあったスポットを表示する関数
-      showSpot: async function(type,univ){
+      showSpot: async function(type,univ,keyword){
         if (type=="reset") type = "";
         var data = await getSpot("","",type,"",univ);
         if (data.success){
           var spots = data.spots;
+          
+          //キーワードを含まないスポットを除外
+          if (keyword!=""){
+            for(let key in spots){
+              if(spots[key].spot_name.indexOf(keyword)==-1){
+                delete spots[key]
+              }
+            }
+          }
           var markerSet = []//マーカーのリスト
           spots.forEach(spot => {
              var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
@@ -134,14 +143,14 @@ export default {
 
       //検索ジャンルを更新するメソッド
       search: async function(...args){
-        const [type,univ] = args
+        const [type,univ,keyword] = args
         this.markers.clearLayers();
         this.marker = [];
         this.nowType = type;
         if(univ){
-          await this.showSpot(type,this.user.univ);
+          await this.showSpot(type,this.user.univ,keyword);
         } else{
-          await this.showSpot(type,"");
+          await this.showSpot(type,"",keyword);
         }
 
       },
@@ -173,7 +182,7 @@ export default {
       //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
       //spot表示
-      this.showSpot(this.nowType,"");
+      this.showSpot(this.nowType,"","");
     }, 
     //現在地追跡のために利用(予定)
     watch: {
