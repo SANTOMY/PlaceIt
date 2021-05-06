@@ -158,10 +158,10 @@
             this.spot = this.spot_list
             // this.user = this.user_list
             // カテゴリ（おすすめ，作成，いいね）毎のページ数計算
-            this.SpotCategories[0].num_page = Math.ceil(this.spot.length/this.num_per_page) 
+            this.SpotCategories[0].num_page = Math.ceil(this.good_spot_list.length/this.num_per_page) 
             this.SpotCategories[1].num_page = Math.ceil(this.my_spot_list.length/this.num_per_page)
             this.SpotCategories[2].num_page = Math.ceil(this.spot_list.length/this.num_per_page)
-            this.SpotCategories[0].num_spot = this.spot_list.length 
+            this.SpotCategories[0].num_spot = this.good_spot_list.length 
             this.SpotCategories[1].num_spot = this.my_spot_list.length
             this.SpotCategories[2].num_spot = this.spot_list.length
             this.ChangeCategory( this.CategorySelect )
