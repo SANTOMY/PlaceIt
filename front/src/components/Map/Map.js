@@ -73,15 +73,6 @@ export default {
           }
       },
 
-      //画面の枠組みの経緯度を取得する関数
-      getWindow: function(){
-        var mapframe = this.map.getBounds()
-        var west = mapframe.getWest()
-        var east = mapframe.getEast()
-        var north = mapframe.getNorth()
-        var south = mapframe.getSouth()
-        
-      },
     //Map上のどこかををクリックした時に起動する関数
       mapClickEvent(event){
         if(this.flag){
