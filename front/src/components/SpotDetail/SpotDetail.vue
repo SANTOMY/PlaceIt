@@ -139,11 +139,7 @@ export default {
             reviews: [],
             rating: 5,
             rating5: [0,0,0,0,0],
-            photos: [
-                {picture_id:1, image:require("@/assets/Hakataramen.jpg")},
-                {picture_id:2, image:require("@/assets/Hakataramen.jpg")},
-                {picture_id:3, image:require("@/assets/Hakataramen.jpg")},
-            ],    //仮
+            photos: [{picture_id:1, image:require("@/assets/noimage.png")}],
             num_page: 0,
             REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
             now_review_page: 1,
@@ -152,7 +148,8 @@ export default {
                 lat: 0,
                 lon: 0
             },
-            isLoading: false
+            isLoadingData: false,   //spotデータを読み込んでいるか
+            isLoadingPhoto: false   // spotイメージを読み込んでいるか
         }
     },
     props: {
@@ -184,12 +181,13 @@ export default {
             this.$emit("close");
         },
         updateDetail: function() {
-            this.isLoading = true;      // データを取得している間はローディング画面を表示する
+            this.isLoadingData = true;      // データを取得している間はローディング画面を表示する
+            this.isLoadingPhoto = true;      
             getSpot(this.spot_id, "", "", "", "")
                 .then(res => {
                     this.spotData = res.spots[0];
                     this.reviews = res.review;
-                    this.isLoading = false;
+                    this.isLoadingData = false;
                     this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
                     this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
                                                 this.reviews.map(r =>  Number(r.score2)),
@@ -200,12 +198,14 @@ export default {
                 })
             getSpotImage(this.spot_id)
                 .then(res => {
-                    const image_data = res.data.map(item => {
-                        return {id: item.picture_id, image: "data:image/jpeg;base64," + item.image}
-                    })
-
-                    this.photos = image_data
-                })
+                    if(res.success && res.data != undefined) {
+                        const image_data = res.data.map(item => {
+                            return {id: item.picture_id, image: "data:image/jpeg;base64," + item.image}
+                        });
+                        this.photos = image_data;
+                    }
+                    this.isLoadingPhoto = false;
+            })
         },
         calcRating: function(scores) {
             return average(scores);
@@ -228,6 +228,9 @@ export default {
             }
             return enumerated_reviews;
         },
+        isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
+            return this.isLoadingData || this.isLoadingPhoto
+        }
     },
 
     watch: {
@@ -236,6 +239,7 @@ export default {
             console.log(this.spot_id)
             this.updateDetail()
             this.now_review_page = 1;
+            this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
         }
     }
 }
