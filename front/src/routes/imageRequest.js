@@ -30,5 +30,38 @@ async function getProfileImage(userId){
         return {success:false};
     }
 }
+
+async function uploadSpotImage(imageFile, spotId){
+    const url = serverIP + '/upload/spot-image/' + spotId;
+    try{
+        const formData = new FormData();
+        console.log(imageFile)
+        formData.append("file", imageFile);
+
+        let reponse = await fetch(url,{
+            mode: 'cors',
+            method: 'POST',
+            body: formData
+        });
+        return await reponse.json();
+    }catch(exception){
+        console.log(exception);
+        return{success:false, data:exception};
+    }
+}
+
+async function getSpotImage(spotId){
+    const url = serverIP + '/upload/spot-image/' + spotId;
+    console.log(url)
+    try{
+        let response = await fetch(url,);
+        let responseJson = await response.json();
+        const images = responseJson.data
+        return {success:true, data:images}
+    } catch(exception){
+        console.log(exception);
+        return {success:false};
+    }
+}
  
-export {uploadProfileImage, getProfileImage}
+export {uploadProfileImage, getProfileImage, uploadSpotImage, getSpotImage}

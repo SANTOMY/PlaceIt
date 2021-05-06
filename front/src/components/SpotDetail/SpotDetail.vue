@@ -18,8 +18,8 @@
                     hide-delimiter-background
                     show-arrows-on-hover
                 >
-                    <v-carousel-item
-                        :src="photo"
+                    <v-carousel-item v-for="photo in photos" :key="photo.id"
+                        :src="photo.image"
                     />
                 </v-carousel>
                 <v-row
@@ -123,6 +123,7 @@ import spotReviewRegister from './SpotReviewRegister.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
+import {getSpotImage} from '../../routes/imageRequest'
 
 export default {
     components: {
@@ -138,7 +139,11 @@ export default {
             reviews: [],
             rating: 5,
             rating5: [0,0,0,0,0],
-            photo: require("@/assets/Hakataramen.jpg"),    //仮
+            photos: [
+                {picture_id:1, image:require("@/assets/Hakataramen.jpg")},
+                {picture_id:2, image:require("@/assets/Hakataramen.jpg")},
+                {picture_id:3, image:require("@/assets/Hakataramen.jpg")},
+            ],    //仮
             num_page: 0,
             REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
             now_review_page: 1,
@@ -192,6 +197,14 @@ export default {
                                                 this.reviews.map(r =>  Number(r.score4)),
                                                 this.reviews.map(r =>  Number(r.score5)));
                     this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
+                })
+            getSpotImage("12345")
+                .then(res => {
+                    const image_data = res.data.map(item => {
+                        return {id: item.picture_id, image: "data:image/jpeg;base64," + item.image}
+                    })
+
+                    this.photos = image_data
                 })
         },
         calcRating: function(scores) {
