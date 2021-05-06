@@ -198,7 +198,7 @@ export default {
                                                 this.reviews.map(r =>  Number(r.score5)));
                     this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
                 })
-            getSpotImage("12345")
+            getSpotImage(this.spot_id)
                 .then(res => {
                     const image_data = res.data.map(item => {
                         return {id: item.picture_id, image: "data:image/jpeg;base64," + item.image}
