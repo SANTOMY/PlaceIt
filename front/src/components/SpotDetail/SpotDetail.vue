@@ -74,7 +74,7 @@
                     <v-row justify="center">
                         <!-- レビューリスト -->
                         <v-col cols="11">
-                            <spot-review-list :reviews="slicedReviews" />
+                            <spot-review-list :reviews="slicedReviews" :now_page="now_review_page"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -125,6 +125,7 @@ import radarChartDisp from '../share/RadarChartDisp'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
 import { getUserById } from '../../routes/userRequest.js'
+import {getProfileImage} from "../../routes/imageRequest"
 
 export default {
     components: {
@@ -207,12 +208,21 @@ export default {
             for(let i = 0; i < this.reviews.length; i++) {
                 getUserById(this.reviews[i].user_id)
                     .then(result => {
-                        j += 1
+                        
                         this.user_list[i]=result[0];            
-
-                        if(j == (this.reviews.length)){
-                            this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
-                        }
+                        getProfileImage( this.reviews[i].user_id )
+                            .then(res => {
+                                if(!res.success) {
+                                    this.user_list[i].src = require('@/assets/default-icon.jpeg')
+                                }else{
+                                    this.user_list[i].src = "data:image/jpeg;base64," + res.data.image;
+                                }
+                                j += 1
+                                console.log('j:',j)
+                                if(j == (this.reviews.length)){
+                                    this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
+                                }
+                            })
                 })
             }
         },
@@ -231,7 +241,7 @@ export default {
             for(var i = 0; i < raw_reviews.length; i++) {
                 enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
             }
-
+            console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
 
@@ -242,7 +252,7 @@ export default {
             if(!this.showDialog) return;
             console.log('spot id:',this.spot_id)
             this.updateDetail()
-            this.now_review_page = 1;
+            this.now_review_page = 1
         }
     }
 }
