@@ -121,16 +121,16 @@ async function deleteSpot(spotId){
     
     const client = await pool.connect();
     
-    return client.query(deleteSpotQuery).then(()=>{
+    return client.query(deleteSpotImageQuery).then(()=>{
         return client.query(deleteSpotReviewsQuery).then(()=>{
-            return client.query(deleteSpotImageQuery).then(()=>{
+            return client.query(deleteSpotQuery).then(()=>{
                 client.release();
                 info(fileLabel,"removed spot, reviews and images for spot id: " + spotId);
                 return {"success":true};
             })
             .catch(err=>{
                 client.release();
-                error(fileLabel,"Error while deleting spot images spot id: " + spotId);
+                error(fileLabel,"Error while deleting spot with id: " + spotId);
                 error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
                 return {"success":false,"data":err};
 
@@ -145,7 +145,7 @@ async function deleteSpot(spotId){
     })
     .catch(err=>{
         client.release();
-        error(fileLabel,"Error while deleting spot for id: " + spotId);
+        error(fileLabel,"Error while deleting spot images for id: " + spotId);
         error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
         return {"success":false,"data":err};
     });
