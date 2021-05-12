@@ -6,8 +6,6 @@
             <v-flex style="overflow: auto">
                 <spot-review v-for="review in reviews" :key="review.id"
                     :reviewer_data="review"
-
-                    :nowPage="now_page"
                 />
             </v-flex>
         </v-layout>
@@ -24,7 +22,6 @@ export default {
 
     props: {
         reviews: null,
-        now_page: null,
     }
 }
 </script>

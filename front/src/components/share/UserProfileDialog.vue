@@ -60,9 +60,10 @@
 
 import SpotListCard from "../UserProfile/SpotListCard.vue";
 import {getSpot} from '../../routes/spotRequest'
-// import {getProfileImage} from "../../routes/imageRequest"
+import {getProfileImage} from "../../routes/imageRequest"
 import {average} from '../../routes/reviewRequest';
 import {getReviewByUserId} from '../../routes/reviewRequest';
+import {SpotExampleData} from "./SpotExampleData";
 
 export default {
 
@@ -70,8 +71,6 @@ export default {
         SpotListCard,
     },
     props:{
-        // username: null,
-        // userId: null,
         user: null,
         showDialog: Boolean,
     },
@@ -79,60 +78,7 @@ export default {
         return {
             // user : null,
             isLoading: true,
-            spot: [ // spot仮データ
-                {
-                    name: 'マクドナルド',
-                    spotId: '000000',
-                    type: 'restaurant',
-                    user_id: '2bedc185-298d-49c4-b1e7-20897646dd92',
-                    username: 'asada',
-                    good: 123,
-                    src: require("@/assets/Mac.jpg"),
-                    review:[
-                        { user_id:'000000' },
-                        { user_id:'000001' }
-                    ]
-                },
-                {
-                    name: 'モスバーガー',
-                    spotId: '000001',
-                    type: 'restaurant',
-                    username: 'takata',
-                    user_id: '000001',
-                    good: 150,
-                    src: require('@/assets/mos.png'),
-                    review:[
-                        { user_id:'000001' },
-                        { user_id:'000002' }
-                    ]
-                },      
-                {
-                    name: 'KFC',
-                    spotId: '000002',
-                    type: 'restaurant',
-                    user_id: '000002',
-                    username: 'matsuo',
-                    good: 121,
-                    src: require('@/assets/KFC.jpg'), 
-                    review:[
-                        { user_id:'000002' },
-                        { user_id:'000000' }
-                    ]
-                },
-                {
-                    name: 'Lotteria',
-                    spotId: '000003',
-                    type: 'restaurant',
-                    user_id: '000003',
-                    username: 'nakamura',
-                    good: 99,
-                    src: require('@/assets/lotteria.png'), 
-                    review:[
-                        { user_id:'000002' },
-                        { user_id:'000000' }
-                    ]
-                } 
-            ],
+            spot: SpotExampleData(),
             my_spot: [
                 // 自分の作成したスポット
                 // required attribute: name, src, good
@@ -228,10 +174,10 @@ export default {
             if(!this.showDialog) return;
             this.isLoading = true; 
             // this.user = {"username": this.username,"user_id": this.id, "src":require('@/assets/default-icon.jpeg') };
-            this.my_spot = [];
-            this.good_spot = [];
-            this.spot_to_show = [];
-            this.show_count = 0
+            this.my_spot = []; // 作成スポット
+            this.good_spot = []; // レビューしたスポット
+            this.spot_to_show = []; // TODO: 表示するスポットの制限
+            this.show_count = 0 // 読み込みが終わり次第ロード画面非表示 
 
             this.getSpotByUserId( this.user.id )
                 .then( () =>{
@@ -245,13 +191,14 @@ export default {
                     this.show_count += 1
                     console.log('good_spot length',this.good_spot.length)
                 })
-
-            // getProfileImage( this.user.user_id )
-            //     .then(result => {
-            //         if(!result.success) return;
-            //         // console.log(result.data.image);
-            //         this.user.src = "data:image/jpeg;base64," + result.data.image;
-            //     })
+            if(this.user.src==undefined){
+            getProfileImage( this.user.user_id )
+                .then(result => {
+                    if(!result.success) return;
+                    // console.log(result.data.image);
+                    this.user.src = "data:image/jpeg;base64," + result.data.image;
+                })
+            }
         }
     }
 };

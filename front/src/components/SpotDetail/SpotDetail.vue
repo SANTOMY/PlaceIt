@@ -74,7 +74,7 @@
                     <v-row justify="center">
                         <!-- レビューリスト -->
                         <v-col cols="11">
-                            <spot-review-list :reviews="slicedReviews" :now_page="now_review_page"/>
+                            <spot-review-list :reviews="slicedReviews"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -177,7 +177,7 @@ export default {
         },
         updateDetail: function() {
             this.isLoading = true;      // データを取得している間はローディング画面を表示する
-            getSpot(this.spot_id, "", "", "", "")
+            getSpot(this.spot_id, "", "", "", "") //スポットIDからレビューリストを持ってくる
                 .then(res => {
                     this.spotData = res.spots[0];
                     this.reviews = res.review;
@@ -193,8 +193,6 @@ export default {
                 }).then( () => {
                     return this.getUserInformation() //レヴューからユーザー名を取得する関数
                 })
-                
-
         },
         calcRating: function(scores) {
             return average(scores);
@@ -202,7 +200,7 @@ export default {
         calcFor5Score: function(score1, score2, score3, score4, score5){
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         },
-        getUserInformation: function() {//レヴューからユーザー名を取得する関数
+        getUserInformation: function() {//レビューからユーザー情報を取得する関数
             this.user_list = Array(this.reviews.length).fill(undefined) // 初期値
             let j = 0
             for(let i = 0; i < this.reviews.length; i++) {
@@ -218,7 +216,6 @@ export default {
                                     this.user_list[i].src = "data:image/jpeg;base64," + res.data.image;
                                 }
                                 j += 1
-                                console.log('j:',j)
                                 if(j == (this.reviews.length)){
                                     this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
                                 }
@@ -248,7 +245,7 @@ export default {
     },
 
     watch: {
-        showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
+        showDialog: function() {    //spot詳細ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
             console.log('spot id:',this.spot_id)
             this.updateDetail()
