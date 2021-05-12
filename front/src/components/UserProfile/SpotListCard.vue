@@ -10,7 +10,6 @@
             :color="color"
             dark
         >
-
             <v-app-bar-nav-icon @click="drawer = true">
             </v-app-bar-nav-icon>
 
@@ -18,6 +17,7 @@
 
             <v-spacer></v-spacer>
 
+            <!-- TODO: 検索ボタン -->
             <v-btn icon>
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>
