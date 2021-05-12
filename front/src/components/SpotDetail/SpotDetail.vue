@@ -18,9 +18,11 @@
                     hide-delimiter-background
                     show-arrows-on-hover
                 >
-                    <v-carousel-item v-for="photo in photos" :key="photo.id"
-                        :src="photo.image"
-                    />
+                    <v-carousel-item v-for="photo in photos" :key="photo.id">
+                        <v-sheet color="black" height=100%>
+                            <v-img :src="photo.image" height=500 contain />
+                        </v-sheet>
+                    </v-carousel-item>
                 </v-carousel>
                 <v-row
                     justify="center"
