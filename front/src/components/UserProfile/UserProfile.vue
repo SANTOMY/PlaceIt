@@ -196,7 +196,6 @@ export default {
         },
         getSpotByUserId: async function(user_id){
             return getSpot('', '', '', user_id, '').then(result => {
-                // console.log( "result of getSpot: ", result );
                 for( var spt of result.spots ){
                     var spt_id = spt.spot_id;
                     var name = spt.spot_name;
@@ -222,15 +221,12 @@ export default {
         },
         getSpotYouReviewed: async function( user_id ){
             return getReviewByUserId( user_id ).then( result => {
-                // console.log( 'result of getReviewByUserId: ', result );
                 var reviewd_spot_ids = new Set()
                 for( let rev of result.review ){
                     reviewd_spot_ids.add( rev.spot_id );
                 }
-                // console.log( 'reviewed_spot_ids: ', reviewd_spot_ids )
                 for( let reviewd_spot_id of reviewd_spot_ids ){
                     getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
-                        // console.log( 'results of getSpot', result )
                         var spt = result.spots[ 0 ];
                         var spt_id = spt.spot_id;
                         var name = spt.spot_name;
