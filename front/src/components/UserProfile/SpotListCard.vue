@@ -10,7 +10,6 @@
             :color="color"
             dark
         >
-
             <v-app-bar-nav-icon @click="drawer = true">
             </v-app-bar-nav-icon>
 
@@ -18,6 +17,7 @@
 
             <v-spacer></v-spacer>
 
+            <!-- TODO: 検索ボタン -->
             <v-btn icon>
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>
@@ -122,12 +122,11 @@
             </v-card-actions>
 
         </v-container>
-  
+        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
     </v-card>  
-
 </template>
 <script>
-
+    import spotDetail from '../SpotDetail/SpotDetail';
     export default {
         props: {
             color: String,
@@ -135,6 +134,10 @@
             good_spot_list: null, // 自分の評価したスポット
             my_spot_list: null, // 自分の作成したスポット
             user_list: null // 自分のユーザー情報
+        },
+
+        components: {
+            spotDetail
         },
 
         data: () => ({
@@ -151,7 +154,10 @@
             now_page: 0, // 初期ページ
             num_per_page: 3, // 1ページの表示スポット数
             num_page: 1, // ページ数
-            showNoCard: false,
+            num_page_array: [ 10, 10, 10 ],
+            showDialog: false,
+            selectedSpotID: "",
+            showNoCard: false
         }),
         mounted() {
             this.spot = this.spot_list
@@ -206,10 +212,16 @@
                     this.spot[ i - this.begin ] = this.spot_list[ i ]
                 }
             },
-
-            spotInformationPage: function(value) { // TODO: spotのカードをクリックしたときに動く関数
-                console.log(this.spot_list[value].spotId) // Debug
-                this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
+            spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
+                console.log("spotInformationPage: ", this.spot[value]) // Debug
+                this.showDialog = true;
+                this.selectedSpotID = this.spot[value].spotId;
+            },
+            // spotInformationPage: function(value) { // TODO: spotのカードをクリックしたときに動く関数
+            //     console.log(this.spot_list[value].spotId) // Debug
+            //     this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
+            closeDialog() {
+                this.showDialog = false;
             },
 
             jumpSpotPage: function( pageToJump ){

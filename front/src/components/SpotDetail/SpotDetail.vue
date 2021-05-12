@@ -4,6 +4,7 @@
       width="1200"
       persistent
     >
+
         <v-card>
             <!-- ローディング画面 -->
             <v-skeleton-loader
@@ -75,7 +76,7 @@
                     <v-row justify="center">
                         <!-- レビューリスト -->
                         <v-col cols="11">
-                            <spot-review-list :reviews="slicedReviews" />
+                            <spot-review-list :reviews="slicedReviews"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -127,6 +128,7 @@ import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
 import {getSpotImage} from '../../routes/imageRequest'
 import { getUserById } from '../../routes/userRequest.js'
+import {getProfileImage} from "../../routes/imageRequest"
 
 export default {
     components: {
@@ -134,7 +136,7 @@ export default {
         spotReviewList,
         spotTypeIcon,
         spotReviewRegister,
-        radarChartDisp
+        radarChartDisp,   
     },
     data: function() {
         return {
@@ -214,18 +216,26 @@ export default {
         calcFor5Score: function(score1, score2, score3, score4, score5){
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         },
-        getUserInformation: function() {//レヴューからユーザー名を取得する関数
+        getUserInformation: function() {//レビューからユーザー情報を取得する関数
             this.user_list = Array(this.reviews.length).fill(undefined) // 初期値
             let j = 0
             for(let i = 0; i < this.reviews.length; i++) {
                 getUserById(this.reviews[i].user_id)
                     .then(result => {
-                        j += 1
+                        
                         this.user_list[i]=result[0];            
-
-                        if(j == (this.reviews.length)){
-                            this.isLoadingData = false; // ユーザー名を全部取得すると、ロード画面が消える
-                        }
+                        getProfileImage( this.reviews[i].user_id )
+                            .then(res => {
+                                if(!res.success) {
+                                    this.user_list[i].src = require('@/assets/default-icon.jpeg')
+                                }else{
+                                    this.user_list[i].src = "data:image/jpeg;base64," + res.data.image;
+                                }
+                                j += 1
+                                if(j == (this.reviews.length)){
+                                    this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
+                                }
+                            })
                 })
             }
         },
@@ -242,10 +252,9 @@ export default {
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
             for(var i = 0; i < raw_reviews.length; i++) {
-                var pert_of_reviews = {id:i, content:raw_reviews[i]}
-                enumerated_reviews.push(Object.assign(raw_users[i],pert_of_reviews));
+                enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
             }
-
+            console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
@@ -254,7 +263,7 @@ export default {
     },
 
     watch: {
-        showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
+        showDialog: function() {    //spot詳細ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
             console.log('spot id:',this.spot_id)
             this.updateDetail()
