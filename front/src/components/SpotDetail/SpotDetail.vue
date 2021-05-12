@@ -182,7 +182,9 @@ export default {
                 .then(res => {
                     this.spotData = res.spots[0];
                     this.reviews = res.review;
-                    this.isLoadingData = false;
+                    //this.isLoadingData = false;
+                    console.log("data", this.isLoading)
+                    console.log(res)
                     this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
                     this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
                                                 this.reviews.map(r =>  Number(r.score2)),
@@ -203,6 +205,7 @@ export default {
                         this.photos = image_data;
                     }
                     this.isLoadingPhoto = false;
+                    console.log("photo", this.isLoading)
             })
         },
         calcRating: function(scores) {
@@ -221,7 +224,7 @@ export default {
                         this.user_list[i]=result[0];            
 
                         if(j == (this.reviews.length)){
-                            this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
+                            this.isLoadingData = false; // ユーザー名を全部取得すると、ロード画面が消える
                         }
                 })
             }
