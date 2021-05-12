@@ -189,7 +189,6 @@ export default {
             if(this.check_database()) {
                 saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, "", this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.scores, this.spot_data.university)
                     .then(res => {
-                        console.log(res.success)
                         if(!res.success) return
                         uploadSpotImage(this.uploadedFiles[0], res.spotId)
                     })
