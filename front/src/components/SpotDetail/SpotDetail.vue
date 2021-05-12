@@ -183,8 +183,6 @@ export default {
                     this.spotData = res.spots[0];
                     this.reviews = res.review;
                     //this.isLoadingData = false;
-                    console.log("data", this.isLoading)
-                    console.log(res)
                     this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
                     this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
                                                 this.reviews.map(r =>  Number(r.score2)),
@@ -205,7 +203,6 @@ export default {
                         this.photos = image_data;
                     }
                     this.isLoadingPhoto = false;
-                    console.log("photo", this.isLoading)
             })
         },
         calcRating: function(scores) {
