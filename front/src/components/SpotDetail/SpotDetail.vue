@@ -4,6 +4,7 @@
       width="1200"
       persistent
     >
+
         <v-card>
             <!-- ローディング画面 -->
             <v-skeleton-loader
@@ -73,7 +74,7 @@
                     <v-row justify="center">
                         <!-- レビューリスト -->
                         <v-col cols="11">
-                            <spot-review-list :reviews="sliced_reviews" />
+                            <spot-review-list :reviews="slicedReviews"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -81,7 +82,7 @@
                         <v-col cols="8">
                             <v-container class="max-width">
                                 <v-pagination                                
-                                    @input="change_page"
+                                    @input="changePage"
                                     v-model="now_review_page"
                                     :length="num_page"
                                     :total-visible="7"
@@ -123,6 +124,8 @@ import spotReviewRegister from './SpotReviewRegister.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
+import { getUserById } from '../../routes/userRequest.js'
+import {getProfileImage} from "../../routes/imageRequest"
 
 export default {
     components: {
@@ -130,19 +133,19 @@ export default {
         spotReviewList,
         spotTypeIcon,
         spotReviewRegister,
-        radarChartDisp
+        radarChartDisp,   
     },
     data: function() {
         return {
             spotData: {spot_name:"", spot_type:""},
-            reviews: [],
-            rating: 5,
-            rating5: [0,0,0,0,0],
-            photo: require("@/assets/Hakataramen.jpg"),    //仮
-            num_page: 0,
-            REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
-            now_review_page: 1,
-
+            reviews: [], // spotのレビューリスト
+            user_list: [], // userのリスト
+            rating: 5, // 5項目の平均評価
+            rating5: [0,0,0,0,0], // レーダーチャート用の5項目それぞれの平均評価格納リスト
+            photo: require("@/assets/Hakataramen.jpg"),    // 仮画像
+            num_page: 0, // 総ページ数
+            REVIEW_NUM_PER_PAGE: 3, // 1ページあたりの表示するレビュー数
+            now_review_page: 1, // 表示レビューのページ
             pos: {
                 lat: 0,
                 lon: 0
@@ -155,14 +158,8 @@ export default {
         showDialog: Boolean
     },
     methods: {
-        // change_page: function(dir) {
-        //     const next_page = this.now_review_page + dir
-        //     const max_page = (this.reviews.length ) / this.review_num_per_page
-        //     if(next_page < 1 || next_page > max_page) return
-        //     else this.now_review_page = next_page
-        // },
-        change_page: function(number){
-            console.log(number)
+        changePage: function(number){
+            // console.log('(change review page)change review page to ',number)
             return this.now_review_page = number
         },
         sum: function(arr){ // 配列の要素の合計を計算
@@ -180,11 +177,11 @@ export default {
         },
         updateDetail: function() {
             this.isLoading = true;      // データを取得している間はローディング画面を表示する
-            getSpot(this.spot_id, "", "", "", "")
+            getSpot(this.spot_id, "", "", "", "") //スポットIDからレビューリストを持ってくる
                 .then(res => {
                     this.spotData = res.spots[0];
                     this.reviews = res.review;
-                    this.isLoading = false;
+                    // this.isLoading = false; // ローディング画面を非表示にする。レビューしたユーザー取得後に移動。
                     this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
                     this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
                                                 this.reviews.map(r =>  Number(r.score2)),
@@ -192,6 +189,9 @@ export default {
                                                 this.reviews.map(r =>  Number(r.score4)),
                                                 this.reviews.map(r =>  Number(r.score5)));
                     this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
+                    
+                }).then( () => {
+                    return this.getUserInformation() //レヴューからユーザー名を取得する関数
                 })
         },
         calcRating: function(scores) {
@@ -199,30 +199,57 @@ export default {
         },
         calcFor5Score: function(score1, score2, score3, score4, score5){
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
-        }
+        },
+        getUserInformation: function() {//レビューからユーザー情報を取得する関数
+            this.user_list = Array(this.reviews.length).fill(undefined) // 初期値
+            let j = 0
+            for(let i = 0; i < this.reviews.length; i++) {
+                getUserById(this.reviews[i].user_id)
+                    .then(result => {
+                        
+                        this.user_list[i]=result[0];            
+                        getProfileImage( this.reviews[i].user_id )
+                            .then(res => {
+                                if(!res.success) {
+                                    this.user_list[i].src = require('@/assets/default-icon.jpeg')
+                                }else{
+                                    this.user_list[i].src = "data:image/jpeg;base64," + res.data.image;
+                                }
+                                j += 1
+                                if(j == (this.reviews.length)){
+                                    this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
+                                }
+                            })
+                })
+            }
+        },
     },
 
     computed: {
         //現在のページに表示するレビューを返す
-        sliced_reviews: function() {
+        slicedReviews: function() {
             const start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
             const end = start + this.REVIEW_NUM_PER_PAGE;
             const raw_reviews = this.reviews.slice(start, end)
+            const raw_users = this.user_list.slice(start, end)
+
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
             for(var i = 0; i < raw_reviews.length; i++) {
-                enumerated_reviews.push({id:i, content:raw_reviews[i]});
+                enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
             }
+            console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
+
     },
 
     watch: {
-        showDialog: function() {    //ダイアログが開いた(閉じた)時に実行するメソッド
+        showDialog: function() {    //spot詳細ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
-            console.log(this.spot_id)
+            console.log('spot id:',this.spot_id)
             this.updateDetail()
-            this.now_review_page = 1;
+            this.now_review_page = 1
         }
     }
 }
