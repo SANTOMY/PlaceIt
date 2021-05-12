@@ -233,7 +233,7 @@ export default {
                                 }
                                 j += 1
                                 if(j == (this.reviews.length)){
-                                    this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
+                                    this.isLoadingData = false; // ユーザー名を全部取得すると、ロード画面が消える
                                 }
                             })
                 })
