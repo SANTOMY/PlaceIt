@@ -196,8 +196,8 @@ export default {
         },
         getSpotByUserId: async function(user_id){
             return getSpot('', '', '', user_id, '').then(result => {
-                // console.log( "result of getSpot: ", result );
                 for( var spt of result.spots ){
+                    var spt_id = spt.spot_id;
                     var name = spt.spot_name;
                     // TODO: to get images from DB
                     var src = require( "@/assets/Mac.jpg" );
@@ -212,7 +212,7 @@ export default {
                         }
                     }
                     var good = Math.round( 10 * average( scores ) ) / 10;
-                    this.my_spot.push( { "name": name, "src": src, "good": good } );
+                    this.my_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
                 }
                 return true   
             }).catch((exception) => {
@@ -221,16 +221,14 @@ export default {
         },
         getSpotYouReviewed: async function( user_id ){
             return getReviewByUserId( user_id ).then( result => {
-                // console.log( 'result of getReviewByUserId: ', result );
                 var reviewd_spot_ids = new Set()
                 for( let rev of result.review ){
                     reviewd_spot_ids.add( rev.spot_id );
                 }
-                // console.log( 'reviewed_spot_ids: ', reviewd_spot_ids )
                 for( let reviewd_spot_id of reviewd_spot_ids ){
                     getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
-                        // console.log( 'results of getSpot', result )
                         var spt = result.spots[ 0 ];
+                        var spt_id = spt.spot_id;
                         var name = spt.spot_name;
                         // TODO: to get images from DB
                         var src = require( "@/assets/Mac.jpg" );
@@ -245,7 +243,7 @@ export default {
                             }
                         }
                         var good = Math.round( 10 * average( scores ) ) / 10;
-                        this.good_spot.push( { "name": name, "src": src, "good": good } );
+                        this.good_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
                     } ).catch((exception) => {
                         console.log( "Error in getReviewByUserId: ", exception );
                     })
