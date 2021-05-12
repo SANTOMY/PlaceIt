@@ -2,10 +2,9 @@ import  'leaflet/dist/leaflet.css'
 import  L from 'leaflet'
 import spotRegButton from './MapButtons/SpotRegButton.vue'
 import nowLocButton from './MapButtons/NowLocButton.vue'
-import typeButton from './MapButtons/TypeButton.vue'
 import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
-import univButton from './MapButtons/UnivButton.vue'
+import searchDialog from './MapButtons/SearchDialog.vue'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -21,9 +20,8 @@ export default {
     components:{
       spotRegButton,
       nowLocButton,
-      typeButton,
       spotDetail,
-      univButton
+      searchDialog
     },
     data: function(){
       return {
@@ -134,27 +132,18 @@ export default {
         //現在地マーカーを設置
       },
 
-      //検索ジャンルを更新するメソッド(TypeButton.vueから呼ばれる)
-      updateType: async function(type){
+      //検索ジャンルを更新するメソッド
+      search: async function(...args){
+        const [type,univ] = args
         this.markers.clearLayers();
         this.marker = [];
         this.nowType = type;
-        if(this.univFlag){
+        if(univ){
           await this.showSpot(type,this.user.univ);
         } else{
           await this.showSpot(type,"");
         }
-      },
-      //大学検索の有効化・無効化関数
-      updateUniv: async function(){
-        this.univFlag = !this.univFlag;
-        this.markers.clearLayers();
-        this.marker = [];
-        if(this.univFlag){
-          await this.showSpot(this.nowType,this.user.univ);
-        } else{
-          await this.showSpot(this.nowType,"");
-        }
+
       },
       closeDialog() {
         this.showDialog = false;
