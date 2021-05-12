@@ -14,8 +14,8 @@ const { exception } = require('console');
  */
 async function saveUser(newUser) {
     const query = {
-        text: 'INSERT INTO users.users(id, username, email, password, university) VALUES($1, $2, $3, $4, $5)',
-        values: [newUser.userId, newUser.userName, newUser.email, newUser.password, newUser.university]
+        text: 'INSERT INTO users.users(id, username, email, password, university, is_active) VALUES($1, $2, $3, $4, $5, $6)',
+        values: [newUser.userId, newUser.userName, newUser.email, newUser.password, newUser.university, true]
     };
 
     const client = await pool.connect();
@@ -121,7 +121,7 @@ async function deleteUser(userId, password) {
         text: `SELECT * from users.users WHERE id='${userId}'`
     }
     const deleteQuery = {
-        text: `DELETE FROM users.users WHERE id='${userId}'`
+        text: `UPDATE users.users SET is_active=false WHERE id='${userId}'`
     };
     const client = await pool.connect();
     return client.query(confirmQuery).then( result1 => {

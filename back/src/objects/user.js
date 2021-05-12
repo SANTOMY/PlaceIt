@@ -6,6 +6,7 @@ module.exports = class User{
         this.email = email;
         this.password = password;
         this.university = university
+        this.isActive = isActive;
     }
 
     getJSON(){
@@ -13,7 +14,8 @@ module.exports = class User{
             "userId": this.userId,
             "userName": this.userName,
             "email": this.email,
-            "university": this.university
+            "university": this.university,
+            "is_active":this.isActive
         };
         return user;
     }
