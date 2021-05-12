@@ -137,12 +137,11 @@
             </v-col>
 
         </v-container>
-  
+        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
     </v-card>  
-
 </template>
 <script>
-
+    import spotDetail from '../SpotDetail/SpotDetail';
     export default {
     
         props: {
@@ -151,6 +150,10 @@
             good_spot_list: null, // 自分の評価したスポット
             my_spot_list: null, // 自分の作成したスポット
             user_list: null // 自分のユーザー情報
+        },
+
+        components: {
+            spotDetail
         },
 
         data: () => ({
@@ -167,7 +170,9 @@
             now_page: 0,
             num_per_page: 3,
             num_page: 10,
-            num_page_array: [ 10, 10, 10 ]
+            num_page_array: [ 10, 10, 10 ],
+            showDialog: false,
+            selectedSpotID: ""
         }),
         mounted() {
             this.spot = this.spot_list
@@ -216,8 +221,18 @@
                 }
             },
             spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
-                console.log(this.spot_list[value].spotId) // Debug
-                this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
+                console.log("spotInformationPage: ", this.spot[value]) // Debug
+                // var p = {
+                //     showDialog_default: true,
+                //     // selectedSpotID_default: this.spot[value].spotId
+                //     selectedSpotID_default: "cdfab8ea-4e7b-4f4a-9870-4140866401c9"
+                // }
+                // this.$router.push({name:'map', params:p})
+                this.showDialog = true;
+                this.selectedSpotID = this.spot[value].spotId;
+            },
+            closeDialog() {
+                this.showDialog = false;
             },
             changeSpotPage: function( diff, ahead = true ){
                 // < > ←このタイプのボタンが押された時にページ送りする
