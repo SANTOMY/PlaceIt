@@ -149,8 +149,8 @@ export default {
                 lat: 0,
                 lon: 0
             },
-            isLoadingData: false,   //spotデータを読み込んでいるか
-            isLoadingPhoto: false   // spotイメージを読み込んでいるか
+            isLoadingData: true,   //spotデータを読み込んでいるか
+            isLoadingPhoto: true   // spotイメージを読み込んでいるか
         }
     },
     props: {
