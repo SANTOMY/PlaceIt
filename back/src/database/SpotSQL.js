@@ -115,7 +115,7 @@ async function deleteSpot(spotId){
         values: [spotId]
     };
     const deleteSpotImageQuery = {
-        text: `DELETE FROM images.spot where spotid = $1`,
+        text: `DELETE FROM images.spot where spot_id = $1`,
         values: [spotId]
     }
     
