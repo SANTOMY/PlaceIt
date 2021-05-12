@@ -63,7 +63,7 @@ async function uploadSpotPicture(newImage){
     const client = await pool.connect();
 
     query = {
-        text: 'INSERT INTO images.spot(spotid, image) VALUES($1, $2)',
+        text: 'INSERT INTO images.spot(spot_id, image) VALUES($1, $2)',
         values: [newImage.spotId, newImage.image]
     };
 
@@ -83,7 +83,7 @@ async function uploadSpotPicture(newImage){
 
 async function getSpotPicture(spotId){
     const query = {
-        text: `SELECT * from images.spot where spotid='${spotId}'`
+        text: `SELECT * from images.spot where spot_id='${spotId}'`
     };
 
     const client = await pool.connect();
