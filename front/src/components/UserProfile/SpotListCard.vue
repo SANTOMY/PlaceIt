@@ -2,7 +2,7 @@
     <!-- カードリストの大枠 -->
     <v-card
         :class="color + ' lighten-4'" 
-        height="500px"
+        height="450px"
     >
     
         <!-- カードのヘッダー部分 -->
@@ -14,7 +14,7 @@
             <v-app-bar-nav-icon @click="drawer = true">
             </v-app-bar-nav-icon>
 
-            <v-toolbar-title>{{items[select].title}}</v-toolbar-title>
+            <v-toolbar-title>{{SpotCategories[CategorySelect].title}}</v-toolbar-title>
 
             <v-spacer></v-spacer>
 
@@ -39,7 +39,7 @@
                     active-class="deep-purple--text text--accent-4" 
                 >
                     <v-list-item
-                        v-for="(item, index) in items"
+                        v-for="(item, index) in SpotCategories"
                         :key="index"
                         @click="ChangeCategory(index)"
                         v-model="drawer"
@@ -59,7 +59,14 @@
 
         <!-- スポット表示 -->
         <v-container fluid>
-            <v-row dense justify="center">
+            <v-card v-if="showNoCard" height="350">
+                <v-card-text>
+                    <p class="display-1 text--primary">
+                        選択されたスポットは存在しません。
+                    </p>
+                </v-card-text>
+            </v-card>
+            <v-row dense justify="center" v-if="!showNoCard">
                 <v-col
                     v-for="(card, index) in spot"
                     :key="index"
@@ -98,43 +105,21 @@
             </v-row>
             <!-- スポットのページ送り -->
             <v-card-actions>
-                <v-row class="mt-1">
-                    <v-icon
-                        class="ml-8"
-                        large
-                        @click="changeSpotPage( 3, ahead = false )"
-                    >
-                        mdi-chevron-left
-                    </v-icon>
-                    <v-icon
-                        class="ml-6"
-                        large
-                        @click="changeSpotPage( 3 )"
-                    >
-                        mdi-chevron-right
-                    </v-icon>
-                </v-row>
+                <v-col>
+                    <v-row justify="center">
+                        <v-col cols="8">
+                            <v-container class="max-width">
+                                <v-pagination                                
+                                    @input="getNumber"
+                                    v-model="now_page"
+                                    :length="num_page"
+                                    :total-visible="7"
+                                ></v-pagination>
+                            </v-container>
+                        </v-col>
+                    </v-row>
+                </v-col>
             </v-card-actions>
-
-            <!-- スポットのページ変更 -->
-            <v-col>
-                <v-row justify="center">
-                    <v-col cols="8">
-                        <v-container class="max-width">
-                            <v-pagination                                
-                                @input="getNumber"
-                                v-model="now_page"
-                                :length="num_page"
-                                :total-visible="7"
-                            ></v-pagination>
-                        </v-container>
-                    </v-col>
-                </v-row>
-                <v-row justify="center">
-                    <v-col cols="5">
-                    </v-col>
-                </v-row>
-            </v-col>
 
         </v-container>
   
@@ -144,7 +129,6 @@
 <script>
 
     export default {
-    
         props: {
             color: String,
             spot_list: null, // おすすめスポット
@@ -155,51 +139,58 @@
 
         data: () => ({
             spot: [],
-            select: 2, //The default is a recommended spot.
+            CategorySelect: 2, //Spot list select. The default is a recommended spot.
             drawer: false,
-            items: [
-                { title: 'レビューしたスポット', icon: 'mdi-home-city' },
-                { title: '作成スポット', icon: 'mdi-account' },
-                { title: 'おすすめスポット', icon: 'mdi-account-group-outline' },
+            SpotCategories: [
+                { title: 'レビューしたスポット', icon: 'mdi-home-city'},
+                { title: '作成スポット', icon: 'mdi-account'},
+                { title: 'おすすめスポット', icon: 'mdi-account-group-outline'},
             ],
             begin: 0, // show spots from (begin)th to (end)th
             end: 3,
-            now_page: 0,
-            num_per_page: 3,
-            num_page: 10,
-            num_page_array: [ 10, 10, 10 ]
+            now_page: 0, // 初期ページ
+            num_per_page: 3, // 1ページの表示スポット数
+            num_page: 1, // ページ数
+            showNoCard: false,
         }),
         mounted() {
             this.spot = this.spot_list
-            this.user = this.user_list
-            this.ChangeCategory( this.select )
+            // カテゴリ（おすすめ，作成，いいね）毎のページ数計算
+            this.ChangeCategory( this.CategorySelect )
         },
         methods:  {
             getNumber: function(number){
                 // < 1 2 ... 10 > ←このタイプのボタンから入力を受け取る
-                console.log(number)
+                // console.log(number)
                 this.jumpSpotPage(number)
             },
             ChangeCategory: function( i ) {
                 // カテゴリ（おすすめ，作成，レビュー）や表示ページの変更に伴い，
                 // 表示するスポットを更新する
-                console.log( "ChangeCategory is called. ( begin, end ): ", this.begin, this.end )
-                if( i != this.select ){
-                    this.select = i
+                // console.log( "ChangeCategory is called. ( begin, end ): ", this.begin, this.end )
+                if( i != this.CategorySelect ){
+                    this.CategorySelect = i
                     this.jumpSpotPage( 1 )
-                    console.log( "begin, end, now_page: ", this.begin, this.end, this.now_page )
+                    // console.log( "begin, end, now_page: ", this.begin, this.end, this.now_page )
                 }
-                this.select = i
-                this.num_page = this.num_page_array[ this.select ]
+                this.CategorySelect = i
+                this.num_page = this.page_num()
                 this.spot = [];
                 if(i==0){
-                    this.GoodSpotSort()
+                    this.GoodSpotSort() // いいねしたスポット表示
                 }else if(i==1){
-                    this.CreatedSpotSort()
+                    this.CreatedSpotSort() // 作ったスポット表示
                 }else if(i==2){
-                    this.RecommendedSpotSort()
+                    this.RecommendedSpotSort() // おすすめスポット表示
+                }
+
+                if(this.spot.length==0) {
+                    this.showNoCard = true;
+                }else{
+                    this.showNoCard = false;
                 }
             },
+            // TODO: 以下3つの関数は似た形なので、1つにまとめる
             CreatedSpotSort: function () { // 作ったスポットを表示する関数 
                 for( let i = this.begin; i < this.end; i++ ){
                     this.spot[ i - this.begin ] = this.my_spot_list[ i ]
@@ -215,61 +206,44 @@
                     this.spot[ i - this.begin ] = this.spot_list[ i ]
                 }
             },
-            spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
+
+            spotInformationPage: function(value) { // TODO: spotのカードをクリックしたときに動く関数
                 console.log(this.spot_list[value].spotId) // Debug
                 this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
             },
-            changeSpotPage: function( diff, ahead = true ){
-                // < > ←このタイプのボタンが押された時にページ送りする
-                let spot_num
-                if( this.select == 0 ){
-                    spot_num = this.good_spot_list.length
-                }else if( this.select == 1 ){
-                    spot_num = this.my_spot_list.length
-                }else{
-                    spot_num = this.spot_list.length
-                }
 
-                if( ahead == true ){
-                    if( this.end + diff <= spot_num ){
-                        this.begin = this.begin + diff
-                        this.end = this.end + diff
-                    }else{
-                        this.begin = spot_num - ( this.end - this.begin )
-                        this.end = spot_num
-                    }
-                }else{
-                    if( this.begin - diff >= 0 ){
-                        this.begin = this.begin - diff
-                        this.end = this.end - diff
-                    }else{
-                        this.end = this.end - this.begin
-                        this.begin = 0
-                    }
-                }
-                this.ChangeCategory( this.select )
-            },
             jumpSpotPage: function( pageToJump ){
                 // < 1 2 ... 10 > ←このタイプのボタンが押された時にページを変える
-                console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
+                // console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
                 this.now_page = pageToJump
                 this.begin = ( this.now_page - 1 ) * this.num_per_page
                 this.end = this.begin + this.num_per_page
-                if( this.end > this.spot_num() ){
+                if( this.end > this.spot_num() ){ 
+                    // 最終ページがnum_per_pageで割り切れない数だった時の処理
                     this.end = this.spot_num()
                 }
-                this.ChangeCategory( this.select )
+                this.ChangeCategory( this.CategorySelect )
             },
             spot_num: function(){
                 // 現在のカテゴリにあるスポットの数を計算
-                if( this.select == 0 ){
+                if( this.CategorySelect == 0 ){
                     return this.good_spot_list.length
-                }else if( this.select == 1 ){
+                }else if( this.CategorySelect == 1 ){
                     return this.my_spot_list.length
                 }else{
                     return this.spot_list.length
                 }
-            }
+            },
+            page_num: function(){
+                // 現在のカテゴリにあるスポットの数を計算
+                if( this.CategorySelect == 0 ){
+                    return Math.ceil(this.good_spot_list.length/this.num_per_page)
+                }else if( this.CategorySelect == 1 ){
+                    return Math.ceil(this.my_spot_list.length/this.num_per_page)
+                }else{
+                    return Math.ceil(this.spot_list.length/this.num_per_page)
+                }
+            },
         }
     };
 </script>
