@@ -20,6 +20,7 @@
                 <v-btn 
                     @click="usernameClickEvent()"
                     text
+                    style="text-transform: none"
                 > 
                     {{ reviewer_data.user.username }} 
                 </v-btn>
