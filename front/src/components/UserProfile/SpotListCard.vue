@@ -156,7 +156,8 @@
             num_page: 1, // ページ数
             num_page_array: [ 10, 10, 10 ],
             showDialog: false,
-            selectedSpotID: ""
+            selectedSpotID: "",
+            showNoCard: false
         }),
         mounted() {
             this.spot = this.spot_list
