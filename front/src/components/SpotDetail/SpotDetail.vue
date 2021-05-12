@@ -139,7 +139,8 @@ export default {
     data: function() {
         return {
             spotData: {spot_name:"", spot_type:""},
-            reviews: [],
+            reviews: [], // spotのレビューリスト
+            user_list: [], // userのリスト
             rating: 5,
             rating5: [0,0,0,0,0],
             photos: [{picture_id:1, image:require("@/assets/noimage.png")}],
