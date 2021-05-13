@@ -19,9 +19,11 @@
                     hide-delimiter-background
                     show-arrows-on-hover
                 >
-                    <v-carousel-item
-                        :src="photo"
-                    />
+                    <v-carousel-item v-for="photo in photos" :key="photo.id">
+                        <v-sheet color="black" height=100%>
+                            <v-img :src="photo.image" height=500 contain />
+                        </v-sheet>
+                    </v-carousel-item>
                 </v-carousel>
                 <v-row
                     justify="center"
@@ -124,6 +126,7 @@ import spotReviewRegister from './SpotReviewRegister.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
+import {getSpotImage} from '../../routes/imageRequest'
 import { getUserById } from '../../routes/userRequest.js'
 import {getProfileImage} from "../../routes/imageRequest"
 
@@ -140,17 +143,19 @@ export default {
             spotData: {spot_name:"", spot_type:""},
             reviews: [], // spotのレビューリスト
             user_list: [], // userのリスト
-            rating: 5, // 5項目の平均評価
-            rating5: [0,0,0,0,0], // レーダーチャート用の5項目それぞれの平均評価格納リスト
-            photo: require("@/assets/Hakataramen.jpg"),    // 仮画像
-            num_page: 0, // 総ページ数
-            REVIEW_NUM_PER_PAGE: 3, // 1ページあたりの表示するレビュー数
-            now_review_page: 1, // 表示レビューのページ
+            rating: 5,
+            rating5: [0,0,0,0,0],
+            photos: [{picture_id:1, image:require("@/assets/noimage.png")}],
+            num_page: 0,
+            REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
+            now_review_page: 1,
+
             pos: {
                 lat: 0,
                 lon: 0
             },
-            isLoading: false
+            isLoadingData: true,   //spotデータを読み込んでいるか
+            isLoadingPhoto: true   // spotイメージを読み込んでいるか
         }
     },
     props: {
@@ -176,12 +181,13 @@ export default {
             this.$emit("close");
         },
         updateDetail: function() {
-            this.isLoading = true;      // データを取得している間はローディング画面を表示する
-            getSpot(this.spot_id, "", "", "", "") //スポットIDからレビューリストを持ってくる
+            this.isLoadingData = true;      // データを取得している間はローディング画面を表示する
+            this.isLoadingPhoto = true;      
+            getSpot(this.spot_id, "", "", "", "")
                 .then(res => {
                     this.spotData = res.spots[0];
                     this.reviews = res.review;
-                    // this.isLoading = false; // ローディング画面を非表示にする。レビューしたユーザー取得後に移動。
+                    //this.isLoadingData = false;
                     this.rating = this.calcRating(this.reviews.map(r =>  Number(r.score)));
                     this.rating5 = this.calcFor5Score(this.reviews.map(r =>  Number(r.score1)),
                                                 this.reviews.map(r =>  Number(r.score2)),
@@ -193,6 +199,16 @@ export default {
                 }).then( () => {
                     return this.getUserInformation() //レヴューからユーザー名を取得する関数
                 })
+            getSpotImage(this.spot_id)
+                .then(res => {
+                    if(res.success && res.data != undefined) {
+                        const image_data = res.data.map(item => {
+                            return {id: item.picture_id, image: "data:image/jpeg;base64," + item.image}
+                        });
+                        this.photos = image_data;
+                    }
+                    this.isLoadingPhoto = false;
+            })
         },
         calcRating: function(scores) {
             return average(scores);
@@ -217,7 +233,7 @@ export default {
                                 }
                                 j += 1
                                 if(j == (this.reviews.length)){
-                                    this.isLoading = false; // ユーザー名を全部取得すると、ロード画面が消える
+                                    this.isLoadingData = false; // ユーザー名を全部取得すると、ロード画面が消える
                                 }
                             })
                 })
@@ -241,7 +257,9 @@ export default {
             console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
-
+        isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
+            return this.isLoadingData || this.isLoadingPhoto
+        }
     },
 
     watch: {
@@ -249,7 +267,8 @@ export default {
             if(!this.showDialog) return;
             console.log('spot id:',this.spot_id)
             this.updateDetail()
-            this.now_review_page = 1
+            this.now_review_page = 1;
+            this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
         }
     }
 }
