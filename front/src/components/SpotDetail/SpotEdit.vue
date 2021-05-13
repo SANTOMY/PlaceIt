@@ -32,9 +32,30 @@
                 large
                 color="gray"
             />
+        
+        </v-row>
+        <v-row
+            justify="center"
+            class="mx-10
+            mt-3 mb-5"
+        >
+            <!-- スポット名 -->
+            <v-text-field class="mr-10"> </v-text-field>
+            <!-- スポットタイプ --> 
+            <!-- <spot-type-icon v-for="type in spotData.types" :key="type"
+                :type="type"
+                class="mr-5"
+                    large
+                    color="gray"        複数タイプに対応していないので一旦コメントアウト
+            /> -->
+            <spot-type-icon
+                :type="spotData.spot_type"
+                class="mr-5"
+                large
+                color="gray"
+            />
 
         </v-row>
-
         <v-row>
             <!-- スポットの評価(レーダーチャート) -->
             <v-col>
