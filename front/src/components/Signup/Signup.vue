@@ -30,7 +30,6 @@
                 <v-autocomplete
                     label="所属大学"
                     clearable
-                    value="univSearch"
                     v-model="university"
                     prepend-icon="mdi-school"
                     item-text="university"
@@ -102,7 +101,6 @@ export default {
             password : '',
             university: '',
             addedUniversity: '',
-            univSearch: '',
             isEditing: false,
 
             showPassword : false,
