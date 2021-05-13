@@ -1,6 +1,6 @@
 <template>
   <spot-input-form @register="OnRegister"
-    editComment
+    submitFirstReview
     title="新しいスポットを登録"
     regButtonText="登録"
     :initialSpotData="initialSpotData"

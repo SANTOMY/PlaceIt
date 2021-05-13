@@ -37,20 +37,20 @@
                             </template>
                         </v-select>
                         <!-- スポットの説明 -->
-                        <v-textarea v-if="editComment"
+                        <v-textarea v-if="submitFirstReview"
                             v-model="spot_data.comment"
                             solo
                             name="input-7-4"
                             label="コメント"
                         ></v-textarea>
 
-                        <v-chip 
+                        <v-chip v-if="submitFirstReview"
                             class = "mb-5"
                             label text-color="brack">
                             <h3>スコア</h3>
                         </v-chip>
 
-                        <v-row v-if="chart_disp==true">
+                        <v-row v-if="chart_disp==true && submitFirstReview">
                             <!-- レーダーチャート表示 -->
                             <v-col cols="5" justify="center">
                                 <radarChartDisp
@@ -175,7 +175,7 @@ export default {
     },
 
     props: {
-        editComment: Boolean,
+        submitFirstReview: Boolean,
         title: String,
         regButtonText: String,
         initialSpotData: Object,
