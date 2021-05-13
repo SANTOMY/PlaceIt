@@ -4,7 +4,6 @@
       width="1200"
       persistent
     >
-
         <v-card>
             <!-- ローディング画面 -->
             <v-skeleton-loader
@@ -12,7 +11,9 @@
                 type="image, article, article"
                 class="mx-auto"
             ></v-skeleton-loader>
-            <v-container v-if="!isLoading">
+
+            <spot-edit v-if="canShowEditMode" />
+            <v-container v-if="canShowViewMode">
                 <!-- 写真 -->
                 <v-carousel
                     cycle
@@ -46,6 +47,9 @@
                         large
                         color="gray"
                     />
+                    <v-btn @click="onClickEditButton">
+                        <h3>EDIT</h3>
+                    </v-btn>
 
 
                 </v-row>
@@ -114,6 +118,7 @@
                 </v-col>
             </v-row>
             </v-container>
+            
         </v-card>
     </v-dialog>
 </template>
@@ -123,6 +128,7 @@ import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
+import spotEdit from './SpotEdit.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
@@ -136,7 +142,8 @@ export default {
         spotReviewList,
         spotTypeIcon,
         spotReviewRegister,
-        radarChartDisp,   
+        radarChartDisp, 
+        spotEdit
     },
     data: function() {
         return {
@@ -155,7 +162,8 @@ export default {
                 lon: 0
             },
             isLoadingData: true,   //spotデータを読み込んでいるか
-            isLoadingPhoto: true   // spotイメージを読み込んでいるか
+            isLoadingPhoto: true,   // spotイメージを読み込んでいるか
+            isEditMode: false // 修正モードであるか
         }
     },
     props: {
@@ -239,6 +247,9 @@ export default {
                 })
             }
         },
+        onClickEditButton: function() {
+            this.isEditMode = true;
+        }        
     },
 
     computed: {
@@ -259,6 +270,13 @@ export default {
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
             return this.isLoadingData || this.isLoadingPhoto
+        },
+
+        canShowViewMode: function() { //閲覧モードを表示できるか
+            return !this.isLoadingData && !this.isLoadingPhoto && !this.isEditMode
+        },
+        canShowEditMode: function() { //編集モードを表示できるか
+            return !this.isLoadingData && !this.isLoadingPhoto && this.isEditMode
         }
     },
 
@@ -269,6 +287,7 @@ export default {
             this.updateDetail()
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
+            this.isEditMode = false;
         }
     }
 }
