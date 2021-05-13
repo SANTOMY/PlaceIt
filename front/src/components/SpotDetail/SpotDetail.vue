@@ -14,6 +14,7 @@
 
             <spot-edit v-if="canShowEditMode" 
                 :spotData="spotData" :photos="photos" :rating5="rating5"
+                @update="onUpdate"
             />
             <v-container v-if="canShowViewMode">
                 <!-- 写真 -->
@@ -50,7 +51,7 @@
                         color="gray"
                     />
                     <v-btn @click="onClickEditButton">
-                        <h3>EDIT</h3>
+                        <h3>変更</h3>
                     </v-btn>
 
 
@@ -251,6 +252,10 @@ export default {
         },
         onClickEditButton: function() {
             this.isEditMode = true;
+        },
+        onUpdate: function() {
+            this.isEditMode = false;
+            this.updateDetail();
         }        
     },
 

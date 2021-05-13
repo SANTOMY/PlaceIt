@@ -1,10 +1,9 @@
 <template>
-    <v-card>
         <v-form ref="spotRegisterForm">
-            <v-container>
+            <v-container fluid>
                 <v-row>
                     <v-col>
-                        <h1>新しいスポットを追加</h1>
+                        <h1>{{title}}</h1>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -38,7 +37,7 @@
                             </template>
                         </v-select>
                         <!-- スポットの説明 -->
-                        <v-textarea
+                        <v-textarea v-if="editComment"
                             v-model="spot_data.comment"
                             solo
                             name="input-7-4"
@@ -126,13 +125,12 @@
                             @click="onClickedRegisterButton"
                             x-large
                         >
-                            登録
+                            {{regButtonText}}
                         </v-btn>
                     </v-col>
                 </v-row>                
             </v-container>
         </v-form>
-    </v-card>
 </template>
 
 <script>
@@ -153,8 +151,6 @@ export default {
             chart_disp: false,
             spot_data: {
                 name: "",
-                x:  this.$route.query.lon,
-                y:  this.$route.query.lat,
                 photos: [],
                 types: "",
                 userId: this.$store.state.userData.userId,
@@ -178,6 +174,15 @@ export default {
         }
     },
 
+    props: {
+        editComment: Boolean,
+        title: String,
+        regButtonText: String,
+        initialSpotData: Object,
+        initialImages: Array,
+        initialScores: Array
+    },
+
     methods: {
         onClickedRegisterButton: function() {
             if (!this.$refs.spotRegisterForm.validate()) {
@@ -190,8 +195,6 @@ export default {
             else {
                 console.log("failed to send database")
             }
-            //TODO: スポットをデータベースに登録する処理
-            this.$router.push('/map')
         },
         check_database: function() {
             //TODO: アカウントを作成できるか確認
@@ -208,6 +211,13 @@ export default {
         currentRating: function (val) {
             this.$emit('current-rating',val)
         }
+    },
+
+    mounted: function() {
+        console.log(this.initialSpotData)
+        this.spot_data.name = this.initialSpotData.spot_name;
+        this.spot_data.types = this.initialSpotData.spot_type;
+        this.spot_data.scores = this.initialScores;
     },
 
     watch: {
