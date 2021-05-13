@@ -12,7 +12,9 @@
                 class="mx-auto"
             ></v-skeleton-loader>
 
-            <spot-edit v-if="canShowEditMode" />
+            <spot-edit v-if="canShowEditMode" 
+                :spotData="spotData" :photos="photos" :rating5="rating5"
+            />
             <v-container v-if="canShowViewMode">
                 <!-- 写真 -->
                 <v-carousel
