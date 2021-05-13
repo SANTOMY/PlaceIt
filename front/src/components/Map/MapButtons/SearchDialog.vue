@@ -61,6 +61,13 @@
     </v-btn-toggle>
     
     </v-container>
+    <!-- キーワード検索 -->
+    <v-container>
+      <v-text-field label="検索ワード"
+      prepend-icon="mdi-alpha-a"
+      v-model="keyword"
+      />
+    </v-container>
     <v-card-actions>
       <v-btn @click="Search(); dialog=false">
         <v-icon>
@@ -84,7 +91,8 @@ export default {
       types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
       typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
       nowUniv:false,//現在の大学
-      dialog:false//検索ダイアログ表示管理
+      dialog:false,//検索ダイアログ表示管理
+      keyword:""
     }
   },
   components: {
@@ -104,7 +112,7 @@ export default {
       Search(){
         //選ばれた検索条件をMapに送信
         var univFlag = (this.nowUniv=="true" ? true : false);
-        this.$emit('search',this.nowType,univFlag);
+        this.$emit('search',this.nowType,univFlag,this.keyword);
       },
     }
     
