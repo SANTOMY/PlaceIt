@@ -216,7 +216,7 @@ export default {
                 return
             }
             if(this.check_database()) {
-                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, "", this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.scores, this.spot_data.university)
+                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, "", this.spot_data.types + "," + this.spot_data.tags, this.spot_data.userId, this.spot_data.comment, this.spot_data.scores, this.spot_data.university)
                     .then(res => {
                         if(!res.success) return
                         uploadSpotImage(this.uploadedFiles[0], res.spotId)
@@ -275,11 +275,12 @@ export default {
         'spot_data.types': function(){ // spot type を変えた時の処理
             this.chart_disp = false
             this.criteria_list = getSpotTypeDict('review')[this.spot_data.types];
-            let spotType = this.spot_data.types
             this.selected_tags = []
+            let spotType = this.spot_data.types
             this.filterd_tags = this.all_tags.filter(function(tag){
                 return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
             });
+            this.$nextTick(() => (this.chart_disp = true));
         },
         'spot_data.scores': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
             this.chart_disp = false
