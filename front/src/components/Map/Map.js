@@ -6,6 +6,8 @@ import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
 import '../../plugins/Leaflet.Icon.Glyph.js'
+import '../share/SpotTypeFunction'
+import { getSpotTypeDict } from '../share/SpotTypeFunction'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -62,9 +64,12 @@ export default {
                   return spot.spot_name.indexOf(keyword) != -1
                 });
                 var markerSet = []//マーカーのリスト
+
+                const icon_dict = getSpotTypeDict('icon')
+
                 spots.forEach(spot => {
                     var marker =  L.marker([spot.y, spot.x], 
-                        {icon: L.icon.glyph({ prefix: 'mdi', glyph: 'login' }) })
+                        {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type] }) })
                     .on('click', this.markerClickEvent);
                     marker.spot_name = spot.spot_name;
                     marker.spot_id = spot.spot_id;
