@@ -1,5 +1,7 @@
 <template>
-  <spot-input-form @register="OnRegister"
+  <spot-input-form 
+    @register="OnRegister"
+    @cancel="OnCancel"
     submitFirstReview
     title="新しいスポットを登録"
     regButtonText="登録"
@@ -41,6 +43,9 @@ export default {
                         })
                 })
             this.$router.push('/map')            
+        },
+        OnCancel: function() {
+            this.$router.push('/map')
         }
     }
 

@@ -256,7 +256,7 @@ export default {
         onUpdate: function() {
             this.isEditMode = false;
             this.updateDetail();
-        }        
+        }      
     },
 
     computed: {

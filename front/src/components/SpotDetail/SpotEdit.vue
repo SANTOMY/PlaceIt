@@ -1,6 +1,8 @@
 <template>
     <v-container>
-        <spot-input-form @register="onUpdate"
+        <spot-input-form 
+            @register="onUpdate"
+            @cancel="onCancel"
             title="スポット情報を更新"
             regButtonText="更新"
             :initialSpotData="spotData"
@@ -27,6 +29,9 @@ export default {
         onUpdate: function(spotData, imageFile) {
             console.log(spotData, imageFile)
             this.$emit("update")   
+        },
+        onCancel: function() {
+            this.$emit("update")
         }
     }
 

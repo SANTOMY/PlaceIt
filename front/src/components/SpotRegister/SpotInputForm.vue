@@ -119,13 +119,22 @@
                     </v-col>
                 </v-row>
                 <v-row>
-                    <v-col>
+                    <v-col cols="2">
                         <!-- 登録ボタン -->
                         <v-btn 
                             @click="onClickedRegisterButton"
                             x-large
                         >
                             {{regButtonText}}
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="2">
+                        <!-- キャンセルボタン -->
+                        <v-btn 
+                            @click="onClickedCancelButton"
+                            x-large
+                        >
+                            キャンセル
                         </v-btn>
                     </v-col>
                 </v-row>                
@@ -196,6 +205,11 @@ export default {
                 console.log("failed to send database")
             }
         },
+
+        onClickedCancelButton: function() {
+            this.$emit("cancel")
+        },
+
         check_database: function() {
             //TODO: アカウントを作成できるか確認
             return true
