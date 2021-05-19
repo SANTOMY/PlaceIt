@@ -2,7 +2,7 @@
 <!-- mapレイヤのような形で生成される -->
     <div id='map'>
         <!-- 検索ダイアログー -->
-        <search-dialog :spots="spots" @search="search" />
+        <search-dialog :spotNameList="spotNameList" @search="search" />
         <!-- 通常モードとスポット登録モードの切り替えボタン -->
         <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()" v-if='this.$store.state.userData != null'/>
         <!-- 現在地ボタン -->

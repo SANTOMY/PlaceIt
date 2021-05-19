@@ -70,7 +70,7 @@
         v-model="keyword"
         prepend-icon="mdi-alpha-a"
         item-text="spot_name"
-        :items="spots">
+        :items="spotNameList">
       </v-autocomplete>
 
     </v-container>
@@ -105,7 +105,7 @@ export default {
   components: {
     //typeButton
     },
-  props:['spots'],//スポット一覧
+  props:['spotNameList'],//スポット一覧
 
     created(){
       this.changeSearchType
@@ -113,7 +113,6 @@ export default {
     mounted(){
         this.types.push(... this.typeNameList ) // typesにtype name listを追加
         this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
-        console.log(this.spots);
     },
     methods:{
       Search(){
