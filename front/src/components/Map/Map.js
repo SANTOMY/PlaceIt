@@ -5,6 +5,7 @@ import nowLocButton from './MapButtons/NowLocButton.vue'
 import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
+import '../../plugins/Leaflet.Icon.Glyph.js'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -62,7 +63,9 @@ export default {
                 });
                 var markerSet = []//マーカーのリスト
                 spots.forEach(spot => {
-                    var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
+                    var marker =  L.marker([spot.y, spot.x], 
+                        {icon: L.icon.glyph({ prefix: 'mdi', glyph: 'login' }) })
+                    .on('click', this.markerClickEvent);
                     marker.spot_name = spot.spot_name;
                     marker.spot_id = spot.spot_id;
                     marker.spot_type = spot.spot_type;
