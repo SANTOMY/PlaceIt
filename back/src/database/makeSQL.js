@@ -15,7 +15,7 @@ module.exports.getSpotQueryBuilder = function(keywords){
     if( !utility.isEmpty(keywords.geom) )
         where.push(` geom='${keywords.geom}'`);
     if( !utility.isEmpty(keywords.spotType) )
-        where.push(` spot_type='${keywords.spotType}'`);
+        where.push(` spot_type like '%${keywords.spotType}%'`);
     if( !utility.isEmpty(keywords.userId) )
         where.push(` user_id='${keywords.userId}'`);
     if( !utility.isEmpty(keywords.university) )
