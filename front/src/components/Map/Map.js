@@ -66,10 +66,11 @@ export default {
                 var markerSet = []//マーカーのリスト
 
                 const icon_dict = getSpotTypeDict('icon')
+                const color_dict = getSpotTypeDict('color')
 
                 spots.forEach(spot => {
                     var marker =  L.marker([spot.y, spot.x], 
-                        {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type] }) })
+                        {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type], color: color_dict[spot.spot_type] }) })
                     .on('click', this.markerClickEvent);
                     marker.spot_name = spot.spot_name;
                     marker.spot_id = spot.spot_id;
