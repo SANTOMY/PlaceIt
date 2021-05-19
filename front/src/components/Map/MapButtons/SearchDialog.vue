@@ -61,6 +61,29 @@
     </v-btn-toggle>
     
     </v-container>
+
+    <!-- tag検索 -->
+    <v-container>
+        <v-autocomplete
+            v-model="selected_tags"
+            :items="tagNameList"
+            label="タグ"
+            multiple
+            single-line
+            prepend-icon="mdi-school"
+        >
+            <template v-slot:selection="{ item }">
+                <v-chip
+                    label
+                    color="grey lighten-4"
+                >
+                    <tag-type-icon :type="item" />
+                    <h3>{{ item }}</h3>
+                </v-chip>
+            </template>
+        </v-autocomplete>
+    </v-container>
+
     <!-- キーワード検索 -->
     <v-container>
     <v-autocomplete
@@ -88,6 +111,8 @@
 
 <script>
 import {getSpotTypeDict} from "../../share/SpotTypeFunction"
+import {getTagTypeDict} from "../../share/TagTypeFunction"
+import tagTypeIcon from "../../share/TagTypeIcon"
 
 export default {
   data: function(){
@@ -99,11 +124,14 @@ export default {
       typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
       nowUniv:false,//現在の大学
       dialog:false,//検索ダイアログ表示管理
-      keyword:""
+      keyword:"",
+      tagNameList: getTagTypeDict('type'),
+      selectedTags: []
     }
   },
   components: {
     //typeButton
+    tagTypeIcon
     },
   props:['spotNameList'],//スポット一覧
 
