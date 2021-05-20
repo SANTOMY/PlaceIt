@@ -50,7 +50,11 @@
                         large
                         color="gray"
                     />
-                    <v-btn @click="onClickEditButton">
+                    <!-- スポット情報修正ボタン -->
+                    <v-btn 
+                        v-if="checkCreatedMyself"
+                        @click="onClickEditButton"
+                    >
                         <h3>変更</h3>
                     </v-btn>
 
@@ -150,7 +154,7 @@ export default {
     },
     data: function() {
         return {
-            spotData: {spot_name:"", spot_type:""},
+            spotData: {spot_name:"", spot_type:"", user_id:""},
             reviews: [], // spotのレビューリスト
             user_list: [], // userのリスト
             rating: 5,
@@ -256,7 +260,7 @@ export default {
         onUpdate: function() {
             this.isEditMode = false;
             this.updateDetail();
-        }      
+        }
     },
 
     computed: {
@@ -284,6 +288,10 @@ export default {
         },
         canShowEditMode: function() { //編集モードを表示できるか
             return !this.isLoadingData && !this.isLoadingPhoto && this.isEditMode
+        },
+
+        checkCreatedMyself: function() { //自分自身が作成したスポットであるか
+            return this.spotData.user_id == this.$store.state.userData.userId
         }
     },
 
