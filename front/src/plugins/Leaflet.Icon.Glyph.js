@@ -1,5 +1,8 @@
 import L from 'leaflet'
 
+// このスクリプトは以下のURLのスクリプトを一部改変したものです。
+// https://github.com/Leaflet/Leaflet.Icon.Glyph/blob/gh-pages/Leaflet.Icon.Glyph.js
+
 L.Icon.Glyph = L.Icon.extend({
 	options: {
 		iconSize: [25, 41],
