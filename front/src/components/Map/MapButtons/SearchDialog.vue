@@ -99,6 +99,7 @@
                 <!-- 大学別検索 -->
                 <v-container>
                     <v-btn-toggle
+                    v-if="userLogin!=null"
                     v-model="nowUniv"
                     group
                     mandatory
@@ -145,6 +146,7 @@ export default {
       keyword:"",//検索キーワード
       moreDetail:false,//詳細検索フォームの表示管理フラグ
       rating:0,//評価の閾値
+      userLogin: this.$store.state.userData,
     }
   },
   components: {
