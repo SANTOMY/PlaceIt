@@ -109,13 +109,6 @@
 
                 </v-col>
             </v-row>
-            <v-row>
-                <v-col>
-                    <v-btn block @click="closeDialog()">
-                        <h3>Close</h3>
-                    </v-btn>
-                </v-col>
-            </v-row>
             </v-container>
         </v-card>
     </v-dialog>
