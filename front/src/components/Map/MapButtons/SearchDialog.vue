@@ -71,15 +71,19 @@
             multiple
             single-line
             clearable
+            deletable-chips
             prepend-icon="mdi-tag-multiple-outline"
         >
             <template v-slot:selection="{ item }">
                 <v-chip
                     label
                     color="grey lighten-4"
+                    @click="remove(item)"
                 >
                     <tag-type-icon :type="item" :isLarge="false"/>
+                    <!--
                     <h4>{{ item }}</h4>
+                    -->
                 </v-chip>
             </template>
         </v-autocomplete>
@@ -127,7 +131,7 @@ export default {
       dialog:false,//検索ダイアログ表示管理
       keyword:"",
       tagNameList: getTagTypeDict('type'),
-      filterdTags: getTagTypeDict('type'),
+      filterdTags: [],
       selectedTags: []
     }
   },
@@ -153,7 +157,11 @@ export default {
             return this.tagNameList.filter(function(tag){
                 return getTagTypeDict("stype")[tag].includes(this.nowType);
             });
-        }
+        },
+        remove :function(item) {
+            const index = this.selectedTags.indexOf(item)
+            if (index >= 0) this.selectedTags.splice(index, 1)
+        },
     },
     watch: {
         'nowType': function(){ // spot type を変えた時の処理
@@ -163,7 +171,7 @@ export default {
                 return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
             });
             if (spotType == "reset")
-                this.filterdTags = this.tagNameList;
+                this.filterdTags = [];
         },
     },
     

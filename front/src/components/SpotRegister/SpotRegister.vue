@@ -54,7 +54,7 @@
                                     label
                                     color="grey lighten-4"
                                 >
-                                    <tag-type-icon :type="item" :isLarge="true"/>
+                                    <tag-type-icon :type="item" :isLarge="true" classType="mr-5"/>
                                     <h3>{{ item }}</h3>
                                 </v-chip>
                             </template>
@@ -288,7 +288,6 @@ export default {
             this.$nextTick(() => (this.chart_disp = true));
         },
         'selected_tags': function(){
-            console.log(this.typesToStrs(this.selected_tags));
             this.spot_data.tags = this.typesToStrs(this.selected_tags);
         }
     },

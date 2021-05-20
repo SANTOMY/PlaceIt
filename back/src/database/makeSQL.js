@@ -18,14 +18,16 @@ module.exports.getSpotQueryBuilder = function(keywords){
         where.push(` spot_type like '%${keywords.spotType.split(",")[0]}%'`);
         var tagList = [];
         var tagQuery = "( ";
-        keywords.spotType.split(",").slice(1).forEach(function(key){
-            tagList.push(` spot_type like '%${key}%'`);
-        });
-        if(tagList.length!=0){
-            tagQuery += tagList.join(' or ');
-            tagQuery += " )"
+        if (keywords.spotType.split(",").length > 1) {
+            keywords.spotType.split(",").slice(1).forEach(function(key){
+                tagList.push(` spot_type like '%${key}%'`);
+            });
+            if(tagList.length!=0){
+                tagQuery += tagList.join(' or ');
+                tagQuery += " )"
+            }
+            where.push(tagQuery);
         }
-        where.push(tagQuery);
     }
     if( !utility.isEmpty(keywords.userId) )
         where.push(` user_id='${keywords.userId}'`);

@@ -1,6 +1,6 @@
 <template>
     <v-icon
-        class="mr-5"
+        :class="classType"
         :large=isLarge
         :color="iconColor"
     >
@@ -14,6 +14,7 @@ export default {
     props: {
         type: String,
         iconColor: String, // spot iconのカラー指定
+        classType: String,
         isLarge: Boolean
     },
     data: function() {
