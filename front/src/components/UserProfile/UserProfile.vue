@@ -107,13 +107,13 @@ export default {
         this.getSpotByUserId( this.$store.state.userData.userId )
             .then( () =>{
                 this.getLatestSpots( 0, 28 )
-                this.show_count += 1
+                // this.show_count += 1
                 console.log('my_spot length',this.my_spot.length)
         })
 
         this.getSpotYouReviewed( this.$store.state.userData.userId )
             .then( () =>{
-                this.show_count += 1
+                // this.show_count += 1
                 console.log('good_spot length',this.good_spot.length)
             })
 
@@ -148,6 +148,8 @@ export default {
         },
         getSpotByUserId: async function(user_id){
             return getSpot('', '', '', user_id, '').then(result => {
+                const all = result.spots.length;
+                var added = 0;
                 for( var spt of result.spots ){
                     const spt_id = spt.spot_id;
                     const name = spt.spot_name;
@@ -173,9 +175,14 @@ export default {
                         console.log( "Error in getSpotImage: ", exception )
                         const src = require( "@/assets/noimage.png" );
                         this.my_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                    }).finally(()=>{
+                        console.log( "DEBUG-A: ", all, added )
+                        added += 1;
+                        if( added >= all ){
+                            this.show_count += 1
+                        }
                     })
                 }
-                return true
             }).catch((exception) => {
                 console.log( "Error in getSpotByUserId: ", exception );
             })
@@ -186,6 +193,8 @@ export default {
                 for( let rev of result.review ){
                     reviewd_spot_ids.add( rev.spot_id );
                 }
+                const all2 = reviewd_spot_ids.size;
+                var added = 0;
                 for( let reviewd_spot_id of reviewd_spot_ids ){
                     getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
                         const spt = result.spots[ 0 ];
@@ -213,13 +222,18 @@ export default {
                             console.log( "Error in getSpotImage: ", exception )
                             const src = require( "@/assets/noimage.png" );
                             this.good_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                        }).finally(()=>{
+                            console.log( "DEBUG-B: ", all2, added )
+                            added += 1;
+                            if( added >= all2 ){
+                                this.show_count += 1
+                            }
                         })
 
                     } ).catch((exception) => {
                         console.log( "Error in getReviewByUserId: ", exception );
                     })
                 }
-                return true
             } ).catch((exception) => {
                 console.log( "Error in getSpotYouReviewed: ", exception );
             })
