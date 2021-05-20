@@ -66,7 +66,7 @@
     <v-container>
         <v-autocomplete
             v-model="selectedTags"
-            :items="tagNameList"
+            :items="filterdTags"
             label="タグ"
             multiple
             single-line
@@ -126,6 +126,7 @@ export default {
       dialog:false,//検索ダイアログ表示管理
       keyword:"",
       tagNameList: getTagTypeDict('type'),
+      filterdTags: [],
       selectedTags: []
     }
   },
@@ -143,12 +144,26 @@ export default {
         this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
     },
     methods:{
-      Search(){
-        //選ばれた検索条件をMapに送信
-        var univFlag = (this.nowUniv=="true" ? true : false);
-        this.$emit('search',this.nowType,univFlag,this.keyword);
-      },
-    }
+        Search(){
+            //選ばれた検索条件をMapに送信
+            var univFlag = (this.nowUniv=="true" ? true : false);
+            this.$emit('search',this.nowType,univFlag,this.keyword);
+        },
+        filterTags: function() {
+            return this.tagNameList.filter(function(tag){
+                return getTagTypeDict("stype")[tag].includes(this.nowType);
+            });
+        }
+    },
+    watch: {
+        'nowType': function(){ // spot type を変えた時の処理
+            this.selectedTags = []
+            let spotType = this.nowType
+            this.filterdTags = this.tagNameList.filter(function(tag){
+                return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
+            });
+        },
+    },
     
 }
 </script>
