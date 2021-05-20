@@ -291,6 +291,7 @@ export default {
         },
 
         checkCreatedMyself: function() { //自分自身が作成したスポットであるか
+            if(this.$store.state.userData == null) return false;
             return this.spotData.user_id == this.$store.state.userData.userId
         }
     },
