@@ -65,7 +65,7 @@
     <!-- tag検索 -->
     <v-container>
         <v-autocomplete
-            v-model="selected_tags"
+            v-model="selectedTags"
             :items="tagNameList"
             label="タグ"
             multiple
@@ -77,8 +77,8 @@
                     label
                     color="grey lighten-4"
                 >
-                    <tag-type-icon :type="item" />
-                    <h3>{{ item }}</h3>
+                    <tag-type-icon :type="item" :isLarge="false"/>
+                    <h4>{{ item }}</h4>
                 </v-chip>
             </template>
         </v-autocomplete>

@@ -1,7 +1,7 @@
 <template>
     <v-icon
         class="mr-5"
-        large
+        :large=isLarge
         :color="iconColor"
     >
         {{ type_dict[type] }}
@@ -13,7 +13,8 @@ import {getTagTypeDict} from "./TagTypeFunction"
 export default {
     props: {
         type: String,
-        iconColor: String // spot iconのカラー指定
+        iconColor: String, // spot iconのカラー指定
+        isLarge: Boolean
     },
     data: function() {
         return {

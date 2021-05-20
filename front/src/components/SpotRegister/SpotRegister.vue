@@ -38,6 +38,7 @@
                             </template>
                         </v-select>
 
+                        <!-- タグ登録 -->
                         <v-autocomplete
                             :rules="typeRules"
                             v-model="selected_tags"
@@ -53,7 +54,7 @@
                                     label
                                     color="grey lighten-4"
                                 >
-                                    <tag-type-icon :type="item" />
+                                    <tag-type-icon :type="item" :isLarge="true"/>
                                     <h3>{{ item }}</h3>
                                 </v-chip>
                             </template>
