@@ -30,6 +30,8 @@
             <v-col>
                 ユーザー名
                 <h1>{{ user.username }}</h1>
+                所属大学
+                <h1>{{ user.university }}</h1>
                 
                     <v-spacer></v-spacer>
                     <v-btn
@@ -79,6 +81,7 @@ export default {
                 username: this.$store.state.userData.userName,
                 email: this.$store.state.userData.email,
                 password: this.$store.state.userData.password,
+                university: this.$store.state.userData.university,
                 src: require('@/assets/default-icon.jpeg')
             },
             spot: SpotExampleData(),
