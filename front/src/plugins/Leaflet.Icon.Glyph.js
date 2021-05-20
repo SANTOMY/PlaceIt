@@ -1,6 +1,4 @@
-
 import L from 'leaflet'
-import "leaflet"
 
 L.Icon.Glyph = L.Icon.extend({
 	options: {
@@ -9,11 +7,7 @@ L.Icon.Glyph = L.Icon.extend({
 		popupAnchor: [1, -34],
 		shadowSize:  [41, 41],
 		iconUrl: require('../assets/markers/marker-icon-blue.png'),
-// 		iconSize: [35, 45],
-// 		iconAnchor:   [17, 42],
-// 		popupAnchor: [1, -32],
 // 		shadowAnchor: [10, 12],
-// 		shadowSize: [36, 16],
 // 		bgPos: (Point)
 		className: '',
 		prefix: '',
