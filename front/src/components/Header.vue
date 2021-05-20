@@ -32,7 +32,7 @@
           
         >
             <template v-slot:activator="{ on }">
-                <v-btn class="px-10 mx-2" v-if="isLoggedIn" v-on="on">
+                <v-btn class="px-10 mx-2" text v-if="isLoggedIn" v-on="on">
                     <v-icon left large color="gray" class="px-5"> mdi-account-circle</v-icon>
                     User
                 </v-btn>
