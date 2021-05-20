@@ -109,7 +109,6 @@ L.Icon.Glyph = L.Icon.extend({
 });
 
 L.icon.glyph = function (options) {
-    console.log(options)
     if(options.color == undefined) options.color = "blue"   
     options.iconUrl = require('../assets/markers/marker-icon-' + options.color + '.png')
 	return new L.Icon.Glyph(options);
