@@ -63,11 +63,18 @@
     </v-container>
     <!-- キーワード検索 -->
     <v-container>
-      <v-text-field label="検索ワード"
-      prepend-icon="mdi-alpha-a"
-      v-model="keyword"
-      />
+    <v-autocomplete
+        label="検索ワード"
+        clearable
+        single-line
+        v-model="keyword"
+        prepend-icon="mdi-alpha-a"
+        item-text="spot_name"
+        :items="spotNameList">
+      </v-autocomplete>
+
     </v-container>
+
     <v-card-actions>
       <v-btn @click="Search(); dialog=false">
         <v-icon>
@@ -98,6 +105,7 @@ export default {
   components: {
     //typeButton
     },
+  props:['spotNameList'],//スポット一覧
 
     created(){
       this.changeSearchType
@@ -106,8 +114,6 @@ export default {
         this.types.push(... this.typeNameList ) // typesにtype name listを追加
         this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
     },
-
-    //props: ['regFlag']
     methods:{
       Search(){
         //選ばれた検索条件をMapに送信
