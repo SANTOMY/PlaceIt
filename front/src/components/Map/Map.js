@@ -6,7 +6,6 @@ import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
 import '../../plugins/Leaflet.Icon.Glyph.js'
-import '../share/SpotTypeFunction'
 import { getSpotTypeDict } from '../share/SpotTypeFunction'
 
 //アイコンをロード
