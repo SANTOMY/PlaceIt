@@ -40,7 +40,6 @@
 
                         <!-- タグ登録 -->
                         <v-autocomplete
-                            :rules="typeRules"
                             v-model="selected_tags"
                             :items="filterd_tags"
                             label="タグ"
