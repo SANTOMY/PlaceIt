@@ -73,11 +73,16 @@ export default {
             if (!this.$refs.loginForm.validate()) return;
             login(this.model.email, this.model.password)
                 .then(res => {
-                    if (res.success) {
-                        const userData = new User(res.data.id, res.data.username, res.data.email, null, res.data.university)
-                        this.$store.commit("login", userData)
-                        this.$router.push('/map')
-                    } else {
+                    console.log(res.data.is_active);
+                    if (res.success && res.data.is_active) {
+                        const userData = new User(res.data.id, res.data.username, res.data.email, null, res.data.university, res.data.isActive)
+                        this.$store.commit("login", userData);
+                        this.$router.push('/map');
+                    } 
+                    else if(!res.data.is_active){
+                        alert("This user doesn't exist.");
+                    }
+                    else {
                         this.errorMessage = res.data 
                     }
                 })

@@ -92,4 +92,29 @@ async function getAllUniversities(){
         return {success:false, data:exception};
     }
 }
-export {register,getUser,editUser,login,getAllUniversities};
+
+/**
+ * 
+ * @param {String} email 
+ * @param {String} password 
+ * @returns 
+ */
+async function deleteUser(userId, password){
+    const url = serverIP + '/user/deleteUser/';
+    try{
+        let reponse = await fetch(url,{
+            mode: 'cors',
+            method: 'PUT',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Origin': 'http://localhost:8080'
+            },
+            body: JSON.stringify({userId: userId, password: password})
+        });
+        return await reponse.json();
+    }catch(exception){
+        return{success:false, data:exception};
+    }
+}
+export {register,getUser,editUser,login,getAllUniversities,deleteUser};

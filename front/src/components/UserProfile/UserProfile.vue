@@ -5,7 +5,7 @@
         type="list-item-avatar-three-line, image"
         class="mx-auto"
     ></v-skeleton-loader>
-    <v-container v-else>
+    <v-container v-else fluid="true">
         <h1>ユーザープロファイル</h1>
 <!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
         <v-dialog v-model="dialogEdit" width=500>
@@ -25,12 +25,13 @@
                     </v-avatar>
                 </v-layout>
                 <avatar-register @submit="editAvatarImage"/>
+                <user-delete @submit="deleteUser"/>
             </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
-                ユーザー名
-                <h1>{{ user.username }}</h1>
-                
+                <strong><font size="5">ユーザー名</font></strong>
+                    <h1>{{ user.username }}</h1>
+                    
                     <v-spacer></v-spacer>
                     <v-btn
                         v-model="editer"
@@ -55,18 +56,20 @@
 
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
-import {getUser} from '../../routes/userRequest'
-import {uploadProfileImage, getProfileImage} from "../../routes/imageRequest"
-import AvatarRegister from "./AvatarRegister.vue"
-import {getSpot} from '../../routes/spotRequest'
+import {getUser} from '../../routes/userRequest';
+import {uploadProfileImage, getProfileImage} from "../../routes/imageRequest";
+import AvatarRegister from "./AvatarRegister.vue";
+import {getSpot} from '../../routes/spotRequest';
 import {average} from '../../routes/reviewRequest';
 import {getReviewByUserId} from '../../routes/reviewRequest';
+import UserDelete from "./UserDelete.vue";
 
 export default {
 
     components: {
         SpotListCard,
         UserEdit,
+        UserDelete,
         AvatarRegister
     },
     data() {
@@ -152,8 +155,8 @@ export default {
         // call getUser(email) from .vue file:
         getUser(this.user.email)
             .then(result => {
-                this.user.username = result[0].username
-                this.user.user_id = result[0].id
+                this.user.username = result[0].username;
+                this.user.user_id = result[0].id;
                 this.getSpotByUserId( this.user.user_id )
                     .then( () =>{
                         this.getLatestSpots( 0, 28 )
@@ -182,6 +185,9 @@ export default {
             this.user.src = image;
             const imageFile = this.createImageFile(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
             uploadProfileImage(imageFile, this.$store.state.userData.userId)
+        },
+        deleteUser: function(){
+            
         },
 
         createImageFile: function(base64image, name) {
