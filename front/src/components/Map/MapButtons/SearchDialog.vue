@@ -70,7 +70,8 @@
             label="タグ"
             multiple
             single-line
-            prepend-icon="mdi-school"
+            clearable
+            prepend-icon="mdi-tag-multiple-outline"
         >
             <template v-slot:selection="{ item }">
                 <v-chip
@@ -126,7 +127,7 @@ export default {
       dialog:false,//検索ダイアログ表示管理
       keyword:"",
       tagNameList: getTagTypeDict('type'),
-      filterdTags: [],
+      filterdTags: getTagTypeDict('type'),
       selectedTags: []
     }
   },
@@ -162,6 +163,8 @@ export default {
             this.filterdTags = this.tagNameList.filter(function(tag){
                 return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
             });
+            if (spotType == "reset")
+                this.filterdTags = this.tagNameList;
         },
     },
     
