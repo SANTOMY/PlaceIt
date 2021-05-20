@@ -47,7 +47,8 @@ export default {
                 email: null,
                 password: null,
                 univ:"",
-            }
+            },
+            tags: []
         };
     },
     methods: {
@@ -136,16 +137,32 @@ export default {
             //現在地マーカーを設置
         },
 
+        // tagのリストを文字列に変換
+        typesToStrs: function(types) {
+            var strs = ""
+            for (var i = 0; i < types.length; i++) {
+                if (i != types.length - 1) {
+                    strs = strs + types[i] + ",";
+                } else {
+                    strs = strs + types[i];
+                }
+            }
+            return strs;
+        },
+
         //検索ジャンルを更新するメソッド
         search: async function(...args){
-            const [type,univ,keyword] = args
+            const [type,univ,keyword,tags] = args
             this.markers.clearLayers();
             this.marker = [];
             this.nowType = type;
+            this.tags = tags;
+            let typeAndTags = type + ((tags.length > 0)? ("," + this.typesToStrs(tags)) : "");
+
             if(univ){
-                await this.showSpot(type,this.user.univ,keyword);
+                await this.showSpot(typeAndTags,this.user.univ,keyword);
             } else{
-                await this.showSpot(type,"",keyword);
+                await this.showSpot(typeAndTags,"",keyword);
             }
         },
         closeDialog() {

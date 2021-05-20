@@ -147,7 +147,7 @@ export default {
     methods:{
         Search(){
             //選ばれた検索条件をMapに送信
-            this.$emit('search',this.nowType,this.nowUniv,this.keyword);
+            this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.selectedTags);
         },
         filterTags: function() {
             return this.tagNameList.filter(function(tag){
