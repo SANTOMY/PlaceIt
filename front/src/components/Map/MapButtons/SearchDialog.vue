@@ -48,12 +48,12 @@
       group
       mandatory
       >
-        <v-btn value="false" class="mx-auto" fab >
+        <v-btn :value="false" class="mx-auto" fab >
           <v-icon>
             mdi-alpha-a-circle-outline
           </v-icon>
         </v-btn>
-        <v-btn value="true" class="mx-auto" fab >
+        <v-btn :value="true" class="mx-auto" fab >
           <v-icon>
             mdi-account-cowboy-hat
           </v-icon>
@@ -147,8 +147,7 @@ export default {
     methods:{
         Search(){
             //選ばれた検索条件をMapに送信
-            var univFlag = (this.nowUniv=="true" ? true : false);
-            this.$emit('search',this.nowType,univFlag,this.keyword);
+            this.$emit('search',this.nowType,this.nowUniv,this.keyword);
         },
         filterTags: function() {
             return this.tagNameList.filter(function(tag){
