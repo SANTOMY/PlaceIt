@@ -4,7 +4,9 @@
     >
         <v-layout column style="height: 300px">      
             <v-flex style="overflow: auto">
-                <spot-review v-for="review in reviews" :key="review.id"
+                <spot-review 
+                    @catchUserData="sendUserData"
+                    v-for="review in reviews" :key="review.id"
                     :reviewer_data="review"
                 />
             </v-flex>
@@ -22,6 +24,11 @@ export default {
 
     props: {
         reviews: null,
+    },
+    methods: {
+        sendUserData(user) {
+            this.$emit('catchUserInformation',user)
+        },
     }
 }
 </script>

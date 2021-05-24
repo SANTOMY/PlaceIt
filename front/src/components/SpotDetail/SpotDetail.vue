@@ -12,7 +12,28 @@
                 type="image, article, article"
                 class="mx-auto"
             ></v-skeleton-loader>
-            <v-container v-if="!isLoading">
+            <!-- <v-container v-if="canShowUserProfileMode">
+                <user-profile-detail 
+                    :user="user"
+                    :otherUser="otherUser"
+                    :showUserProfileDetail="showUserProfileDetail"
+                    @closeProfile="closeUserProfile"/>
+            </v-container> -->
+
+            <user-profile-dialog
+                :user="user"
+                :otherUser="otherUser"
+                :showUserDialog="showUserProfileDetail"
+                @closeDialog="closeUserProfile"/>
+
+            <v-container v-if="canShowViewMode">
+                <!-- 他ユーザープロフィール -->
+                <user-profile-dialog
+                    :user="user"
+                    :otherUser="otherUser"
+                    :showUserDialog="showUserProfileDetail"
+                    @closeDialog="closeUserProfile"/>
+
                 <!-- 写真 -->
                 <v-carousel
                     cycle
@@ -76,7 +97,9 @@
                     <v-row justify="center">
                         <!-- レビューリスト -->
                         <v-col cols="11">
-                            <spot-review-list :reviews="slicedReviews"/>
+                            <spot-review-list 
+                                @catchUserInformation="getUserInformationByReviewer"
+                                :reviews="slicedReviews"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -124,11 +147,14 @@ import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
 import radarChartDisp from '../share/RadarChartDisp'
+// import userProfileDetail from '../UserProfile/UserProfileDetail'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
 import {getSpotImage} from '../../routes/imageRequest'
 import { getUserById } from '../../routes/userRequest.js'
 import {getProfileImage} from "../../routes/imageRequest"
+import UserProfileDialog from '../share/UserProfileDialog.vue'
+
 
 export default {
     components: {
@@ -136,13 +162,16 @@ export default {
         spotReviewList,
         spotTypeIcon,
         spotReviewRegister,
-        radarChartDisp,   
+        radarChartDisp,
+        // userProfileDetail,
+        UserProfileDialog,
     },
     data: function() {
         return {
             spotData: {spot_name:"", spot_type:""},
             reviews: [], // spotのレビューリスト
             user_list: [], // userのリスト
+            user: [],
             rating: 5,
             rating5: [0,0,0,0,0],
             photos: [{picture_id:1, image:require("@/assets/noimage.png")}],
@@ -155,7 +184,10 @@ export default {
                 lon: 0
             },
             isLoadingData: true,   //spotデータを読み込んでいるか
-            isLoadingPhoto: true   // spotイメージを読み込んでいるか
+            isLoadingPhoto: true,   // spotイメージを読み込んでいるか
+            showUserProfileDetail: false,   //他のユーザープロフィール表示するか
+            isEditMode: false, // Spot情報を修正するか
+            otherUser: true,
         }
     },
     props: {
@@ -223,7 +255,8 @@ export default {
                 getUserById(this.reviews[i].user_id)
                     .then(result => {
                         
-                        this.user_list[i]=result[0];            
+                        this.user_list[i]=result[0];
+                        // console.log('user_list',this.user_list)            
                         getProfileImage( this.reviews[i].user_id )
                             .then(res => {
                                 if(!res.success) {
@@ -238,6 +271,13 @@ export default {
                             })
                 })
             }
+        },
+        getUserInformationByReviewer: function(user){
+            this.user = user
+            this.showUserProfileDetail = true;         
+        },
+        closeUserProfile() {
+            this.showUserProfileDetail = false;
         },
     },
 
@@ -254,18 +294,31 @@ export default {
             for(var i = 0; i < raw_reviews.length; i++) {
                 enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
             }
-            console.log('cut reviewer data:',enumerated_reviews)
+            // console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
-            return this.isLoadingData || this.isLoadingPhoto
-        }
+            console.log('isLoading')
+            return this.isLoadingData || this.isLoadingPhoto //どっちかがtureだったらture, どっちともfalseだったらfalseを返す
+        },
+        canShowViewMode: function() { //閲覧モードを表示できるか
+            console.log('canShowViewMode')
+            return !this.isLoading && !this.isEditMode // falseかつfalseかつfalseだったらtrue, 他falseを返す
+        },
+        canShowEditMode: function() { //閲覧モードを表示できるか
+            console.log('canShowEditMode')
+            return !this.isLoading && this.isEditMode // falseかつfalseかつfalseだったらtrue, 他falseを返す
+        },
+        // canShowUserProfileMode: function() { //編集モードを表示できるか
+        //     console.log('canShowUserProfileMode')
+        //     return !this.isLoading && !this.isEditMode && this.showUserProfileDetail // falseかつfalseかつtrueだったらtrue, 他falseを返す
+        // }
     },
 
     watch: {
         showDialog: function() {    //spot詳細ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
-            console.log('spot id:',this.spot_id)
+            // console.log('spot id:',this.spot_id)
             this.updateDetail()
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
