@@ -5,6 +5,12 @@
       persistent
     >
         <v-card>
+            <!-- 閉じるボタン -->
+            <v-btn fixed top right dark fab rounded class="z-top mt-6 mr-8"
+                v-show="showDialog" @click="closeDialog()"
+            >
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
             <!-- ローディング画面 -->
             <v-skeleton-loader
                 v-if="isLoading"
@@ -115,13 +121,6 @@
                         </v-col>
                     </v-row>
 
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <v-btn block @click="closeDialog()">
-                        <h3>Close</h3>
-                    </v-btn>
                 </v-col>
             </v-row>
             </v-container>
