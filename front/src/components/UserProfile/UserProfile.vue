@@ -176,7 +176,6 @@ export default {
                         const src = require( "@/assets/noimage.png" );
                         this.my_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
                     }).finally(()=>{
-                        console.log( "DEBUG-A: ", all, added )
                         added += 1;
                         if( added >= all ){
                             this.show_count += 1
@@ -193,7 +192,7 @@ export default {
                 for( let rev of result.review ){
                     reviewd_spot_ids.add( rev.spot_id );
                 }
-                const all2 = reviewd_spot_ids.size;
+                const all = reviewd_spot_ids.size;
                 var added = 0;
                 for( let reviewd_spot_id of reviewd_spot_ids ){
                     getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
@@ -223,9 +222,8 @@ export default {
                             const src = require( "@/assets/noimage.png" );
                             this.good_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
                         }).finally(()=>{
-                            console.log( "DEBUG-B: ", all2, added )
                             added += 1;
-                            if( added >= all2 ){
+                            if( added >= all ){
                                 this.show_count += 1
                             }
                         })
