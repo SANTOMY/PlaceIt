@@ -3,17 +3,34 @@ export function getSpotTypeDict(value) {
     var type_dict = {
         restaurant: "mdi-silverware-fork-knife",// restaurantのアイコン
         travel: "mdi-bag-suitcase",             // travelのアイコン
-        shopping: "mdi-cart"                    // shoppingのアイコン
+        shopping: "mdi-cart",                   // shoppingのアイコン
+        amusements: "mdi-baseball-bat",         // amusementsのアイコン
+        accomodetion: "mdi-bed",                // accomodationのアイコン
+        lifework: "mdi-mother-heart",           // lifeworkのアイコン
     }
     var review_dict = {
-        restaurant: ["バリエーション", "立地", "価格", "おいしさ", "雰囲気"],    // restaurantで登録されたスポットの評価項目
-        travel: ["食事", "景観", "交通の便", "コスパ", "雰囲気"],         // travelで登録されたスポットの評価項目
-        shopping: ["景観", "品揃え", "立地", "価格", "雰囲気"]              // shoppingで登録されたスポットの評価項目
+        restaurant: ["バリエーション", "立地", "価格", "おいしさ", "雰囲気"],   // restaurantで登録されたスポットの評価項目
+        travel: ["サービス", "立地", "価格", "雰囲気", "リピート"],            // travelで登録されたスポットの評価項目
+        shopping: ["サービス", "品揃え", "立地", "価格", "人気度"],            // shoppingで登録されたスポットの評価項目
+        amusements: ["サービス","立地","価格","待ち時間","人気度"],            // amusementsの評価項目
+        accomodetion: ["サービス", "立地", "価格", "アメニティ", "雰囲気"],    //accomodetionのスポット評価項目
+        lifework: ["サービス","立地","価格","雰囲気","リピート"],              // lifeworkのスポット評価項目
+    }
+    var name_dict = {
+        restaurant: '食事',                 // restrantの内容
+        travel: '旅行/観光',                // travelの内容
+        shopping: '買い物',                // shoppingの内容
+        amusements:'スポーツ/レジャー',     // amusementsの内容
+        accomodetion:'宿泊/温泉',          // accomodationの内容
+        lifework:'生活/交通施設/学校/会社',  // lifeworkの内容
     }
     var color_dict = {
-        restaurant: 'red',  // restrantのiconなどの色
-        travel: 'green',    // travelのiconなどの色
-        shopping: 'blue'    // shoppingのiconなどの色
+        restaurant: 'red',      // restrantのiconなどの色
+        travel: 'green',        // travelのiconなどの色
+        shopping: 'blue',       // shoppingのiconなどの色
+        amusements:'yellow',    // amusementsのiconなどの色
+        accomodetion:'orange',  // accomodationのiconなどの色
+        lifework:'violet',      // lifeworkのiconなどの色
     }
     var spot_types = Object.keys(type_dict)
     if (value=='icon'){
@@ -24,6 +41,8 @@ export function getSpotTypeDict(value) {
         return review_dict
     }else if(value=='color'){
         return color_dict
+    }else if(value=='name'){
+        return name_dict
     }
 }
 

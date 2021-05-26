@@ -33,7 +33,7 @@
                                     color="grey lighten-4"
                                 >
                                     <spot-type-icon :type="item" />
-                                    <h3>{{ item }}</h3>
+                                    <h3>{{ all_types_name[item] }}</h3>
                                 </v-chip>
                             </template>
                         </v-select>
@@ -166,7 +166,7 @@ export default {
             },
             criteria_list: [],
             all_spot_types: getSpotTypeDict('type'), //spot typeを取得
-
+            all_types_name: getSpotTypeDict('name'), //sposの内容説明を取得
             // アップロードされたファイルを一時的に保管する変数
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
             uploadedFiles: [],
