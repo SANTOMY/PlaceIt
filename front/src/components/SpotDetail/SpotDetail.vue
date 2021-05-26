@@ -12,27 +12,8 @@
                 type="image, article, article"
                 class="mx-auto"
             ></v-skeleton-loader>
-            <!-- <v-container v-if="canShowUserProfileMode">
-                <user-profile-detail 
-                    :user="user"
-                    :otherUser="otherUser"
-                    :showUserProfileDetail="showUserProfileDetail"
-                    @closeProfile="closeUserProfile"/>
-            </v-container> -->
-
-            <!-- <user-profile-dialog
-                :user="user"
-                :otherUser="otherUser"
-                :showUserDialog="showUserProfileDetail"
-                @closeDialog="closeUserProfile"/> -->
 
             <v-container v-if="canShowViewMode">
-                <!-- 他ユーザープロフィール -->
-                <user-profile-dialog
-                    :user="user"
-                    :otherUser="otherUser"
-                    :showUserDialog="showUserDialog"
-                    @closeDialog="closeUserProfile"/>
 
                 <!-- 写真 -->
                 <v-carousel
@@ -147,13 +128,11 @@ import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
 import radarChartDisp from '../share/RadarChartDisp'
-// import userProfileDetail from '../UserProfile/UserProfileDetail'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
 import {getSpotImage} from '../../routes/imageRequest'
 import { getUserById } from '../../routes/userRequest.js'
 import {getProfileImage} from "../../routes/imageRequest"
-import UserProfileDialog from '../share/UserProfileDialog.vue'
 
 
 export default {
@@ -163,8 +142,6 @@ export default {
         spotTypeIcon,
         spotReviewRegister,
         radarChartDisp,
-        // userProfileDetail,
-        UserProfileDialog,
     },
     data: function() {
         return {
@@ -298,15 +275,12 @@ export default {
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
-            // console.log('isLoading')
             return this.isLoadingData || this.isLoadingPhoto //どっちかがtureだったらture, どっちともfalseだったらfalseを返す
         },
         canShowViewMode: function() { //編集モードを表示できるか
-            // console.log('canShowViewMode')
             return !this.isLoading && !this.isEditMode // falseかつfalseかつfalseだったらtrue, 他falseを返す
         },
         canShowEditMode: function() { //閲覧モードを表示できるか
-            // console.log('canShowEditMode')
             return !this.isLoading && this.isEditMode // falseかつfalseかつfalseだったらtrue, 他falseを返す
         },
     },

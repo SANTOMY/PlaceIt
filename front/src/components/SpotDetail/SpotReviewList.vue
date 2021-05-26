@@ -27,6 +27,7 @@ export default {
     },
     methods: {
         sendUserData(user) {
+            // SpotDetail.vue にuser dataを渡す関数（いまは使ってない）
             this.$emit('catchUserInformation',user)
         },
     }

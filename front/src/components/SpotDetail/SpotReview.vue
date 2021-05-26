@@ -37,18 +37,41 @@
                 {{ reviewer_data.content.score }}
             </v-row>
         </v-container>
+        <user-profile-dialog
+            :user="reviewer_data.user"
+            :otherUser="otherUser"
+            :showUserDialog="userDialog"
+            @closeDialog="closeUserProfile()"/>
     </v-card>
+
 </template>
 
 <script>
 
+import UserProfileDialog from '../share/UserProfileDialog.vue'
+
 export default {
+    components: {
+        UserProfileDialog
+    },
     props: {
         reviewer_data: null,
     },
+    data: function() {
+        return {
+            userDialog: false,
+            otherUser: true,
+            // user: null,
+        }
+    },
     methods:{
         usernameClickEvent() {
+            // SpotDetail.vue にuser dataを渡す関数（いまは使ってない）
             this.$emit('catchUserData',this.reviewer_data.user)
+            this.userDialog = true
+        },
+        closeUserProfile() {
+            this.userDialog = false;
         },
     },
 }
