@@ -83,3 +83,4 @@ module.exports = class SpotController{
             return res.status(400).json({"success": false, "error": exception});
         })
     }
+}
