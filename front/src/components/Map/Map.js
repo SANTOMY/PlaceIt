@@ -5,6 +5,8 @@ import nowLocButton from './MapButtons/NowLocButton.vue'
 import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
+import '../../plugins/Leaflet.Icon.Glyph.js'
+import { getSpotTypeDict } from '../share/SpotTypeFunction'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -63,14 +65,20 @@ export default {
                     return spot.spot_name.indexOf(keyword) != -1;
                 });
                 var markerSet = []//マーカーのリスト
+
+                const icon_dict = getSpotTypeDict('icon')
+                const color_dict = getSpotTypeDict('color')
+
                 spots.forEach(spot => {
                     if(this.culSpotRating(spot.spot_id,review) > rating){
-                    var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
-                    marker.spot_name = spot.spot_name;
-                    marker.spot_id = spot.spot_id;
-                    marker.spot_type = spot.spot_type;
-                    marker.spot_picture = spot.spot_picture;
-                    markerSet.push(marker)
+                        var marker =  L.marker([spot.y, spot.x], 
+                            {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type], color: color_dict[spot.spot_type] }) })
+                        .on('click', this.markerClickEvent);
+                        marker.spot_name = spot.spot_name;
+                        marker.spot_id = spot.spot_id;
+                        marker.spot_type = spot.spot_type;
+                        marker.spot_picture = spot.spot_picture;
+                        markerSet.push(marker)
                     }
                 });
                 this.markers = L.layerGroup(markerSet).addTo(this.map)
