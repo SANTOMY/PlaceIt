@@ -14,12 +14,14 @@
 
 <script>
 import spotInputForm from '../SpotRegister/SpotInputForm'
+import {editSpot} from '../../routes/spotRequest'
 export default {
     components: {
         spotInputForm
     },
 
     props: {
+        spotId: String, 
         spotData: Object,
         photos: Array,
         rating5: Array
@@ -27,8 +29,13 @@ export default {
 
     methods: {
         onUpdate: function(spotData, imageFile) {
-            console.log(spotData, imageFile)
-            this.$emit("update")   
+            console.log(this.spotId, spotData.name, spotData.types);
+            editSpot(this.spotId, spotData.name, spotData.types)
+                .then(res => {
+                    console.log(res);
+                    this.$emit("update");   
+                })
+            console.log(imageFile);
         },
         onCancel: function() {
             this.$emit("update")

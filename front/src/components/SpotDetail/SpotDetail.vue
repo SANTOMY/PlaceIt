@@ -19,7 +19,7 @@
             ></v-skeleton-loader>
 
             <spot-edit v-if="canShowEditMode" 
-                :spotData="spotData" :photos="photos" :rating5="rating5"
+                :spotId="spot_id" :spotData="spotData" :photos="photos" :rating5="rating5"
                 @update="onUpdate"
             />
             <v-container v-if="canShowViewMode">

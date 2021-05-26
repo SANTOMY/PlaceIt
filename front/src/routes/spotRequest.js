@@ -52,4 +52,24 @@ async function getSpot(spotId, spotName, spotType, userId, university){
     }
 }
 
-export {saveSpot, getSpot};
+async function editSpot(spotId, spotName, spotType){
+    const url = serverIP + '/spot/editSpot';
+    try{
+        let reponse = await fetch(url,{
+            mode: 'cors',
+            method: 'PUT',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Origin': 'http://localhost:8080'
+            },
+            body: JSON.stringify({spotId: spotId, spotName: spotName, spotType: spotType})
+        });
+        return await reponse.json();
+    }catch(exception){
+        console.log(exception);
+        return{success:false, data:exception};
+    }
+}
+
+export {saveSpot, getSpot, editSpot};
