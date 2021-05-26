@@ -103,11 +103,11 @@ async function editSpot(spotId, newSpotName, newSpotType) {
     var spotNameStatus = "not updated";
     var spotTypeStatus = "not updated";
     if (!utility.isEmpty(newSpotName)) {
-        setQuery = setQuery + ` spotName='${newSpotName}',`
+        setQuery = setQuery + ` spot_name='${newSpotName}',`
         spotNameStatus = `updated to ${newSpotName}`
     }
     if (!utility.isEmpty(newSpotType)) {
-        setQuery = setQuery + ` spotType='${newSpotType}',`
+        setQuery = setQuery + ` spot_type='${newSpotType}',`
         spotNameStatus = `updated to ${newSpotType}`
     }
     if (!setQuery) {
@@ -116,7 +116,7 @@ async function editSpot(spotId, newSpotName, newSpotType) {
     setQuery = setQuery.slice(0, -1)
 
     const query = {
-        text: `UPDATE users.users SET ${setQuery} WHERE spotId='${spotId}'`
+        text: `UPDATE spots.spots SET ${setQuery} WHERE spot_id='${spotId}'`
     };
     const client = await pool.connect();
     return client.query(query).then( result => {

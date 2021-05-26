@@ -49,7 +49,20 @@ module.exports = class SpotController{
 
     async editSpot(req, res) {
         console.log("editSpot");
-        const {spotName, spotType} = req.body;
-        
+        const {spotId, spotName, spotType} = req.body;
+        return SpotSQL.editSpot(spotId, spotName, spotType).then((result) => {
+            if(result.success) {
+                info(fileLabel, "Loaded Successfully");
+                return res.status(200).json({"success": true, "spotName": result.spotName, "spotType": result.spotType});
+            }
+            else {
+                info(fileLabel, "Loaded Unsuccessfully");
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+        })
+        .catch((exception)=> {
+            error(fileLabel,"Error in attempt to edit " + spotId + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
     }
 }
