@@ -40,27 +40,6 @@
         </v-btn>
       </v-btn-toggle>
     </v-container>
-    <v-container>
-    
-    <!-- 大学別検索 -->
-    <v-btn-toggle
-      v-model="nowUniv"
-      group
-      mandatory
-      >
-        <v-btn :value="false" class="mx-auto" fab >
-          <v-icon>
-            mdi-alpha-a-circle-outline
-          </v-icon>
-        </v-btn>
-        <v-btn :value="true" class="mx-auto" fab >
-          <v-icon>
-            mdi-account-cowboy-hat
-          </v-icon>
-        </v-btn>
-    </v-btn-toggle>
-    
-    </v-container>
 
     <!-- tag検索 -->
     <v-container>
@@ -89,35 +68,98 @@
         </v-autocomplete>
     </v-container>
 
-    <!-- キーワード検索 -->
-    <v-container>
-    <v-autocomplete
-        label="検索ワード"
-        clearable
-        single-line
-        v-model="keyword"
-        prepend-icon="mdi-alpha-a"
-        item-text="spot_name"
-        :items="spotNameList">
-      </v-autocomplete>
+        <!-- キーワード検索 -->
+        <v-container>
+        <v-autocomplete
+            label="検索ワード"
+            clearable
+            single-line
+            v-model="keyword"
+            prepend-icon="mdi-alpha-a"
+            item-text="spot_name"
+            :items="spotNameList">
+          </v-autocomplete>
+        </v-container>
 
-    </v-container>
+        <v-container>
+        <v-card-actions>
+            <!-- より詳細な検索条件の設定 -->
+            <v-tooltip bottom>
+                <template v-slot:activator="{on, attrs}">
+                    <v-btn 
+                    text
+                    @click="moreDetail=!moreDetail"
+                    v-bind="attrs"
+                    v-on="on"
+                    >
+                        <v-icon v-if="!moreDetail" small>
+                            mdi-details
+                        </v-icon>
+                        <v-icon v-if="moreDetail" x-small>
+                            mdi-triangle-outline
+                        </v-icon>
+                    </v-btn>
+                </template>
+                <span v-if="!moreDetail">Set more search details for filtering.</span>
+                <span v-if="moreDetail">Finish to set search details for filtering.</span>
+            </v-tooltip>
+        </v-card-actions>
+        </v-container>
 
-    <v-card-actions>
-      <v-btn @click="Search(); dialog=false">
-        <v-icon>
-        mdi-card-search
-        </v-icon>
-      </v-btn> 
-    </v-card-actions>
+
+        <!-- 詳細検索設定 -->
+        <v-expand-transition>
+            <v-card
+                v-if="moreDetail"
+                class="transition-fast-in-fast-out v-card--moreDetail"
+                style="height: 100%;"
+                outlined>
+                <v-container>
+                    評価の下限
+                    <star-rating 
+                    v-model="rating"
+                    v-bind:increment="0.1"
+                    small />
+                </v-container>
+
+                <!-- 大学別検索 -->
+                <v-container>
+                    <v-btn-toggle
+                    v-if="userLogin!=null"
+                    v-model="nowUniv"
+                    group
+                    mandatory
+                    >
+                        <v-btn value="false" class="mx-auto" fab >
+                            <v-icon>
+                                mdi-alpha-a-circle-outline
+                            </v-icon>
+                        </v-btn>
+                        <v-btn value="true" class="mx-auto" fab >
+                            <v-icon>
+                                mdi-account-cowboy-hat
+                            </v-icon>
+                        </v-btn>
+                    </v-btn-toggle>
+                </v-container>
+            </v-card>
+        </v-expand-transition>
+        
+        <!-- 検索ボタン -->
+        <v-btn @click="Search(); dialog=false">
+            <v-icon>
+            mdi-card-search
+            </v-icon>
+        </v-btn> 
     </v-card>
-  </v-dialog>
+    </v-dialog>
 </template>
 
 <script>
 import {getSpotTypeDict} from "../../share/SpotTypeFunction"
 import {getTagTypeDict} from "../../share/TagTypeFunction"
 import tagTypeIcon from "../../share/TagTypeIcon"
+import StarRating from 'vue-star-rating'
 
 export default {
   data: function(){
@@ -129,15 +171,19 @@ export default {
       typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
       nowUniv:false,//現在の大学
       dialog:false,//検索ダイアログ表示管理
-      keyword:"",
       tagNameList: getTagTypeDict('type'),
       filterdTags: [],
-      selectedTags: []
+      selectedTags: [],
+      keyword:"",//検索キーワード
+      moreDetail:false,//詳細検索フォームの表示管理フラグ
+      rating:0,//評価の閾値
+      userLogin: this.$store.state.userData,
     }
   },
   components: {
     //typeButton
-    tagTypeIcon
+    tagTypeIcon,
+    StarRating
     },
   props:['spotNameList'],//スポット一覧
 
@@ -151,7 +197,7 @@ export default {
     methods:{
         Search(){
             //選ばれた検索条件をMapに送信
-            this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.selectedTags);
+            this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.rating,this.selectedTags);
         },
         filterTags: function() {
             return this.tagNameList.filter(function(tag){

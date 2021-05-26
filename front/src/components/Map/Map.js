@@ -5,6 +5,8 @@ import nowLocButton from './MapButtons/NowLocButton.vue'
 import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
+import '../../plugins/Leaflet.Icon.Glyph.js'
+import { getSpotTypeDict } from '../share/SpotTypeFunction'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -53,23 +55,32 @@ export default {
     },
     methods: {
         //Map上に検索条件にあったスポットを表示する関数
-        showSpot: async function(type,univ,keyword){
+        showSpot: async function(type,univ,keyword,rating){
             if (type=="reset") type = "";
             var data = await getSpot("","",type,"",univ);
             if (data.success){
-                var spots = data.spots;      
+                var spots = data.spots;
+                var review = data.review;  
                 //キーワードを含まないスポットを除外
                 spots = spots.filter(function(spot){
-                  return spot.spot_name.indexOf(keyword) != -1
+                    return spot.spot_name.indexOf(keyword) != -1;
                 });
                 var markerSet = []//マーカーのリスト
+
+                const icon_dict = getSpotTypeDict('icon')
+                const color_dict = getSpotTypeDict('color')
+
                 spots.forEach(spot => {
-                    var marker =  L.marker([spot.y, spot.x]).on('click', this.markerClickEvent);
-                    marker.spot_name = spot.spot_name;
-                    marker.spot_id = spot.spot_id;
-                    marker.spot_type = spot.spot_type;
-                    marker.spot_picture = spot.spot_picture;
-                    markerSet.push(marker)
+                    if(this.culSpotRating(spot.spot_id,review) > rating){
+                        var marker =  L.marker([spot.y, spot.x], 
+                            {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type.split(",")[0]], color: color_dict[spot.spot_type] }) })
+                        .on('click', this.markerClickEvent);
+                        marker.spot_name = spot.spot_name;
+                        marker.spot_id = spot.spot_id;
+                        marker.spot_type = spot.spot_type;
+                        marker.spot_picture = spot.spot_picture;
+                        markerSet.push(marker)
+                    }
                 });
                 this.markers = L.layerGroup(markerSet).addTo(this.map)
             } else {
@@ -152,7 +163,7 @@ export default {
 
         //検索ジャンルを更新するメソッド
         search: async function(...args){
-            const [type,univ,keyword,tags] = args
+            const [type,univ,keyword,rating,tags] = args
             this.markers.clearLayers();
             this.marker = [];
             this.nowType = type;
@@ -160,10 +171,23 @@ export default {
             let typeAndTags = type + ((tags.length > 0)? ("," + this.typesToStrs(tags)) : "");
 
             if(univ){
-                await this.showSpot(typeAndTags,this.user.univ,keyword);
+                await this.showSpot(typeAndTags,this.user.univ,keyword,rating);
             } else{
-                await this.showSpot(typeAndTags,"",keyword);
+                await this.showSpot(typeAndTags,"",keyword,rating);
             }
+        },
+        //スポットごとのレビュー評価平均を計算する関数
+        culSpotRating: function(spot_id,reviews){
+            reviews = reviews.filter(function(review){
+                return review.spot_id == spot_id
+              });
+            var sumRate=0;
+            var dataNum=0;
+            reviews.forEach(review => {
+                sumRate = sumRate+review.score;
+                dataNum += 1;
+            });
+            return sumRate/dataNum;
         },
         closeDialog() {
             this.showDialog = false;
@@ -193,7 +217,7 @@ export default {
         //現在地マーカーを設置(予定)
         //this.map.on("locationfound",this.locationMarker);
         //spot表示
-        this.showSpot(this.nowType,"","");
+        this.showSpot(this.nowType,"","",0);
         var data = await getSpot("","","","","");
         this.spotNameList = data.spots;
     }, 
