@@ -132,4 +132,58 @@ async function editSpot(spotId, newSpotName, newSpotType) {
     });
 }
 
-module.exports = {saveSpot:saveSpot, getSpotByKeywords:getSpotByKeywords, editSpot:editSpot}
+//also delete reviews and images
+async function deleteSpot(spotId){
+
+    if(utility.isEmpty(spotId)){
+        error(fileLabel,"Empty spotId provided");
+        return {"success":false,"data":"Spot id is empty"};
+    }
+
+    const deleteSpotQuery = {
+        text: `DELETE FROM spots.spots where spot_id = $1`,
+        values: [spotId]
+    };
+    const deleteSpotReviewsQuery = {
+        text: `DELETE FROM spots.review where spot_id = $1`,
+        values: [spotId]
+    };
+    const deleteSpotImageQuery = {
+        text: `DELETE FROM images.spot where spot_id = $1`,
+        values: [spotId]
+    }
+    
+    const client = await pool.connect();
+    
+    return client.query(deleteSpotImageQuery).then(()=>{
+        return client.query(deleteSpotReviewsQuery).then(()=>{
+            return client.query(deleteSpotQuery).then(()=>{
+                client.release();
+                info(fileLabel,"removed spot, reviews and images for spot id: " + spotId);
+                return {"success":true};
+            })
+            .catch(err=>{
+                client.release();
+                error(fileLabel,"Error while deleting spot with id: " + spotId);
+                error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
+                return {"success":false,"data":err};
+
+            });     
+        })
+        .catch(err=>{
+            client.release();
+            error(fileLabel,"Error while deleting spot reviews for spot id: " + spotId);
+            error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
+            return {"success":false,"data":err};
+        });
+    })
+    .catch(err=>{
+        client.release();
+        error(fileLabel,"Error while deleting spot images for id: " + spotId);
+        error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
+        return {"success":false,"data":err};
+    });
+
+}
+
+module.exports = {saveSpot:saveSpot, getSpotByKeywords:getSpotByKeywords, editSpot:editSpot, deleteSpot:deleteSpot}
