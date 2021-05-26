@@ -20,18 +20,18 @@
                     @closeProfile="closeUserProfile"/>
             </v-container> -->
 
-            <user-profile-dialog
+            <!-- <user-profile-dialog
                 :user="user"
                 :otherUser="otherUser"
                 :showUserDialog="showUserProfileDetail"
-                @closeDialog="closeUserProfile"/>
+                @closeDialog="closeUserProfile"/> -->
 
             <v-container v-if="canShowViewMode">
                 <!-- 他ユーザープロフィール -->
                 <user-profile-dialog
                     :user="user"
                     :otherUser="otherUser"
-                    :showUserDialog="showUserProfileDetail"
+                    :showUserDialog="showUserDialog"
                     @closeDialog="closeUserProfile"/>
 
                 <!-- 写真 -->
@@ -185,7 +185,7 @@ export default {
             },
             isLoadingData: true,   //spotデータを読み込んでいるか
             isLoadingPhoto: true,   // spotイメージを読み込んでいるか
-            showUserProfileDetail: false,   //他のユーザープロフィール表示するか
+            showUserDialog: false,   //他のユーザープロフィール表示するか
             isEditMode: false, // Spot情報を修正するか
             otherUser: true,
         }
@@ -274,10 +274,10 @@ export default {
         },
         getUserInformationByReviewer: function(user){
             this.user = user
-            this.showUserProfileDetail = true;         
+            this.showUserDialog = true;         
         },
         closeUserProfile() {
-            this.showUserProfileDetail = false;
+            this.showUserDialog = false;
         },
     },
 
@@ -298,21 +298,17 @@ export default {
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
-            console.log('isLoading')
+            // console.log('isLoading')
             return this.isLoadingData || this.isLoadingPhoto //どっちかがtureだったらture, どっちともfalseだったらfalseを返す
         },
-        canShowViewMode: function() { //閲覧モードを表示できるか
-            console.log('canShowViewMode')
+        canShowViewMode: function() { //編集モードを表示できるか
+            // console.log('canShowViewMode')
             return !this.isLoading && !this.isEditMode // falseかつfalseかつfalseだったらtrue, 他falseを返す
         },
         canShowEditMode: function() { //閲覧モードを表示できるか
-            console.log('canShowEditMode')
+            // console.log('canShowEditMode')
             return !this.isLoading && this.isEditMode // falseかつfalseかつfalseだったらtrue, 他falseを返す
         },
-        // canShowUserProfileMode: function() { //編集モードを表示できるか
-        //     console.log('canShowUserProfileMode')
-        //     return !this.isLoading && !this.isEditMode && this.showUserProfileDetail // falseかつfalseかつtrueだったらtrue, 他falseを返す
-        // }
     },
 
     watch: {
