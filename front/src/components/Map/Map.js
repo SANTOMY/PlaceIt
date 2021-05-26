@@ -32,6 +32,7 @@ export default {
             map: L.map,//Mapオブジェクト
             zoom:10,//zoomのサイズ まだうまく制御できてない(SATD)
             spot:null,//spot用のオブジェクト
+            spotNameList:[],//スポット名のリスト，v-autocompleteで利用するため
             review:null,//review用のオブジェクト
             myplace:null,//現在地オブジェクト
             regFlag:false,//スポット登録モードのフラグ
@@ -184,6 +185,8 @@ export default {
         //this.map.on("locationfound",this.locationMarker);
         //spot表示
         this.showSpot(this.nowType,"","");
+        var data = await getSpot("","","","","");
+        this.spotNameList = data.spots;
     }, 
     //現在地追跡のために利用(予定)
     watch: {
