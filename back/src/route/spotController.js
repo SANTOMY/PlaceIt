@@ -46,4 +46,10 @@ module.exports = class SpotController{
             return res.status(400).json({"success": false, "error": exception});
         })
     }
+
+    async editSpot(req, res) {
+        console.log("editSpot");
+        const {spotName, spotType} = req.body;
+        
+    }
 }
