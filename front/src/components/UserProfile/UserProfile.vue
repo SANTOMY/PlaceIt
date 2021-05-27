@@ -62,7 +62,7 @@ import AvatarRegister from "./AvatarRegister.vue"
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest';
 import {getReviewByUserId} from '../../routes/reviewRequest';
-import {SpotExampleData} from "../share/SpotExampleData";
+// import {SpotExampleData} from "../share/SpotExampleData";
 import {getSpotImage} from "../../routes/imageRequest"
 
 export default {
@@ -84,7 +84,7 @@ export default {
                 university: this.$store.state.userData.university,
                 src: require('@/assets/default-icon.jpeg')
             },
-            spot: SpotExampleData(),
+            spot: [], // SpotExampleData(),
             my_spot: [
                 // 自分の作成したスポット
                 // required attribute: name, src, good
@@ -115,6 +115,12 @@ export default {
             .then( () =>{
                 // this.show_count += 1
                 console.log('good_spot length',this.good_spot.length)
+            })
+
+        this.getRecommendedSpots( this.user.university )
+            .then( () =>{
+                // this.show_count += 1
+                console.log('spot length',this.spot.length)
             })
 
         getProfileImage(this.$store.state.userData.userId)
@@ -178,6 +184,15 @@ export default {
                     }).finally(()=>{
                         added += 1;
                         if( added >= all ){
+                            this.my_spot.sort( function( a, b ){
+                                var good1 = a.good;
+                                var good2 = b.good;
+                                if( good1 > good2 ){
+                                    return -1
+                                }else{
+                                    return 1
+                                }
+                            } )
                             this.show_count += 1
                         }
                     })
@@ -224,6 +239,15 @@ export default {
                         }).finally(()=>{
                             added += 1;
                             if( added >= all ){
+                                this.good_spot.sort( function( a, b ){
+                                    var good1 = a.good;
+                                    var good2 = b.good;
+                                    if( good1 > good2 ){
+                                        return -1
+                                    }else{
+                                        return 1
+                                    }
+                                } )
                                 this.show_count += 1
                             }
                         })
@@ -236,6 +260,69 @@ export default {
                 console.log( "Error in getSpotYouReviewed: ", exception );
             })
         },
+        shuffleArray: function( array ){
+            var newArray = [];
+
+            while ( array.length > 0 ) {
+                var n = array.length;
+                var k = Math.floor( Math.random() * n );
+
+                newArray.push( array[ k ] );
+                array.splice( k, 1 );
+            }
+
+            return newArray;
+        },
+        getRecommendedSpots: function( user_univ ){
+            return getSpot('', '', '', '', user_univ).then( result => {
+                var sampled = this.shuffleArray( result.spots )//.slice( 0, 3 )
+                console.log( "recommendedSpots:", sampled )
+                const all = sampled.length;
+                var added = 0;
+                for( var spt of sampled ){
+                    const spt_id = spt.spot_id;
+                    const name = spt.spot_name;
+
+                    // レビューの計算
+                    var scores = [];
+                    for( var rev of result.review ){
+                        if( spt.spot_id == rev.spot_id ){
+                            scores.push( rev.score );
+                        }
+                    }
+                    const good = Math.round( 10 * average( scores ) ) / 10;
+
+                    getSpotImage( spt_id ).then( ( result ) =>{
+                        if( result.success && result.data != undefined ){
+                            const src = "data:image/jpeg;base64," + result.data[0].image
+                            this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                        }else{
+                            const src = require( "@/assets/noimage.png" );
+                            this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                        }
+                    } ).catch((exception)=>{
+                        console.log( "Error in getSpotImage: ", exception )
+                        const src = require( "@/assets/noimage.png" );
+                        this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                    }).finally(()=>{
+                        added += 1;
+                        if( added >= all ){
+                            this.spot.sort( function( a, b ){
+                                var good1 = a.good;
+                                var good2 = b.good;
+                                if( good1 > good2 ){
+                                    return -1
+                                }else{
+                                    return 1
+                                }
+                            } )
+                            this.spot = this.spot.slice( 0, 6 )
+                            this.show_count += 1
+                        }
+                    })
+                }
+            })
+        },
         getLatestSpots: function( left = 0, right ){ //スポットが多すぎるときの処理。
             // TODO: 他のスポットにも対応
             console.log( "latestSpots", ( this.my_spot ).slice( left, right ) )
@@ -244,8 +331,8 @@ export default {
     },
     watch:  {
         show_count: function() {
-            if(this.show_count!=2) return;
-            if(this.show_count==2) this.isLoading=false
+            if(this.show_count!=3) return;
+            if(this.show_count==3) this.isLoading=false
         }
 
     }
