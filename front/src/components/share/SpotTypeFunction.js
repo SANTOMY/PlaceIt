@@ -16,14 +16,14 @@ export function getSpotTypeDict(value) {
         accomodetion: ["サービス", "立地", "価格", "アメニティ", "雰囲気"],    //accomodetionのスポット評価項目
         lifework: ["サービス","立地","料金設定","雰囲気","リピート"],              // lifeworkのスポット評価項目
     }
-    var name_dict = {
-        restaurant: '食事',                 // restrantの内容
-        travel: '旅行/観光',                // travelの内容
-        shopping: '買い物',                // shoppingの内容
-        amusements:'スポーツ/レジャー',     // amusementsの内容
-        accomodetion:'宿泊/温泉',          // accomodationの内容
-        lifework:'生活/交通施設/学校/会社',  // lifeworkの内容
-    }
+    var name_list = [
+        {type:'restaurant', text:'食事'},                 // restrantの内容
+        {type:'travel', text:'旅行/観光'},                // travelの内容
+        {type:'shopping',text:'買い物'},                // shoppingの内容
+        {type:'amusements', text:'スポーツ/レジャー'},     // amusementsの内容
+        {type:'accomodetion', text:'宿泊/温泉'},          // accomodationの内容
+        {type:'lifework', text:'生活/交通施設/学校/会社'},  // lifeworkの内容
+    ]
     var color_dict = {
         restaurant: 'red',      // restrantのiconなどの色
         travel: 'green',        // travelのiconなどの色
@@ -42,7 +42,7 @@ export function getSpotTypeDict(value) {
     }else if(value=='color'){
         return color_dict
     }else if(value=='name'){
-        return name_dict
+        return name_list
     }
 }
 

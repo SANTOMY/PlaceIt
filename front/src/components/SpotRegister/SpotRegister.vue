@@ -21,7 +21,9 @@
                         <v-select
                             :rules="typeRules"
                             v-model="spot_data.types"
-                            :items="all_spot_types"
+                            :items="all_types_name"
+                            item-text="text"
+                            item-value="type"
                             label="スポットの種類"
                             solo
                             height="80px"
@@ -32,8 +34,8 @@
                                     label
                                     color="grey lighten-4"
                                 >
-                                    <spot-type-icon :type="item" />
-                                    <h3>{{ all_types_name[item] }}</h3>
+                                    <spot-type-icon :type="item.type" />
+                                    <h3>{{ item.text }}</h3>
                                 </v-chip>
                             </template>
                         </v-select>
@@ -45,11 +47,7 @@
                             label="コメント"
                         ></v-textarea>
 
-                        <v-chip 
-                            class = "mb-5"
-                            label text-color="brack">
-                            <h3>スコア</h3>
-                        </v-chip>
+                        <h3 v-if="spot_data.types">スコア</h3>
 
                         <v-row v-if="chart_disp==true">
                             <!-- レーダーチャート表示 -->
@@ -166,7 +164,7 @@ export default {
             },
             criteria_list: [],
             all_spot_types: getSpotTypeDict('type'), //spot typeを取得
-            all_types_name: getSpotTypeDict('name'), //sposの内容説明を取得
+            all_types_name: getSpotTypeDict('name'), //spotの内容説明を取得
             // アップロードされたファイルを一時的に保管する変数
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
             uploadedFiles: [],
