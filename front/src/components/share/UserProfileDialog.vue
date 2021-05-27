@@ -6,12 +6,18 @@
       persistent
     >
         <v-card height="500">
-            <v-btn fixed top right dark fab rounded class="z-top mt-6 mr-8"
-                v-show="showUserDialog" @click="closeUserDialog()"
+            <v-toolbar
+            flat
+            color="transparent"
             >
-                <v-icon>mdi-close</v-icon>
-            </v-btn>
-
+                <v-spacer></v-spacer>
+                <v-btn
+                    icon
+                    @click="closeUserDialog()"
+                >
+                    <v-icon>mdi-close-circle-outline</v-icon>
+                </v-btn>
+            </v-toolbar>
             <!-- 原因不明のエラーのためコメントアウトしています -->
             <v-container>
                 <v-col>

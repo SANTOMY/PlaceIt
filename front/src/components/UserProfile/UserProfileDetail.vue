@@ -61,7 +61,6 @@ import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {uploadProfileImage} from "../../routes/imageRequest"
 import AvatarRegister from "./AvatarRegister.vue"
-import UserProfileTemplate from './UserProfileTemplate.vue'
 
 export default {
 
@@ -69,7 +68,6 @@ export default {
         SpotListCard,
         UserEdit,
         AvatarRegister,
-        UserProfileTemplate
     },
     props: {
         otherUser: Boolean,
