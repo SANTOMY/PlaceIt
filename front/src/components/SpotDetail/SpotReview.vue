@@ -37,9 +37,8 @@
                 {{ reviewer_data.content.score }}
             </v-row>
         </v-container>
-        <user-profile-dialog
+        <UserProfileDialog
             :user="reviewer_data.user"
-            :otherUser="otherUser"
             :showUserDialog="userDialog"
             @closeDialog="closeUserProfile()"/>
     </v-card>
@@ -60,14 +59,14 @@ export default {
     data: function() {
         return {
             userDialog: false,
-            otherUser: true,
-            // user: null,
         }
     },
     methods:{
         usernameClickEvent() {
-            // SpotDetail.vue にuser dataを渡す関数（いまは使ってない）
-            this.$emit('catchUserData',this.reviewer_data.user)
+            // const otherUserData = new User(this.reviewer_data.user.id, this.reviewer_data.user.username, null, null, this.reviewer_data.user.university)
+            // console.log('otherUserData:',otherUserData)
+            // this.$store.commit("inputUserData", otherUserData)
+            this.$emit('catchUserData',this.reviewer_data.user)// SpotDetail.vue にuser dataを渡す関数（いまは使ってない）
             this.userDialog = true
         },
         closeUserProfile() {

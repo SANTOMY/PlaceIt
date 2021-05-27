@@ -1,19 +1,11 @@
 <template>
     <v-container>
         <v-toolbar
-        flat
-        color="transparent"
+            flat
+            color="transparent"
         >
             <v-icon>mdi-account</v-icon>
             <v-toolbar-title>ユーザープロファイル</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn
-                icon
-                @click="closeDialog()"
-                v-if="otherUser"
-            >
-                <v-icon>mdi-close-circle-outline</v-icon>
-            </v-btn>
         </v-toolbar>
 <!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
         <v-dialog v-model="dialogEdit" width=500>
@@ -32,7 +24,7 @@
                         <img v-bind:src="user.src">
                     </v-avatar>
                 </v-layout>
-                <avatar-register @submit="editAvatarImage"/>
+                <avatar-register v-if="!otherUser" @submit="editAvatarImage"/>
             </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
@@ -69,13 +61,15 @@ import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {uploadProfileImage} from "../../routes/imageRequest"
 import AvatarRegister from "./AvatarRegister.vue"
+import UserProfileTemplate from './UserProfileTemplate.vue'
 
 export default {
 
     components: {
         SpotListCard,
         UserEdit,
-        AvatarRegister
+        AvatarRegister,
+        UserProfileTemplate
     },
     props: {
         otherUser: Boolean,
@@ -88,7 +82,6 @@ export default {
         return {
             editer: false, // User profile edit UI ON/OFF(true/false)
             dialogEdit: false, // user information edit UI
-
         }
     },
 
@@ -114,9 +107,6 @@ export default {
             return new File([buffer.buffer], name, {type: "image/jpeg"});
         },
 
-        closeDialog: function() {
-            this.$emit("closeProfile")
-        }
     },
 
 };

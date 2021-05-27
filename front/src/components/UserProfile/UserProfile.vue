@@ -17,10 +17,10 @@
 
 <script>
 
-import userProfileDetail from "@/components/UserProfile/UserProfileDetail.vue";
+import userProfileDetail from "./UserProfileDetail.vue";
 import {getProfileImage} from "../../routes/imageRequest"
 import {SpotExampleData} from "../share/SpotExampleData";
-import {getSpotByUserId,getSpotYouReviewed} from './GetProfileInformation.js';
+import {getSpotByUserId,getSpotYouReviewed} from '../share/GetProfileInformation.js';
 
 export default {
 
@@ -30,13 +30,8 @@ export default {
     data() {
         return {
             otherUser: false, // other user profile judge
-            user: { // ユーザー仮データ
-                id: this.$store.state.userData.userId,
-                username: this.$store.state.userData.userName,
-                email: this.$store.state.userData.email,
-                password: this.$store.state.userData.password,
-                university: this.$store.state.userData.university,
-                src: require('@/assets/default-icon.jpeg')
+            user: { 
+                // ユーザー仮データ
             },
             isLoading: true,
             spot: SpotExampleData(),
@@ -55,10 +50,32 @@ export default {
         }
     },
     mounted() {
+        // console.log('query:',this.$route.query['otherUser'])
+        if(this.$route.query['otherUser']=='true'){
+            this.user= { 
+                id: this.$store.state.otherUserData.userId,
+                username: this.$store.state.otherUserData.userName,
+                email: null,
+                password: null,
+                university: this.$store.state.otherUserData.university,
+                src: require('@/assets/default-icon.jpeg')
+            },
+            this.otherUser = true
+        }else if(this.$route.query['otherUser']==undefined){
+            this.user= { 
+                id: this.$store.state.userData.userId,
+                username: this.$store.state.userData.userName,
+                email: this.$store.state.userData.email,
+                password: this.$store.state.userData.password,
+                university: this.$store.state.userData.university,
+                src: require('@/assets/default-icon.jpeg')
+            }
+        }
+        
         this.show_count = 0
         getProfileImage( this.user.id )
             .then(result => {
-                console.log('test, UserProfile getProfileImage success')
+                // console.log('test, UserProfile getProfileImage success')
                 if(!result.success) return;
                 this.user.src = "data:image/jpeg;base64," + result.data.image;
             }) 
@@ -77,12 +94,15 @@ export default {
     },
     watch:  {
         show_count: function() {
-            console.log('my_spot',this.my_spot)
-            console.log('good_spot',this.good_spot)
-            console.log('user',this.user)
-            console.log('otherUser',this.otherUser)
             if(this.show_count!=2) return;
-            if(this.show_count==2) this.isLoading=false
+            if(this.show_count==2) {
+                this.isLoading=false
+                // console.log('=========finish loading===========')
+                // console.log('my_spot',this.my_spot)
+                // console.log('good_spot',this.good_spot)
+                // console.log('user',this.user)
+                // console.log('otherUser',this.otherUser)
+            }
         },
     },
 }

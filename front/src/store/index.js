@@ -6,7 +6,8 @@ const User = require("./user");
 Vue.use(Vuex);
 
 const state = {
-    userData: User
+    userData: User,
+    otherUserData: User
 }
 
 const mutations =  {
@@ -15,7 +16,10 @@ const mutations =  {
     },
     logout(state) {
         state.userData = null
-    }
+    },
+    inputUserData(state, otherUserData) {
+        state.otherUserData = otherUserData
+    },
 }
 
 // Storeを生成
