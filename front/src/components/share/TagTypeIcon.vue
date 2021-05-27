@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
     <v-icon
         :class="classType"
-        :large=isLarge
+        :large="isLarge"
         :color="iconColor"
         v-bind="attrs"
         v-on="on"
