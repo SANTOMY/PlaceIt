@@ -14,7 +14,7 @@ export function getSpotTypeDict(value) {
         shopping: ["サービス", "品揃え", "立地", "価格", "人気度"],            // shoppingで登録されたスポットの評価項目
         amusements: ["サービス","立地","価格","待ち時間","人気度"],            // amusementsの評価項目
         accomodetion: ["サービス", "立地", "価格", "アメニティ", "雰囲気"],    //accomodetionのスポット評価項目
-        lifework: ["サービス","立地","価格","雰囲気","リピート"],              // lifeworkのスポット評価項目
+        lifework: ["サービス","立地","料金設定","雰囲気","リピート"],              // lifeworkのスポット評価項目
     }
     var name_dict = {
         restaurant: '食事',                 // restrantの内容
