@@ -1,18 +1,15 @@
 import {getSpot} from '../../routes/spotRequest';
 import {average} from '../../routes/reviewRequest';
 import {getReviewByUserId} from '../../routes/reviewRequest';
+import {getSpotImage} from "../../routes/imageRequest"
 
 async function getSpotByUserId (user_id){
     return getSpot('', '', '', user_id, '').then(result => {
         var my_spot = []
         for( var spt of result.spots ){
-            var spt_id = spt.spot_id;
-            var name = spt.spot_name;
-            // TODO: to get images from DB
-            var src = require( "@/assets/Mac.jpg" );
-            if( Math.random() >= 0.5 ){
-                src = require('@/assets/mos.png');
-            }
+            const spt_id = spt.spot_id;
+            const name = spt.spot_name;
+
             // レビューの計算
             var scores = [];
             for( var rev of result.review ){
@@ -20,10 +17,22 @@ async function getSpotByUserId (user_id){
                     scores.push( rev.score );
                 }
             }
-            var good = Math.round( 10 * average( scores ) ) / 10;
-            my_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+            const good = Math.round( 10 * average( scores ) ) / 10;
+            getSpotImage( spt_id ).then( ( result ) =>{
+                if( result.success && result.data != undefined ){
+                    const src = "data:image/jpeg;base64," + result.data[0].image
+                    my_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                }else{
+                    const src = require( "@/assets/noimage.png" );
+                    my_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                }
+            }).catch((exception)=>{
+                console.log( "Error in getSpotImage: ", exception )
+                const src = require( "@/assets/noimage.png" );
+                my_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+            })
         }
-        return my_spot   
+        return my_spot
     }).catch((exception) => {
         console.log( "Error in getSpotByUserId: ", exception );
     })
@@ -36,16 +45,14 @@ async function getSpotYouReviewed( user_id ){
         for( let rev of result.review ){
             reviewd_spot_ids.add( rev.spot_id );
         }
+        // const all = reviewd_spot_ids.size;
+        // var added = 0;
         for( let reviewd_spot_id of reviewd_spot_ids ){
             getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
-                var spt = result.spots[ 0 ];
-                var spt_id = spt.spot_id;
-                var name = spt.spot_name;
-                // TODO: to get images from DB
-                var src = require( "@/assets/Mac.jpg" );
-                if( Math.random() >= 0.5 ){
-                    src = require('@/assets/mos.png');
-                }
+                const spt = result.spots[ 0 ];
+                const spt_id = spt.spot_id;
+                const name = spt.spot_name;
+ 
                 // レビューの計算
                 var scores = [];
                 for( var rev of result.review ){
@@ -53,8 +60,21 @@ async function getSpotYouReviewed( user_id ){
                         scores.push( rev.score );
                     }
                 }
-                var good = Math.round( 10 * average( scores ) ) / 10;
-                good_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                const good = Math.round( 10 * average( scores ) ) / 10;
+                
+                getSpotImage( spt_id ).then( ( result ) =>{
+                    if( result.success && result.data != undefined ){
+                        const src = "data:image/jpeg;base64," + result.data[0].image
+                        good_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                    }else{
+                        const src = require( "@/assets/noimage.png" );
+                        good_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                    }
+                } ).catch((exception)=>{
+                    console.log( "Error in getSpotImage: ", exception )
+                    const src = require( "@/assets/noimage.png" );
+                    good_spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                })
             } ).catch((exception) => {
                 console.log( "Error in getReviewByUserId: ", exception );
             })

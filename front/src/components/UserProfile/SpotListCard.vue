@@ -70,6 +70,7 @@
                 <v-col
                     v-for="(card, index) in spot"
                     :key="index"
+                    :cols="4"
                 >
 
                     <!-- サブカード -->
