@@ -73,7 +73,6 @@ export default {
             if (!this.$refs.loginForm.validate()) return;
             login(this.model.email, this.model.password)
                 .then(res => {
-                    console.log(res.data.is_active);
                     if (res.success && res.data.is_active) {
                         const userData = new User(res.data.id, res.data.username, res.data.email, null, res.data.university, res.data.isActive)
                         this.$store.commit("login", userData);
