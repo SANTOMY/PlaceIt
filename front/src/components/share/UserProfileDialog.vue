@@ -67,8 +67,14 @@ export default {
         goOtherUserPage(){
             const otherUserData = new User(this.user.id, this.user.username, null, null, this.user.university)
             // console.log('otherUserData:',otherUserData)
+            // console.log('Location.serch:',location.search)
+            // console.log('Location.pathname:',location.pathname)
             this.$store.commit("inputUserData", otherUserData)
-            this.$router.push({ path: 'user', query: { otherUser: true } })
+            if(location.pathname=='/user'){
+                this.$router.go({path: this.$router.currentRoute.path, query: { otherUser: true }, force: true})
+            }else{
+                this.$router.push({ path: 'user', query: { otherUser: true } })
+            }
         }
     }
 };
