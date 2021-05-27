@@ -15,6 +15,7 @@
 <script>
 import spotInputForm from '../SpotRegister/SpotInputForm'
 import {editSpot} from '../../routes/spotRequest'
+import {uploadSpotImage} from '../../routes/imageRequest'
 export default {
     components: {
         spotInputForm
@@ -32,10 +33,13 @@ export default {
             console.log(this.spotId, spotData.name, spotData.types);
             editSpot(this.spotId, spotData.name, spotData.types)
                 .then(res => {
-                    console.log(res);
-                    this.$emit("update");   
+                    if(!res.success) return
+                    uploadSpotImage(imageFile, this.spotId)
+                        .then(res => {
+                            console.log(res)
+                            this.$emit("update");   
+                        })
                 })
-            console.log(imageFile);
         },
         onCancel: function() {
             this.$emit("update")
