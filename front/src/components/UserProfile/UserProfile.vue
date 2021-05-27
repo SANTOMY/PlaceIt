@@ -58,7 +58,6 @@
 
 import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
-import {getUser} from '../../routes/userRequest';
 import {uploadProfileImage, getProfileImage} from "../../routes/imageRequest";
 import AvatarRegister from "./AvatarRegister.vue";
 import {getSpot} from '../../routes/spotRequest';
