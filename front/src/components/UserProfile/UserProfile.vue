@@ -150,6 +150,9 @@ export default {
         },
         getSpotByUserId: async function(user_id){
             return getSpot('', '', '', user_id, '').then(result => {
+                if(!result.success){
+                    return;
+                }
                 const all = result.spots.length;
                 var added = 0;
                 for( var spt of result.spots ){
