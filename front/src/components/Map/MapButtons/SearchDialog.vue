@@ -59,7 +59,7 @@
                     color="grey lighten-4"
                     @click="remove(item)"
                 >
-                    <tag-type-icon :type="item" :isLarge="false"/>
+                    <tag-type-icon :type="item" :isLarge="false" toolTip/>
                     <!--
                     <h4>{{ item }}</h4>
                     -->

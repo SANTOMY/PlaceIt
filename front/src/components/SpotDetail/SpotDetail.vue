@@ -41,20 +41,20 @@
 
                     <!-- スポットタイプ --> 
                     
-                    <spot-type-icon
+                    <spot-type-icon 
                         :type="typesToType()"
-                        class="mr-5"
+                        classType="mr-5"
                         large
+                        toolTip
                         color="gray"
                     />
                     
                     <tag-type-icon v-for="type in typesToTags()" :key="type"
                         :type="type"
-                        class="mr-5"
-                        large
+                        classType="mr-5"
+                        toolTip
                         color="gray"
                     />
-
 
                 </v-row>
 
