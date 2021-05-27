@@ -85,4 +85,10 @@ async function getSpotYouReviewed( user_id ){
     })
 }
 
-export {getSpotByUserId,getSpotYouReviewed}
+async function getLatestSpots( left = 0, right ,spot){ //スポットが多すぎるときの処理。
+    // TODO: 他のスポットにも対応
+    console.log( "latestSpots", ( spot ).slice( left, right ) )
+    return ( spot ).slice( left, right )
+}
+
+export {getSpotByUserId,getSpotYouReviewed,getLatestSpots}
