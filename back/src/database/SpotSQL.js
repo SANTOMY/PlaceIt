@@ -98,4 +98,92 @@ async function getSpotByKeywords(keywords){
     });
 }
 
-module.exports = {saveSpot:saveSpot, getSpotByKeywords:getSpotByKeywords}
+async function editSpot(spotId, newSpotName, newSpotType) {
+    var setQuery = "";
+    var spotNameStatus = "not updated";
+    var spotTypeStatus = "not updated";
+    if (!utility.isEmpty(newSpotName)) {
+        setQuery = setQuery + ` spot_name='${newSpotName}',`
+        spotNameStatus = `updated to ${newSpotName}`
+    }
+    if (!utility.isEmpty(newSpotType)) {
+        setQuery = setQuery + ` spot_type='${newSpotType}',`
+        spotNameStatus = `updated to ${newSpotType}`
+    }
+    if (!setQuery) {
+        return {"success":false, "data":"no changes"};
+    }
+    setQuery = setQuery.slice(0, -1)
+
+    const query = {
+        text: `UPDATE spots.spots SET ${setQuery} WHERE spot_id='${spotId}'`
+    };
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+        client.release();
+        if (result.rowCount == 0)
+            return {"success":false, "data":"Spot does not exist"};
+        info(fileLabel,"edit spot: " + spotId);
+        return {"success":true, "spotName":spotNameStatus, "spotType":spotTypeStatus};
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while editing information. " + exception);
+        return {"success":false, "data":exception};      
+    });
+}
+
+//also delete reviews and images
+async function deleteSpot(spotId){
+
+    if(utility.isEmpty(spotId)){
+        error(fileLabel,"Empty spotId provided");
+        return {"success":false,"data":"Spot id is empty"};
+    }
+
+    const deleteSpotQuery = {
+        text: `DELETE FROM spots.spots where spot_id = $1`,
+        values: [spotId]
+    };
+    const deleteSpotReviewsQuery = {
+        text: `DELETE FROM spots.review where spot_id = $1`,
+        values: [spotId]
+    };
+    const deleteSpotImageQuery = {
+        text: `DELETE FROM images.spot where spot_id = $1`,
+        values: [spotId]
+    }
+    
+    const client = await pool.connect();
+    
+    return client.query(deleteSpotImageQuery).then(()=>{
+        return client.query(deleteSpotReviewsQuery).then(()=>{
+            return client.query(deleteSpotQuery).then(()=>{
+                client.release();
+                info(fileLabel,"removed spot, reviews and images for spot id: " + spotId);
+                return {"success":true};
+            })
+            .catch(err=>{
+                client.release();
+                error(fileLabel,"Error while deleting spot with id: " + spotId);
+                error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
+                return {"success":false,"data":err};
+
+            });     
+        })
+        .catch(err=>{
+            client.release();
+            error(fileLabel,"Error while deleting spot reviews for spot id: " + spotId);
+            error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
+            return {"success":false,"data":err};
+        });
+    })
+    .catch(err=>{
+        client.release();
+        error(fileLabel,"Error while deleting spot images for id: " + spotId);
+        error(fileLabel,"ERROR OBJECT: " + util.inspect(err,{showHidden: false, depth: null}));
+        return {"success":false,"data":err};
+    });
+
+}
+
+module.exports = {saveSpot:saveSpot, getSpotByKeywords:getSpotByKeywords, editSpot:editSpot, deleteSpot:deleteSpot}
