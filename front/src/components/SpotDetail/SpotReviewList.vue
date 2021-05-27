@@ -5,9 +5,7 @@
         <v-layout column style="height: 300px">      
             <v-flex style="overflow: auto">
                 <spot-review v-for="review in reviews" :key="review.id"
-                    :user_name="review.content.user_name"
-                    :comment="review.content.comment"
-                    :score="review.content.score"
+                    :reviewer_data="review"
                 />
             </v-flex>
         </v-layout>
@@ -23,8 +21,7 @@ export default {
     },
 
     props: {
-        reviews: null
+        reviews: null,
     }
-    
 }
 </script>

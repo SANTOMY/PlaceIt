@@ -91,6 +91,7 @@
                         <v-file-input
                             v-model="uploadedFiles"
                             placeholder=""
+                            multiple
                             label="写真ファイルを追加"
                             prepend-icon="mdi-paperclip"
                         >
@@ -140,6 +141,7 @@ import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import {saveSpot} from '../../routes/spotRequest'
 import StarRating from 'vue-star-rating'
 import radarChartDisp from '../share/RadarChartDisp'
+import {uploadSpotImage} from '../../routes/imageRequest'
 
 export default {
 
@@ -155,7 +157,7 @@ export default {
                 name: "",
                 x:  this.$route.query.lon,
                 y:  this.$route.query.lat,
-                photos: "dir",
+                photos: [],
                 types: "",
                 userId: this.$store.state.userData.userId,
                 comment: "",
@@ -185,13 +187,15 @@ export default {
                 return
             }
             if(this.check_database()) {
-                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, this.spot_data.photos, this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.scores, this.spot_data.university)
-                this.create_spot()
-                //this.$router.push('/map')
-                }
-                else {
-                    console.log("failed to send database")
-                }
+                saveSpot(this.spot_data.name, this.spot_data.x, this.spot_data.y, "", this.spot_data.types, this.spot_data.userId, this.spot_data.comment, this.spot_data.scores, this.spot_data.university)
+                    .then(res => {
+                        if(!res.success) return
+                        uploadSpotImage(this.uploadedFiles[0], res.spotId)
+                    })
+            }
+            else {
+                console.log("failed to send database")
+            }
             //TODO: スポットをデータベースに登録する処理
             this.$router.push('/map')
         },

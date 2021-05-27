@@ -330,6 +330,7 @@ export default {
             this.state = value-1
         },
         reLoad: function () {
+            // ページをリロードする関数
             this.$router.go({path: this.$router.currentRoute.path, force: true})
         }
         

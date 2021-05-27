@@ -102,11 +102,11 @@ export default {
         onClickedRegisterButton: function() {
             this.showDialog = false;
             for(var i = 0; i < 5; i++) {
-                console.log(i + ": " + this.review_data.scores[i]);
+                console.log("score " + i + ": " + this.review_data.scores[i]);
             }
             saveReview(this.spot_id, this.review_data.comment, this.review_data.scores, this.$store.state.userData.userId)
                 .then(res => {
-                    console.log(res)        // Debug
+                    console.log('saveReview response:',res)        // Debug
                     this.$emit('submit')
                 })
         },

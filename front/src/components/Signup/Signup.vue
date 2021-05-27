@@ -27,20 +27,51 @@
                     :counter="32"
                     :rules="passwordRules" />
 
-                <v-select 
+                <v-autocomplete
                     label="所属大学"
+                    clearable
                     v-model="university"
                     prepend-icon="mdi-school"
                     item-text="university"
-                    :items="universities"/>
+                    :items="universities"
+                    v-if='!this.isEditing'>
+
+                    <template v-slot:append-outer>
+                    <v-slide-x-reverse-transition
+                        mode="out-in"
+                    >
+                    <v-icon
+                        :key="`icon-${isEditing}`"
+                        :color="isEditing ? 'success' : 'info'"
+                        @click="isEditing = !isEditing"
+                    >
+                    mdi-pencil-plus
+                    </v-icon>
+                    </v-slide-x-reverse-transition>
+                    </template>
+                </v-autocomplete>
                 
                 <v-text-field label="所属大学を入力してください"
-                    v-model="addedUniversity" 
+                    v-model="university"
                     prepend-icon="mdi-fountain-pen-tip"
                     :counter="64"
                     :rules="universityRules"
-                    v-if='this.university == "その他"'/>
-
+                    v-if='this.isEditing'>
+                    <template v-slot:append-outer>
+                    <v-slide-x-reverse-transition
+                        mode="out-in"
+                    >
+                    <v-icon
+                        :key="`icon-${isEditing}`"
+                        color="red"
+                        @click="isEditing = !isEditing"
+                    >
+                    mdi-undo-variant
+                    </v-icon>
+                    </v-slide-x-reverse-transition>
+                    </template>
+                </v-text-field>
+                
                 <v-card-actions>
                     <v-btn @click="createUser">登録</v-btn>
                 </v-card-actions>
@@ -51,6 +82,13 @@
 </template>
 
 <script>
+/*
+import Vue from 'vue'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'; 
+Vue.component('v-select', vSelect);
+*/
+
 import {register} from '../../routes/userRequest'
 import {getAllUniversities} from '../../routes/userRequest'
 const User = require("../../store/user");
@@ -63,6 +101,7 @@ export default {
             password : '',
             university: '',
             addedUniversity: '',
+            isEditing: false,
 
             showPassword : false,
             usernameRules: [
@@ -91,15 +130,12 @@ export default {
         getAllUniversities()
             .then(result => {
                 this.universities = result
-                this.universities.push({"university": "その他"})
         })
     },
 
     methods: {
         createUser: function() {
             if (!this.$refs.loginForm.validate()) return;
-            if (this.university == "その他")
-                this.university = this.addedUniversity
             register(this.username,this.email,this.password,this.university)
                 .then(res => {
                     //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
@@ -108,7 +144,7 @@ export default {
                     this.$router.push('/map')
                 });
         },
-    }
+    },
     
 }
 </script>
