@@ -4,7 +4,6 @@
       width="1200"
       persistent
     >
-
         <v-card>
             <!-- 閉じるボタン -->
             <v-btn fixed top right dark fab rounded class="z-top mt-6 mr-8"
@@ -18,7 +17,12 @@
                 type="image, article, article"
                 class="mx-auto"
             ></v-skeleton-loader>
-            <v-container v-if="!isLoading">
+
+            <spot-edit v-if="canShowEditMode" 
+                :spotId="spot_id" :spotData="spotData" :photos="photos" :rating5="rating5"
+                @update="onUpdate"
+            />
+            <v-container v-if="canShowViewMode">
                 <!-- 写真 -->
                 <v-carousel
                     cycle
@@ -52,6 +56,13 @@
                         large
                         color="gray"
                     />
+                    <!-- スポット情報修正ボタン -->
+                    <v-btn 
+                        v-if="checkCreatedMyself"
+                        @click="onClickEditButton"
+                    >
+                        <h3>変更</h3>
+                    </v-btn>
 
 
                 </v-row>
@@ -113,6 +124,7 @@
                 </v-col>
             </v-row>
             </v-container>
+            
         </v-card>
     </v-dialog>
 </template>
@@ -122,6 +134,7 @@ import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
 import spotReviewRegister from './SpotReviewRegister.vue'
+import spotEdit from './SpotEdit.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
@@ -135,11 +148,12 @@ export default {
         spotReviewList,
         spotTypeIcon,
         spotReviewRegister,
-        radarChartDisp,   
+        radarChartDisp, 
+        spotEdit
     },
     data: function() {
         return {
-            spotData: {spot_name:"", spot_type:""},
+            spotData: {spot_name:"", spot_type:"", user_id:""},
             reviews: [], // spotのレビューリスト
             user_list: [], // userのリスト
             rating: 5,
@@ -154,7 +168,8 @@ export default {
                 lon: 0
             },
             isLoadingData: true,   //spotデータを読み込んでいるか
-            isLoadingPhoto: true   // spotイメージを読み込んでいるか
+            isLoadingPhoto: true,   // spotイメージを読み込んでいるか
+            isEditMode: false // 修正モードであるか
         }
     },
     props: {
@@ -238,6 +253,13 @@ export default {
                 })
             }
         },
+        onClickEditButton: function() {
+            this.isEditMode = true;
+        },
+        onUpdate: function() {
+            this.isEditMode = false;
+            this.updateDetail();
+        }
     },
 
     computed: {
@@ -258,6 +280,18 @@ export default {
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
             return this.isLoadingData || this.isLoadingPhoto
+        },
+
+        canShowViewMode: function() { //閲覧モードを表示できるか
+            return !this.isLoadingData && !this.isLoadingPhoto && !this.isEditMode
+        },
+        canShowEditMode: function() { //編集モードを表示できるか
+            return !this.isLoadingData && !this.isLoadingPhoto && this.isEditMode
+        },
+
+        checkCreatedMyself: function() { //自分自身が作成したスポットであるか
+            if(this.$store.state.userData == null) return false;
+            return this.spotData.user_id == this.$store.state.userData.userId
         }
     },
 
@@ -268,6 +302,7 @@ export default {
             this.updateDetail()
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
+            this.isEditMode = false;
         }
     }
 }
