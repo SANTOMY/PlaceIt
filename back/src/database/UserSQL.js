@@ -116,35 +116,41 @@ async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     });
 }
 
-async function deleteUser(userId, password) {
+async function confirmPassword(userId, password){
     const confirmQuery = {
         text: `SELECT * from users.users WHERE id='${userId}'`
     }
+    const client = await pool.connect();
+    return client.query(confirmQuery).then( result => {
+        client.release();
+        if (result.rowCount == 0){
+            throw "User does not exist";
+        }
+        const hash = result.rows[0].password;
+        const isCorrectPassword = bcrypt.compareSync(password, hash);
+        if(!isCorrectPassword){
+            return {"success":true, "data":"Passwrod is incorrect", "userId":userId, "confirm":false};
+        }else{
+            return {"success":true, "data":"Password is correct", "userId":userId, "confirm":true};
+        }
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while confirming password. " + exception);
+        return {"success":false, "data":exception};
+    })
+}
+
+async function deleteUser(userId) {
     const deleteQuery = {
         text: `UPDATE users.users SET is_active=false WHERE id='${userId}'`
     };
     const client = await pool.connect();
-    return client.query(confirmQuery).then( result1 => {
-        if (result1.rowCount == 0){
-            throw "User does not exist";
-        }
-        const hash = result1.rows[0].password;
-        const isCorrectPassword = bcrypt.compareSync(password, hash);
-        if(!isCorrectPassword){
-           throw "Password is incorrect";
-        }else{
-            return client.query(deleteQuery).then( result2 => {
-                client.release();
-                return {"success":true, "data":"Successfully deleted", "userId":userId};
-            }).catch((exception)=>{
-                client.release();
-                error(fileLabel,"Error while deleting user. " + exception);
-                return {"success":false, "data":exception};
-            });
-        }
+    return client.query(deleteQuery).then( result => {
+        client.release();
+        return {"success":true, "data":"Successfully deleted", "userId":userId};
     }).catch((exception)=>{
         client.release();
-        error(fileLabel,"Error while confirming user. " + exception);
+        error(fileLabel,"Error while deleting user. " + exception);
         return {"success":false, "data":exception};
     });
 }
@@ -190,5 +196,5 @@ async function getAllUniversities() {
     });
 }
 
-module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser, deleteUser:deleteUser,
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser, confirmPassword:confirmPassword, deleteUser:deleteUser,
      login:login, getUserById:getUserById, getAllUniversities:getAllUniversities};

@@ -95,12 +95,12 @@ async function getAllUniversities(){
 
 /**
  * 
- * @param {String} email 
+ * @param {String} userId 
  * @param {String} password 
- * @returns 
+ * @return {boolean} confirm correct password or not
  */
-async function deleteUser(userId, password){
-    const url = serverIP + '/user/deleteUser/';
+async function confirmPassword(userId, password){
+    const url = serverIP + '/user/confirmPassword/';
     try{
         let reponse = await fetch(url,{
             mode: 'cors',
@@ -117,4 +117,29 @@ async function deleteUser(userId, password){
         return{success:false, data:exception};
     }
 }
-export {register,getUser,editUser,login,getAllUniversities,deleteUser};
+
+/**
+ * 
+ * @param {String} email 
+ * @param {String} password 
+ * @returns {boolean} success or fail 
+ */
+async function deleteUser(userId){
+    const url = serverIP + '/user/deleteUser/';
+    try{
+        let reponse = await fetch(url,{
+            mode: 'cors',
+            method: 'PUT',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Origin': 'http://localhost:8080'
+            },
+            body: JSON.stringify({userId: userId})
+        });
+        return await reponse.json();
+    }catch(exception){
+        return{success:false, data:exception};
+    }
+}
+export {register,getUser,editUser,login,getAllUniversities,confirmPassword,deleteUser};

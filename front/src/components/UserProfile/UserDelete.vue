@@ -1,10 +1,10 @@
 <template>
     <v-dialog v-model="showDialog" width="800">
-        <template v-slot:activator="{ on, attrs }">
+        <template v-slot:activator="{ attrs }">
             <v-container>
                 <v-row justify="center">
                     <v-col cols="6">
-                        <v-btn class="px-5 py-6" v-bind="attrs" v-on="on" color="red">
+                        <v-btn class="px-5 py-6" v-bind="attrs" @click="activate()" color="red">
                             <h3>ユーザ削除</h3>
                         </v-btn>
                     </v-col>
@@ -12,15 +12,23 @@
             </v-container>
         </template>
         
-        <v-card class="px-5" v-if='!passwordConfirm'>
+        <v-card class="px-5" v-if='!passwordConfirm && init_flag'>
+            <v-skeleton-loader
+                v-if="isLoading"
+                type="image, article, article"
+                class="mx-auto"
+            ></v-skeleton-loader>
             <v-container>
                 <v-row>
                     <v-col>
                         <v-title class="mb-5"><h1>あなたのデータを削除</h1></v-title>
                             あなたのパスワードを入力してください
-                        <v-form>
+                        <v-form @submit.prevent>
                             <v-text-field label=""
                                 prepend-icon="mdi-lock" 
+                                v-bind:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
+                                v-bind:type="showPassword ? 'text' : 'password'" 
+                                @click:append="showPassword = !showPassword"
                                 v-model="password"
                                 :counter="32"
                                 :rules="passwordRules"
@@ -37,7 +45,7 @@
                 </v-row>
             </v-container> 
         </v-card>
-        <v-card class="px-5" v-if='password !=="" && passwordConfirm'>
+        <v-card class="px-5" v-if='!isLoading && passwordConfirm'>
             <v-container>
                 <v-row justify="center">
                     <v-col cols="6">
@@ -67,36 +75,69 @@
                 </v-row>
             </v-container>
         </v-card>
+        <v-card class="px-5" v-if='!isLoading && !passwordConfirm && !init_flag'>
+            <v-container>
+                <v-row justify="center">
+                    <v-col cols="6">
+                        <h1>パスワードが違います</h1>
+                        もう一度パスワードを入力して下さい
+                        <v-form @submit.prevent>
+                            <v-text-field label=""
+                                prepend-icon="mdi-lock" 
+                                v-bind:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
+                                v-bind:type="showPassword ? 'text' : 'password'" 
+                                @click:append="showPassword = !showPassword"
+                                v-model="password"
+                                :counter="32"
+                                :rules="passwordRules"
+                            />
+                            <v-btn 
+                                block
+                                class="pa-5"
+                                @click="confirm()"
+                            >
+                                <h3>送信</h3>
+                            </v-btn>
+                        </v-form>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card>
     </v-dialog>
 </template>
 
 <script>
-import {deleteUser} from '../../routes/userRequest'
+import {deleteUser, confirmPassword} from '../../routes/userRequest'
 export default {
     data: function() {
         return {
+            init_flag: true,
             deleteSuccess: true, 
-            showDialog: true,
+            showDialog: false,
             password : "",
             passwordConfirm : false,
-            //TODO：ログインのパスワードにルールがついてないので、ここにつけてもうまく機能しない
+            // TODO：ログインのパスワードにルールがついてないので、ここにつけてもうまく機能しない
             // passwordRules: [ // password の入力ルール
             //     v => !!v || "パスワードは必須項目です。",
             //     v => (v && v.length >= 8) || "パスワードは8文字以上で入力してください。",
             //     v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
             // ],
+            showPassword : false,
+            isLoading : false,
         }
     },
 
     methods: {
         deleteUser: function() {
 
-            deleteUser(this.$store.state.userData.userId, this.password)
+            deleteUser(this.$store.state.userData.userId)
                 .then(res => {
-                    if (!res.success) 
+                    if (!res.success) {
                         this.deleteSuccess = false;
+                        alert("削除に失敗しました");
+                    }
                     else
-                        alert("正常にユーザを削除しました")
+                        alert("正常にユーザを削除しました");
                 }).catch((exception=>{
                     alert(exception)
                 }));
@@ -105,23 +146,45 @@ export default {
         },
 
         confirm: function(){
+            this.isLoading = true;
+            this.init_flag = false;
             this.$emit('password', this.password);
-            this.passwordConfirm = true;
-            
+            confirmPassword(this.$store.state.userData.userId, this.password)
+                .then(res=>{
+                    this.isLoading = false;
+                    if(!res.success)
+                        alert(res.success)
+                    else if(res.confirm)
+                        this.passwordConfirm = true;
+                    else if(!res.confirm)
+                        this.passwordConfirm =false;
+                }).catch((exception=>{
+                    this.isLoading = false;
+                    alert(exception);
+                }));
+        },
+
+        activate: function(){
+            this.showDialog = true;
         },
 
         cancel: function() {  
             this.password = "";
             this.passwordConfirm = false;
+            this.init_flag = true;
             this.closeCard();
         },
 
         closeCard: function(){
             this.showDialog = false
+            this.init_flag = true;
             this.$emit('close')
         },
 
         reLoad: function () {
+            this.init_flag = true;
+            this.passwordConfirm = false;
+            this.password = "";
             this.$router.go({path: this.$router.currentRoute.path, force: true})
         },
 

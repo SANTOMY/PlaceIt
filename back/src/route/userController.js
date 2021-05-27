@@ -98,14 +98,29 @@ module.exports = class UserController{
         });
     }
 
-    async deleteUser(req, res){
+    async confirmPassword(req, res){
         const userId = req.body.userId;
         const password = utility.isEmpty(req.body.password) ? '' : req.body.password;
         if (utility.isEmpty(password)) {
             debug(fileLabel,"Password is Empty"); 
             return res.status(400).json({"success": false, "error": "password is empty"});
         }
-        return userSQL.deleteUser(userId, password).then((result)=>{
+        return userSQL.confirmPassword(userId, password).then((result)=>{
+            if(result.success){
+                debug(fileLabel, "Successfully confirmed " + userId);
+                return res.status(200).json({"success": true, "userId":result.userId, "confirm": result.confirm});
+            }else{
+                throw result1.data;
+            }
+        }).catch((exception)=>{
+            error(fileLabel,"Error in attempt to confirm "+ userId + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
+
+    async deleteUser(req, res){
+        const userId = req.body.userId;
+        return userSQL.deleteUser(userId).then((result)=>{
             if(result.success){
                 debug(fileLabel, "Successfully deleted " + userId);
                 return res.status(200).json({"success": true, "userId":result.userId});
