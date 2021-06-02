@@ -88,13 +88,14 @@
                 class="transition-fast-in-fast-out v-card--moreDetail"
                 style="height: 100%;"
                 outlined>
-                <v-container>
+                <!-- TODO : fileter by rating -->
+                <!-- <v-container>
                     評価の下限
                     <star-rating 
                     v-model="rating"
                     v-bind:increment="0.1"
                     small />
-                </v-container>
+                </v-container> -->
 
                 <!-- 大学別検索 -->
                 <v-container>
@@ -131,7 +132,7 @@
 
 <script>
 import {getSpotTypeDict} from "../../share/SpotTypeFunction"
-import StarRating from 'vue-star-rating'
+// import StarRating from 'vue-star-rating'
 
 export default {
   data: function(){
@@ -149,9 +150,9 @@ export default {
       userLogin: this.$store.state.userData,
     }
   },
-  components: {
-    StarRating
-    },
+//   components: {
+//     StarRating
+//     },
   props:['spotNameList'],//スポット一覧
 
     created(){

@@ -54,12 +54,14 @@ export default {
     },
     methods: {
         //Map上に検索条件にあったスポットを表示する関数
-        showSpot: async function(type,univ,keyword,rating){
+        showSpot: async function (type, univ, keyword) {
             if (type=="reset") type = "";
+            console.log("ok")
             var data = await getSpot("","",type,"",univ);
+            console.log("ok")
             if (data.success){
                 var spots = data.spots;
-                var review = data.review;  
+                console.log(spots);
                 //キーワードを含まないスポットを除外
                 spots = spots.filter(function(spot){
                     return spot.spot_name.indexOf(keyword) != -1;
@@ -69,17 +71,16 @@ export default {
                 const icon_dict = getSpotTypeDict('icon')
                 const color_dict = getSpotTypeDict('color')
 
+                //TODO : filter by rating
                 spots.forEach(spot => {
-                    if(this.culSpotRating(spot.spot_id,review) > rating){
-                        var marker =  L.marker([spot.y, spot.x], 
-                            {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type], color: color_dict[spot.spot_type] }) })
+                    var marker = L.marker([spot.y, spot.x],
+                        { icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type], color: color_dict[spot.spot_type] }) })
                         .on('click', this.markerClickEvent);
-                        marker.spot_name = spot.spot_name;
-                        marker.spot_id = spot.spot_id;
-                        marker.spot_type = spot.spot_type;
-                        marker.spot_picture = spot.spot_picture;
-                        markerSet.push(marker)
-                    }
+                    marker.spot_name = spot.spot_name;
+                    marker.spot_id = spot.spot_id;
+                    marker.spot_type = spot.spot_type;
+                    marker.spot_picture = spot.spot_picture;
+                    markerSet.push(marker)
                 });
                 this.markers = L.layerGroup(markerSet).addTo(this.map)
             } else {
@@ -160,19 +161,20 @@ export default {
                 await this.showSpot(type,"",keyword,rating);
             }
         },
+        //TODO : filter by rating
         //スポットごとのレビュー評価平均を計算する関数
-        culSpotRating: function(spot_id,reviews){
-            reviews = reviews.filter(function(review){
-                return review.spot_id == spot_id
-              });
-            var sumRate=0;
-            var dataNum=0;
-            reviews.forEach(review => {
-                sumRate = sumRate+review.score;
-                dataNum += 1;
-            });
-            return sumRate/dataNum;
-        },
+        // culSpotRating: function(spot_id,reviews){
+        //     reviews = reviews.filter(function(review){
+        //         return review.spot_id == spot_id
+        //       });
+        //     var sumRate=0;
+        //     var dataNum=0;
+        //     reviews.forEach(review => {
+        //         sumRate = sumRate+review.score;
+        //         dataNum += 1;
+        //     });
+        //     return sumRate/dataNum;
+        // },
         closeDialog() {
             this.showDialog = false;
     }
@@ -202,8 +204,9 @@ export default {
         //this.map.on("locationfound",this.locationMarker);
         //spot表示
         this.showSpot(this.nowType,"","",0);
-        var data = await getSpot("","","","","");
-        this.spotNameList = data.spots;
+        // var data = await getSpot("","","","","");
+        // this.spotNameList = data.spots;
+        this.spotNameList = [];
     }, 
     //現在地追跡のために利用(予定)
     watch: {
