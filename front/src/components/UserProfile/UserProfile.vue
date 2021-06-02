@@ -63,7 +63,9 @@ import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest';
 import {getReviewByUserId} from '../../routes/reviewRequest';
 import {SpotExampleData} from "../share/SpotExampleData";
-import {getSpotImage} from "../../routes/imageRequest"
+import {getSpotImage} from "../../routes/imageRequest";
+import {ConvertToFileFromBase64} from '../share/ConvertImageFunctions';
+
 
 export default {
 
@@ -134,7 +136,7 @@ export default {
         },
         editAvatarImage: function(image) {
             this.user.src = image;
-            const imageFile = this.createImageFile(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
+            const imageFile = ConvertToFileFromBase64(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
             uploadProfileImage(imageFile, this.$store.state.userData.userId)
         },
 

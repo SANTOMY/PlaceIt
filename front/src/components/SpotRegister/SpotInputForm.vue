@@ -147,6 +147,7 @@ import SpotTypeIcon from "../share/SpotTypeIcon.vue"
 import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import StarRating from 'vue-star-rating'
 import radarChartDisp from '../share/RadarChartDisp'
+import {ConvertToFileFromBase64} from '../share/ConvertImageFunctions'
 
 export default {
 
@@ -189,7 +190,8 @@ export default {
         regButtonText: String,
         initialSpotData: Object,
         initialImages: Array,
-        initialScores: Array
+        initialScores: Array,
+        initialPicture: String
     },
 
     methods: {
@@ -199,7 +201,8 @@ export default {
                 return
             }
             if(this.check_database()) {
-                this.$emit("register", this.spot_data, this.uploadedFiles[0]);
+                const file = ConvertToFileFromBase64(this.spot_data.photos[0], "hoge.jpeg");
+                this.$emit("register", this.spot_data, file);
             }
             else {
                 console.log("failed to send database")
