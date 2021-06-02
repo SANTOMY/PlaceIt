@@ -55,13 +55,10 @@ export default {
     methods: {
         //Map上に検索条件にあったスポットを表示する関数
         showSpot: async function (type, univ, keyword) {
-            if (type=="reset") type = "";
-            console.log("ok")
-            var data = await getSpot("","",type,"",univ);
-            console.log("ok")
+            if (type == "reset") type = "";
+            var data = await getSpot("", "", type, "", univ);
             if (data.success){
                 var spots = data.spots;
-                console.log(spots);
                 //キーワードを含まないスポットを除外
                 spots = spots.filter(function(spot){
                     return spot.spot_name.indexOf(keyword) != -1;
@@ -88,16 +85,15 @@ export default {
             }
         },
 
+        //TODO
         //画面の枠組みの経緯度を取得する関数
-        getWindow: function(){
-            var mapframe = this.map.getBounds()
-            var west = mapframe.getWest()
-            var east = mapframe.getEast()
-            var north = mapframe.getNorth()
-            var south = mapframe.getSouth()
-            console.log([west,east,north,south])
-
-        },
+        // getWindow: function(){
+        //     var mapframe = this.map.getBounds()
+        //     var west = mapframe.getWest()
+        //     var east = mapframe.getEast()
+        //     var north = mapframe.getNorth()
+        //     var south = mapframe.getSouth()
+        // },
         //Map上のどこかををクリックした時に起動する関数
         mapClickEvent(event){
             if(this.flag){
@@ -116,8 +112,8 @@ export default {
         //Markerがクリックされた時に起動する関数
         markerClickEvent(event){
             this.showDialog = true;
-            this.getWindow()
             this.selectedSpotID = event.target.spot_id
+            console.log(this.selectedSpotID)
         },
 
         //現在地アイコンを更新する関数(予定)
