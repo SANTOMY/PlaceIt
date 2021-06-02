@@ -44,16 +44,19 @@
                     <h1 class="mr-10"> {{ spotData.spot_name }} </h1>
 
                     <!-- スポットタイプ --> 
-                    <!-- <spot-type-icon v-for="type in spotData.types" :key="type"
+                    
+                    <spot-type-icon 
+                        :type="typesToType()"
+                        classType="mr-5"
+                        large
+                        toolTip
+                        color="gray"
+                    />
+                    
+                    <tag-type-icon v-for="type in typesToTags()" :key="type"
                         :type="type"
-                        class="mr-5"
-                        large
-                        color="gray"        複数タイプに対応していないので一旦コメントアウト
-                    /> -->
-                    <spot-type-icon
-                        :type="spotData.spot_type"
-                        class="mr-5"
-                        large
+                        classType="mr-5"
+                        toolTip
                         color="gray"
                     />
                     <!-- スポット情報修正ボタン -->
@@ -72,7 +75,7 @@
                 <v-col>
                     <v-row justify="center">
                         <radarChartDisp
-                            :type="this.spotData.spot_type"
+                            :type="typesToType()"
                             :reviewRating="rating5"
                         />
                     </v-row>
@@ -115,7 +118,7 @@
                             <spot-review-register  
                                 v-if="this.$store.state.userData != null"
                                 :spot_id="spotData.spot_id"
-                                :spot_type="spotData.spot_type" 
+                                :spot_type="spotData.spot_type"
                                 @submit="updateDetail()"
                             />
                         </v-col>
@@ -133,6 +136,7 @@
 import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
+import tagTypeIcon from "../share/TagTypeIcon.vue"
 import spotReviewRegister from './SpotReviewRegister.vue'
 import spotEdit from './SpotEdit.vue'
 import radarChartDisp from '../share/RadarChartDisp'
@@ -147,6 +151,7 @@ export default {
         starRating,
         spotReviewList,
         spotTypeIcon,
+        tagTypeIcon,
         spotReviewRegister,
         radarChartDisp, 
         spotEdit
@@ -193,6 +198,12 @@ export default {
         },
         closeDialog: function() {
             this.$emit("close");
+        },
+        typesToType: function() {
+            return this.spotData.spot_type.split(',')[0];
+        },
+        typesToTags: function() {
+            return this.spotData.spot_type.split(',').slice(1);
         },
         updateDetail: function() {
             this.isLoadingData = true;      // データを取得している間はローディング画面を表示する
