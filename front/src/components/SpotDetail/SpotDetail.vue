@@ -282,7 +282,6 @@ export default {
             this.isEditMode = true;
         },
         onUpdate: function() {
-            console.log("bbb")
             this.isEditMode = false;
             this.updateDetail();
         }

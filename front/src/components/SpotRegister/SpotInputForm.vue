@@ -228,8 +228,6 @@ export default {
                 return
             }
             if(this.check_database()) {
-                console.log("aaa")
-                console.log(this.spot_data)
                 this.$emit("register", this.spot_data, this.uploadedFiles[0]);
             }
             else {
