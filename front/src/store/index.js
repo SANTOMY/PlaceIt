@@ -6,7 +6,9 @@ const User = require("./user");
 Vue.use(Vuex);
 
 const state = {
-    userData: User
+    userData: User,
+    otherUserData: User,
+    otherUser: false
 }
 
 const mutations =  {
@@ -15,7 +17,15 @@ const mutations =  {
     },
     logout(state) {
         state.userData = null
-    }
+    },
+    otherUserPageDisp(state, otherUserData) {
+        state.otherUserData = otherUserData
+        state.otherUser = true
+    },
+    myPageDisp(state){
+        state.otherUser = false
+        state.otherUserData = null
+    },
 }
 
 // Storeを生成
