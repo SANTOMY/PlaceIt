@@ -1,46 +1,72 @@
 <template>
-    <!-- 検索ダイアログ -->
-    <v-dialog 
-    v-model="dialog"
-    width="500"
-    >
-    <template v-slot:activator="{ on,attrs }">
+  <!-- 検索ダイアログ -->
+  <v-dialog 
+  v-model="dialog"
+  width="500"
+  >
+  <template v-slot:activator="{ on,attrs }">
+  <!--ダイアログ呼び出しのボタン-->
+  <v-btn
+  id="search-button"
+  class="mx-15 my-5"
+  fab
+  v-bind="attrs"
+  v-on="on"
+  >
+    <v-icon
+      class="px-5"
+      large
+      >
+      mdi-card-search-outline
+    </v-icon>
+  </v-btn>
+  </template>
+  <!-- ダイアログの中身 -->
+  <v-card>
+    <!-- スポットタイプ検索 -->
+    <v-container>
+      <v-btn-toggle
+        v-model="nowType"
+        group
+        mandatory
+      >
+        <v-btn
+          v-for="type in types"
+          :key="type" 
+          :value="type" class="mx-auto" fab >
+          <v-icon>
+            {{featureIcons[type]}}
+          </v-icon>
+        </v-btn>
+      </v-btn-toggle>
+    </v-container>
 
-    <!--ダイアログ呼び出しのボタン-->
-    <v-btn
-    id="search-button"
-    class="mx-15 my-5"
-    fab
-    v-bind="attrs"
-    v-on="on"
-    >
-        <v-icon
-        class="px-5"
-        large
+    <!-- tag検索 -->
+    <v-container>
+        <v-autocomplete
+            v-model="selectedTags"
+            :items="filterdTags"
+            label="タグ"
+            multiple
+            single-line
+            clearable
+            deletable-chips
+            prepend-icon="mdi-tag-multiple-outline"
         >
-        mdi-card-search-outline
-        </v-icon>
-    </v-btn>
-    </template>
-    <!-- ダイアログの中身 -->
-    <v-card>
-        <!-- スポットタイプ検索 -->
-        <v-container>
-            <v-btn-toggle
-            v-model="nowType"
-            group
-            mandatory
-            >
-                <v-btn
-                v-for="type in types"
-                :key="type" 
-                :value="type" class="mx-auto" fab >
-                    <v-icon>
-                    {{featureIcons[type]}}
-                  </v-icon>
-                </v-btn>
-            </v-btn-toggle>
-        </v-container>
+            <template v-slot:selection="{ item }">
+                <v-chip
+                    label
+                    color="grey lighten-4"
+                    @click="remove(item)"
+                >
+                    <tag-type-icon :type="item" :isLarge="false" toolTip/>
+                    <!--
+                    <h4>{{ item }}</h4>
+                    -->
+                </v-chip>
+            </template>
+        </v-autocomplete>
+    </v-container>
 
         <!-- キーワード検索 -->
         <v-container>
@@ -132,6 +158,8 @@
 
 <script>
 import {getSpotTypeDict} from "../../share/SpotTypeFunction"
+import {getTagTypeDict} from "../../share/TagTypeFunction"
+import tagTypeIcon from "../../share/TagTypeIcon"
 // import StarRating from 'vue-star-rating'
 
 export default {
@@ -144,15 +172,20 @@ export default {
       typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
       nowUniv:false,//現在の大学
       dialog:false,//検索ダイアログ表示管理
+      tagNameList: getTagTypeDict('type'),
+      filterdTags: [],
+      selectedTags: [],
       keyword:"",//検索キーワード
       moreDetail:false,//詳細検索フォームの表示管理フラグ
       rating:0,//評価の閾値
       userLogin: this.$store.state.userData,
     }
   },
-//   components: {
-//     StarRating
-//     },
+  components: {
+    //typeButton
+    tagTypeIcon
+    // StarRating
+    },
   props:['spotNameList'],//スポット一覧
 
     created(){
@@ -163,12 +196,31 @@ export default {
         this.$set(this.featureIcons, 'reset', "mdi-map-marker-circle") // iconオブジェクトにreset icon追加
     },
     methods:{
-      Search(){
-        //選ばれた検索条件をMapに送信
-        var univFlag = (this.nowUniv=="true" ? true : false);
-        this.$emit('search',this.nowType,univFlag,this.keyword,this.rating);
-      },
-    }
+        Search(){
+            //選ばれた検索条件をMapに送信
+            this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.rating,this.selectedTags);
+        },
+        filterTags: function() {
+            return this.tagNameList.filter(function(tag){
+                return getTagTypeDict("stype")[tag].includes(this.nowType);
+            });
+        },
+        remove :function(item) {
+            const index = this.selectedTags.indexOf(item)
+            if (index >= 0) this.selectedTags.splice(index, 1)
+        },
+    },
+    watch: {
+        'nowType': function(){ // spot type を変えた時の処理
+            this.selectedTags = []
+            let spotType = this.nowType
+            this.filterdTags = this.tagNameList.filter(function(tag){
+                return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
+            });
+            if (spotType == "reset")
+                this.filterdTags = [];
+        },
+    },
     
 }
 </script>

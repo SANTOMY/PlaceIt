@@ -60,11 +60,20 @@ async function getProfilePicture(userId){
 async function uploadSpotPicture(newImage){
     var query;
     const client = await pool.connect();
-
-    query = {
-        text: 'INSERT INTO images.spot(spot_id, image) VALUES($1, $2)',
-        values: [newImage.spotId, newImage.image]
-    };
+    var spotExist = await getSpotPicture(newImage.spotId);
+    if(spotExist.success) {
+        info(fileLabel,"Spot already exist. Updating picture");
+        query = {
+            text: 'Update images.spot set image=$1 where spot_id=$2',
+            values: [newImage.image,newImage.spotId]
+        };
+    }
+    else {
+        query = {
+            text: 'INSERT INTO images.spot(spot_id, image) VALUES($1, $2)',
+            values: [newImage.spotId, newImage.image]
+        };
+    }   
 
     return client.query(query).then((result)=>{
         info(fileLabel,"Inside query");
