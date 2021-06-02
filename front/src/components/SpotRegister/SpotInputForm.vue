@@ -230,7 +230,10 @@ export default {
                 return
             }
             if(this.check_database()) {
-                const file = ConvertToFileFromBase64(this.spot_data.photos[0], "hoge.jpeg");
+                var file = "";
+                if(this.spot_data.photos.length > 0) {
+                    file = ConvertToFileFromBase64(this.spot_data.photos[0], "hoge.jpeg");
+                }
                 this.$emit("register", this.spot_data, file);
             }
             else {
