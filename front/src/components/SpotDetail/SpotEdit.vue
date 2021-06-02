@@ -8,6 +8,7 @@
             :initialSpotData="spotData"
             :initialImages="photos"
             :initialScores="rating5"
+            :initialPicture="base64Image"
         />
     </v-container>
 </template>
@@ -43,6 +44,12 @@ export default {
         },
         onCancel: function() {
             this.$emit("update")
+        }
+    },
+
+    computed: {
+        base64Image: function() {
+            return this.photos.map(item => item.image)[0];
         }
     }
 

@@ -235,6 +235,7 @@ export default {
         this.spot_data.name = this.initialSpotData.spot_name;
         this.spot_data.types = this.initialSpotData.spot_type;
         this.spot_data.scores = this.initialScores;
+        this.spot_data.photos = [this.initialPicture];
     },
 
     watch: {
