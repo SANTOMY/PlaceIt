@@ -8,15 +8,14 @@
             <v-row 
                 class="mx-1"
                 align="center"
-            >
-                <!-- いつかavaterに変えたい -->
-                
+            >   
+                <!-- ユーザーのアバター写真 -->
                 <v-avatar
                     class="mr-5"
                 >
                     <img :src="reviewer_data.user.src">
                 </v-avatar>
-               
+               <!-- ユーザー名（ボタン） -->
                 <v-btn 
                     @click="usernameClickEvent()"
                     text
@@ -25,9 +24,11 @@
                     {{ reviewer_data.user.username }} 
                 </v-btn>
             </v-row>
+            <!-- コメント -->
             <v-row class="mx-5 mt-2">
                 {{ reviewer_data.content.comment }}
             </v-row>
+            <!-- 評価 -->
             <v-row class="mx-3 mt-1">
                 <v-spacer />
                 <v-icon class="mr-1">
@@ -36,35 +37,40 @@
                 {{ reviewer_data.content.score }}
             </v-row>
         </v-container>
-        <user-profile-dialog :showDialog="showUserDialog" :user="reviewer_data.user" @close="closeDialog()"/>
+        <UserProfileDialog
+            :user="reviewer_data.user"
+            :showUserDialog="userDialog"
+            @closeDialog="closeUserProfile()"/>
     </v-card>
-    
+
 </template>
 
 <script>
+
 import UserProfileDialog from '../share/UserProfileDialog.vue'
 
 export default {
     components: {
         UserProfileDialog
     },
-
     props: {
         reviewer_data: null,
-        // (reviewer_dataの構造) = [{ content: {comment: x , score: y} 
-        //                          { user: {username: a, id: b, src: c} } } ]
     },
     data: function() {
         return {
-            showUserDialog: false,
+            userDialog: false,
         }
     },
     methods:{
-        closeDialog() {
-            this.showUserDialog = false;
-        },
         usernameClickEvent() {
-            this.showUserDialog = true;
+            // const otherUserData = new User(this.reviewer_data.user.id, this.reviewer_data.user.username, null, null, this.reviewer_data.user.university)
+            // console.log('otherUserData:',otherUserData)
+            // this.$store.commit("inputUserData", otherUserData)
+            this.$emit('catchUserData',this.reviewer_data.user)// SpotDetail.vue にuser dataを渡す関数（いまは使ってない）
+            this.userDialog = true
+        },
+        closeUserProfile() {
+            this.userDialog = false;
         },
     },
 }

@@ -39,7 +39,7 @@
             </template>
             <v-list>
                 <v-list-item>
-                    <v-btn to="/user" class="px-8 mb-2">
+                    <v-btn @click="toUserPage" class="px-8 mb-2">
                         <v-icon left large color="gray" class="px-5"> mdi-account-circle</v-icon>
                         Profile
                     </v-btn>
@@ -118,6 +118,14 @@ export default {
             this.$store.commit("logout")
             if (this.$route.path != '/map'){
                 this.$router.push('/map')
+            }
+        },
+        toUserPage() {
+            this.$store.commit("myPageDisp")
+            if(location.pathname=='/user'){
+                this.$router.go({path: this.$router.currentRoute.path, force: true})       
+            }else{
+                this.$router.push({ path: 'user'})
             }
         }
     }
