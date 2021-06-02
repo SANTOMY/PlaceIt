@@ -44,7 +44,8 @@ export default {
 
     methods: {
         OnRegister: function(spotData, imageFile) {
-            saveSpot(spotData.name, this.$route.query.lon, this.$route.query.lat, "", spotData.types, spotData.userId, spotData.comment, spotData.scores, spotData.university)
+            console.log(spotData)
+            saveSpot(spotData.name, this.$route.query.lon, this.$route.query.lat, "", spotData.types + "," + spotData.tags, spotData.userId, spotData.comment, spotData.scores, spotData.university)
                 .then(res => {
                     if(!res.success) return
                     uploadSpotImage(imageFile, res.spotId)

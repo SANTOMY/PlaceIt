@@ -2,8 +2,8 @@
     <v-tooltip bottom :disabled="!toolTip">
     <template v-slot:activator="{ on, attrs }">
     <v-icon
-        class="mr-5"
-        large
+        :class="classType"
+        :large="isLarge"
         :color="iconColor"
         v-bind="attrs"
         v-on="on"
@@ -12,21 +12,22 @@
     </v-icon>
     </template>
     <span>{{type}}</span>
-    </v-tooltip>
+    </v-tooltip> 
 </template>
 
 <script>
-import {getSpotTypeDict} from "./SpotTypeFunction"
+import {getTagTypeDict} from "./TagTypeFunction"
 export default {
     props: {
         type: String,
         iconColor: String, // spot iconのカラー指定
-        toolTip: Boolean,
         classType: String,
+        isLarge: Boolean,
+        toolTip: Boolean,
     },
     data: function() {
         return {
-            type_dict: getSpotTypeDict('icon')
+            type_dict: getTagTypeDict('icon')
         }
     }  
 }
