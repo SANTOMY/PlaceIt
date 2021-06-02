@@ -49,7 +49,8 @@ export default {
                 email: null,
                 password: null,
                 univ:"",
-            }
+            },
+            tags: []
         };
     },
     methods: {
@@ -72,11 +73,11 @@ export default {
                 spots.forEach(spot => {
                     if(this.culSpotRating(spot.spot_id,review) > rating){
                         var marker =  L.marker([spot.y, spot.x], 
-                            {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type], color: color_dict[spot.spot_type] }) })
+                            {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type.split(",")[0]], color: color_dict[spot.spot_type.split(",")[0]] }) })
                         .on('click', this.markerClickEvent);
                         marker.spot_name = spot.spot_name;
                         marker.spot_id = spot.spot_id;
-                        marker.spot_type = spot.spot_type;
+                        marker.spot_type = spot.spot_type.split(",")[0];
                         marker.spot_picture = spot.spot_picture;
                         markerSet.push(marker)
                     }
@@ -147,17 +148,32 @@ export default {
             //現在地マーカーを設置
         },
 
+        // tagのリストを文字列に変換
+        typesToStrs: function(types) {
+            var strs = ""
+            for (var i = 0; i < types.length; i++) {
+                if (i != types.length - 1) {
+                    strs = strs + types[i] + ",";
+                } else {
+                    strs = strs + types[i];
+                }
+            }
+            return strs;
+        },
+
         //検索ジャンルを更新するメソッド
         search: async function(...args){
-            const [type,univ,keyword,rating] = args
+            const [type,univ,keyword,rating,tags] = args
             this.markers.clearLayers();
             this.marker = [];
-            this.nowType = type;    
+            this.nowType = type;
+            this.tags = tags;
+            let typeAndTags = type + ((tags.length > 0)? ("," + this.typesToStrs(tags)) : "");
 
             if(univ){
-                await this.showSpot(type,this.user.univ,keyword,rating);
+                await this.showSpot(typeAndTags,this.user.univ,keyword,rating);
             } else{
-                await this.showSpot(type,"",keyword,rating);
+                await this.showSpot(typeAndTags,"",keyword,rating);
             }
         },
         //スポットごとのレビュー評価平均を計算する関数

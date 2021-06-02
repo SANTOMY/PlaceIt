@@ -4,7 +4,6 @@
       width="1200"
       persistent
     >
-
         <v-card>
             <!-- 閉じるボタン -->
             <v-btn fixed top right dark fab rounded class="z-top mt-6 mr-8"
@@ -19,8 +18,11 @@
                 class="mx-auto"
             ></v-skeleton-loader>
 
+            <spot-edit v-if="canShowEditMode" 
+                :spotId="spot_id" :spotData="spotData" :photos="photos" :rating5="rating5"
+                @update="onUpdate"
+            />
             <v-container v-if="canShowViewMode">
-
                 <!-- 写真 -->
                 <v-carousel
                     cycle
@@ -42,18 +44,28 @@
                     <h1 class="mr-10"> {{ spotData.spot_name }} </h1>
 
                     <!-- スポットタイプ --> 
-                    <!-- <spot-type-icon v-for="type in spotData.types" :key="type"
-                        :type="type"
-                        class="mr-5"
+                    
+                    <spot-type-icon 
+                        :type="typesToType()"
+                        classType="mr-5"
                         large
-                        color="gray"        複数タイプに対応していないので一旦コメントアウト
-                    /> -->
-                    <spot-type-icon
-                        :type="spotData.spot_type"
-                        class="mr-5"
-                        large
+                        toolTip
                         color="gray"
                     />
+                    
+                    <tag-type-icon v-for="type in typesToTags()" :key="type"
+                        :type="type"
+                        classType="mr-5"
+                        toolTip
+                        color="gray"
+                    />
+                    <!-- スポット情報修正ボタン -->
+                    <v-btn 
+                        v-if="checkCreatedMyself"
+                        @click="onClickEditButton"
+                    >
+                        <h3>変更</h3>
+                    </v-btn>
 
 
                 </v-row>
@@ -63,7 +75,7 @@
                 <v-col>
                     <v-row justify="center">
                         <radarChartDisp
-                            :type="this.spotData.spot_type"
+                            :type="typesToType()"
                             :reviewRating="rating5"
                         />
                     </v-row>
@@ -108,7 +120,7 @@
                             <spot-review-register  
                                 v-if="this.$store.state.userData != null"
                                 :spot_id="spotData.spot_id"
-                                :spot_type="spotData.spot_type" 
+                                :spot_type="spotData.spot_type"
                                 @submit="updateDetail()"
                             />
                         </v-col>
@@ -117,6 +129,7 @@
                 </v-col>
             </v-row>
             </v-container>
+            
         </v-card>
     </v-dialog>
 </template>
@@ -125,7 +138,9 @@
 import starRating from 'vue-star-rating'
 import spotReviewList from './SpotReviewList.vue'
 import spotTypeIcon from '../share/SpotTypeIcon.vue'
+import tagTypeIcon from "../share/TagTypeIcon.vue"
 import spotReviewRegister from './SpotReviewRegister.vue'
+import spotEdit from './SpotEdit.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {getSpot} from '../../routes/spotRequest'
 import {average} from '../../routes/reviewRequest'
@@ -139,12 +154,14 @@ export default {
         starRating,
         spotReviewList,
         spotTypeIcon,
+        tagTypeIcon,
         spotReviewRegister,
-        radarChartDisp,
+        radarChartDisp, 
+        spotEdit
     },
     data: function() {
         return {
-            spotData: {spot_name:"", spot_type:""},
+            spotData: {spot_name:"", spot_type:"", user_id:""},
             reviews: [], // spotのレビューリスト
             user_list: [], // userのリスト
             user: [],
@@ -187,6 +204,12 @@ export default {
         },
         closeDialog: function() {
             this.$emit("close");
+        },
+        typesToType: function() {
+            return this.spotData.spot_type.split(',')[0];
+        },
+        typesToTags: function() {
+            return this.spotData.spot_type.split(',').slice(1);
         },
         updateDetail: function() {
             this.isLoadingData = true;      // データを取得している間はローディング画面を表示する
@@ -255,6 +278,13 @@ export default {
         closeUserProfile() {
             this.showUserDialog = false;
         },
+        onClickEditButton: function() {
+            this.isEditMode = true;
+        },
+        onUpdate: function() {
+            this.isEditMode = false;
+            this.updateDetail();
+        }
     },
 
     computed: {
@@ -274,14 +304,20 @@ export default {
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
-            return this.isLoadingData || this.isLoadingPhoto //どっちかがtureだったらture, どっちともfalseだったらfalseを返す
+            return this.isLoadingData || this.isLoadingPhoto
         },
-        canShowViewMode: function() { //編集モードを表示できるか
-            return !this.isLoading && !this.isEditMode // falseかつfalseかつfalseだったらtrue, 他falseを返す
+
+        canShowViewMode: function() { //閲覧モードを表示できるか
+            return !this.isLoadingData && !this.isLoadingPhoto && !this.isEditMode
         },
-        canShowEditMode: function() { //閲覧モードを表示できるか
-            return !this.isLoading && this.isEditMode // falseかつfalseかつfalseだったらtrue, 他falseを返す
+        canShowEditMode: function() { //編集モードを表示できるか
+            return !this.isLoadingData && !this.isLoadingPhoto && this.isEditMode
         },
+
+        checkCreatedMyself: function() { //自分自身が作成したスポットであるか
+            if(this.$store.state.userData == null) return false;
+            return this.spotData.user_id == this.$store.state.userData.userId
+        }
     },
 
     watch: {
@@ -291,6 +327,7 @@ export default {
             this.updateDetail()
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
+            this.isEditMode = false;
         }
     }
 }
