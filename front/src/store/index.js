@@ -7,7 +7,8 @@ Vue.use(Vuex);
 
 const state = {
     userData: User,
-    otherUserData: User
+    otherUserData: User,
+    otherUser: false
 }
 
 const mutations =  {
@@ -17,8 +18,13 @@ const mutations =  {
     logout(state) {
         state.userData = null
     },
-    inputUserData(state, otherUserData) {
+    otherUserPageDisp(state, otherUserData) {
         state.otherUserData = otherUserData
+        state.otherUser = true
+    },
+    myPageDisp(state){
+        state.otherUser = false
+        state.otherUserData = null
     },
 }
 

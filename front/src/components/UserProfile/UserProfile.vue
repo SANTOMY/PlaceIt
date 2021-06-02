@@ -29,7 +29,7 @@ export default {
     },
     data() {
         return {
-            otherUser: false, // other user profile judge
+            otherUser: this.$store.state.otherUser, // other user profile judge
             user: { 
                 // ユーザー仮データ
             },
@@ -50,8 +50,8 @@ export default {
         }
     },
     mounted() {
-        // console.log('query:',this.$route.query['otherUser'])
-        if(this.$route.query['otherUser']=='true'){
+        // console.log('query:',this.otherUser)
+        if(this.otherUser==true){
             this.user= { 
                 id: this.$store.state.otherUserData.userId,
                 username: this.$store.state.otherUserData.userName,
@@ -59,9 +59,9 @@ export default {
                 password: null,
                 university: this.$store.state.otherUserData.university,
                 src: require('@/assets/default-icon.jpeg')
-            },
-            this.otherUser = true
-        }else if(this.$route.query['otherUser']==undefined){
+            }
+            // this.otherUser = true
+        }else if(this.otherUser==false){
             this.user= { 
                 id: this.$store.state.userData.userId,
                 username: this.$store.state.userData.userName,
@@ -70,6 +70,9 @@ export default {
                 university: this.$store.state.userData.university,
                 src: require('@/assets/default-icon.jpeg')
             }
+        }else{
+            alert("URLが間違っており、読み込めませんでした。");
+            return
         }
         
         this.show_count = 0

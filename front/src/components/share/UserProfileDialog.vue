@@ -65,15 +65,17 @@ export default {
             this.$emit('closeDialog')
         },
         goOtherUserPage(){
-            const otherUserData = new User(this.user.id, this.user.username, null, null, this.user.university)
-            // console.log('otherUserData:',otherUserData)
-            // console.log('Location.serch:',location.search)
-            // console.log('Location.pathname:',location.pathname)
-            this.$store.commit("inputUserData", otherUserData)
-            if(location.pathname=='/user'){
-                this.$router.go({path: this.$router.currentRoute.path, query: { otherUser: true }, force: true})
+            if(this.user.id==this.$store.state.userData.userId){
+                this.$store.commit("myPageDisp")
             }else{
-                this.$router.push({ path: 'user', query: { otherUser: true } })
+                const otherUserData = new User(this.user.id, this.user.username, null, null, this.user.university)
+                this.$store.commit("otherUserPageDisp", otherUserData)
+            }
+
+            if(location.pathname=='/user'){
+                this.$router.go({path: this.$router.currentRoute.path, force: true})       
+            }else{
+                this.$router.push({ path: 'user'})
             }
         }
     }
