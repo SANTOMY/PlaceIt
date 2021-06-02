@@ -20,7 +20,9 @@
                         <v-select
                             :rules="typeRules"
                             v-model="spot_data.types"
-                            :items="all_spot_types"
+                            :items="all_types_name"
+                            item-text="text"
+                            item-value="type"
                             label="スポットの種類"
                             solo
                             height="80px"
@@ -31,8 +33,8 @@
                                     label
                                     color="grey lighten-4"
                                 >
-                                    <spot-type-icon :type="item" />
-                                    <h3>{{ item }}</h3>
+                                    <spot-type-icon :type="item.type" />
+                                    <h3>{{ item.text }}</h3>
                                 </v-chip>
                             </template>
                         </v-select>
@@ -66,13 +68,10 @@
                             label="コメント"
                         ></v-textarea>
 
-                        <v-chip v-if="submitFirstReview"
-                            class = "mb-5"
-                            label text-color="brack">
-                            <h3>スコア</h3>
-                        </v-chip>
 
-                        <v-row v-if="chart_disp==true && submitFirstReview">
+                        <h3 v-if="chart_disp==true && submitFirstReview && spot_data.types">スコア</h3>
+
+                        <v-row v-if="chart_disp==true && submitFirstReview && spot_data.types">
                             <!-- レーダーチャート表示 -->
                             <v-col cols="5" justify="center">
                                 <radarChartDisp
@@ -196,6 +195,7 @@ export default {
             },
             criteria_list: [],
             all_spot_types: getSpotTypeDict('type'), //spot typeを取得
+            all_types_name: getSpotTypeDict('name'), //spotの内容説明を取得
             all_tags: getTagTypeDict('type'), // 全てのタグ
             filterd_tags: [], // spot typeに紐づいたタグのリスト
             selected_tags: [], // ユーザが選択したタグのリスト

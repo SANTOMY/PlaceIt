@@ -26,7 +26,7 @@
                     yellow: 'rgb(255, 205, 86, 0.4)',
                     green: 'rgb(75, 192, 192, 0.4)',
                     blue: 'rgb(54, 162, 235, 0.4)',
-                    purple: 'rgb(153, 102, 255, 0.4)',
+                    violet: 'rgb(153, 102, 255, 0.4)',
                     grey: 'rgb(201, 203, 207, 0.4)',
                 },
                 datacollection: null,
