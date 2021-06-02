@@ -98,6 +98,7 @@ export default {
             ],
             isLoading: true,
             show_count: 0,
+            recommended_border: 1
         }
     },
     mounted: function(){
@@ -275,7 +276,7 @@ export default {
         },
         getRecommendedSpots: function( user_univ ){
             return getSpot('', '', '', '', user_univ).then( result => {
-                var sampled = this.shuffleArray( result.spots )//.slice( 0, 3 )
+                var sampled = this.shuffleArray( result.spots )
                 console.log( "recommendedSpots:", sampled )
                 const all = sampled.length;
                 var added = 0;
@@ -291,19 +292,26 @@ export default {
                         }
                     }
                     const good = Math.round( 10 * average( scores ) ) / 10;
+                    const review_length = scores.length
 
                     getSpotImage( spt_id ).then( ( result ) =>{
                         if( result.success && result.data != undefined ){
                             const src = "data:image/jpeg;base64," + result.data[0].image
-                            this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                            if( review_length > this.recommended_border ){
+                                this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                            }
                         }else{
                             const src = require( "@/assets/noimage.png" );
-                            this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                            if( review_length > this.recommended_border ){
+                                this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                            }
                         }
                     } ).catch((exception)=>{
                         console.log( "Error in getSpotImage: ", exception )
                         const src = require( "@/assets/noimage.png" );
-                        this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                        if( review_length > this.recommended_border ){
+                            this.spot.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                        }
                     }).finally(()=>{
                         added += 1;
                         if( added >= all ){
