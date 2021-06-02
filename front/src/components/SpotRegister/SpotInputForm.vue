@@ -47,9 +47,9 @@
                         ></v-textarea>
 
 
-                        <h3 v-if="spot_data.types">スコア</h3>
+                        <h3 v-if="chart_disp==true && submitFirstReview && spot_data.types">スコア</h3>
 
-                        <v-row v-if="chart_disp==true && submitFirstReview">
+                        <v-row v-if="chart_disp==true && submitFirstReview && spot_data.types">
                             <!-- レーダーチャート表示 -->
                             <v-col cols="5" justify="center">
                                 <radarChartDisp
@@ -198,6 +198,8 @@ export default {
                 return
             }
             if(this.check_database()) {
+                console.log("aaa")
+                console.log(this.spot_data)
                 this.$emit("register", this.spot_data, this.uploadedFiles[0]);
             }
             else {
