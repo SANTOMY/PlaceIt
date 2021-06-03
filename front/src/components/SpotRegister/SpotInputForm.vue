@@ -53,6 +53,7 @@
                                     large
                                     label
                                     color="grey lighten-4"
+                                    @click="removeTag(item)"
                                 >
                                     <tag-type-icon :type="item" :isLarge="true" classType="mr-5"/>
                                     <h3>{{ item }}</h3>
@@ -265,6 +266,10 @@ export default {
             }
             return strs;
         },
+        removeTag :function(item) {
+            const index = this.selected_tags.indexOf(item)
+            if (index >= 0) this.selected_tags.splice(index, 1)
+        }
     },
 
     mounted: function() {
