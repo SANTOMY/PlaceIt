@@ -101,6 +101,7 @@ export default {
     methods: {
         onClickedRegisterButton: function() {
             this.showDialog = false;
+            console.log(this.spot_id);
             for(var i = 0; i < 5; i++) {
                 console.log("score " + i + ": " + this.review_data.scores[i]);
             }
