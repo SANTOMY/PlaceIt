@@ -5,22 +5,40 @@ export function getTagTypeDict(value) {
         hamburger: "mdi-hamburger",             // hamburgerのアイコン
         karaoke: "mdi-microphone-variant",
         hotel: "mdi-home-city-outline",
-        onsen: "mdi-hot-tub"
+        onsen: "mdi-hot-tub",
+        soccer: "mdi-soccer",
+        tennis: "mdi-tennis",
+        baseball: "mdi-baseball-bat",
+        convenience: "mdi-store-24-hour",
+        electric: "mdi-fridge-bottom",
+        hospital: "mdi-hospital-box",
     }
+    //カラーは使ってないからとりあえず適当
     var color_dict = {
-        noodle: 'red',  // noodleのiconなどの色
-        hamburger: 'green',    // hamburgerのiconなどの色
-        karaoke: 'green',
+        noodle: 'orange',
+        hamburger: 'orange',
+        karaoke: 'orange',
         hotel: 'orange',
-        onsen: 'orange'
+        onsen: 'orange',
+        soccer: "orange",
+        tennis: "orange",
+        baseball: "orange",
+        convenience: "orange",
+        electric: "orange",
+        hospital: "orange",
     }
     var spot_type_dict = {
         noodle: ["restaurant"],
         hamburger: ["restaurant"],
-        karaoke: ["travel"],
-        hotel: ["travel"],
-        onsen: ["travel"]
-
+        karaoke: ["amusements"],
+        hotel: ["accomodation"],
+        onsen: ["travel", "accomodation"],
+        soccer: ["amusements"],
+        tennis: ["amusements"],
+        baseball: ["amusements"],
+        convenience: ["shopping"],
+        electric: ["shopping"],
+        hospital: ["lifework"],
     }
     var tag_types = Object.keys(type_dict)
     if (value=='icon'){

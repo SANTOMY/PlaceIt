@@ -296,6 +296,8 @@ export default {
             this.selected_tags = []
             let spotType = this.spot_data.types
             this.filterd_tags = this.all_tags.filter(function(tag){
+                console.log(spotType)
+                console.log(getTagTypeDict("stype")[tag.toString()].indexOf(spotType))
                 return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
             });
             this.$nextTick(() => (this.chart_disp = true));
