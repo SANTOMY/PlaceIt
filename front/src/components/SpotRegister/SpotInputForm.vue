@@ -230,7 +230,7 @@ export default {
                 return
             }
             if(this.check_database()) {
-                var file = "";
+                var file = undefined;
                 if(this.spot_data.photos.length > 0) {
                     file = ConvertToFileFromBase64(this.spot_data.photos[0], "hoge.jpeg");
                 }
@@ -278,7 +278,13 @@ export default {
         this.spot_data.name = this.initialSpotData.spot_name;
         this.spot_data.types = this.initialSpotData.spot_type;
         this.spot_data.scores = this.initialScores;
-        this.spot_data.photos = [this.initialPicture];
+        if(this.initialPicture == ""
+        || this.initialPicture == require("@/assets/noimage.png")) {
+            this.spot_data.photos = [];    
+        }
+        else {
+            this.spot_data.photos = [this.initialPicture];
+        }
     },
 
     watch: {

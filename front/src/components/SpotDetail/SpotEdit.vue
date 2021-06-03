@@ -34,8 +34,9 @@ export default {
             console.log(this.spotId, spotData.name, spotData.types + "," + spotData.tags);
             editSpot(this.spotId, spotData.name, spotData.types + "," + spotData.tags)
                 .then(res => {
-                    if(!res.success) return
-                    if(imageFile == "") return
+                    if(!res.success || imageFile == undefined) {
+                        this.$emit("update");   
+                    }
                     uploadSpotImage(imageFile, this.spotId)
                         .then(res => {
                             console.log(res)
