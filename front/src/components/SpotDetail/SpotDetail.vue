@@ -96,7 +96,9 @@
                     <v-row justify="center">
                         <!-- レビューリスト -->
                         <v-col cols="11">
-                            <spot-review-list :reviews="slicedReviews"/>
+                            <spot-review-list 
+                                @catchUserInformation="getUserInformationByReviewer"
+                                :reviews="slicedReviews"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -140,12 +142,10 @@ import tagTypeIcon from "../share/TagTypeIcon.vue"
 import spotReviewRegister from './SpotReviewRegister.vue'
 import spotEdit from './SpotEdit.vue'
 import radarChartDisp from '../share/RadarChartDisp'
-import {getSpot} from '../../routes/spotRequest'
-import {average} from '../../routes/reviewRequest'
+import {average, getReviewBySpotId} from '../../routes/reviewRequest'
 import {getSpotImage} from '../../routes/imageRequest'
 import { getUserById } from '../../routes/userRequest.js'
 import {getProfileImage} from "../../routes/imageRequest"
-
 export default {
     components: {
         starRating,
@@ -161,26 +161,34 @@ export default {
             spotData: {spot_name:"", spot_type:"", user_id:""},
             reviews: [], // spotのレビューリスト
             user_list: [], // userのリスト
+            user: [],
             rating: 5,
             rating5: [0,0,0,0,0],
             photos: [{picture_id:1, image:require("@/assets/noimage.png")}],
             num_page: 0,
             REVIEW_NUM_PER_PAGE: 3, //1ページあたりの表示するレビュー数
             now_review_page: 1,
-
             pos: {
                 lat: 0,
                 lon: 0
             },
             isLoadingData: true,   //spotデータを読み込んでいるか
             isLoadingPhoto: true,   // spotイメージを読み込んでいるか
-            isEditMode: false // 修正モードであるか
+            showUserDialog: false,   //他のユーザープロフィール表示するか
+            isEditMode: false, // Spot情報を修正するか
+            otherUser: true,
         }
     },
-    props: ["spot", "showDialog"],
-
+    props: {
+        spot_id: String,
+        showDialog: Boolean,
+        spot_name: String,
+        spot_type: String,
+        user_id: String
+    },
     methods: {
-        change_page: function(number){
+        changePage: function(number){
+            // console.log('(change review page)change review page to ',number)
             return this.now_review_page = number
         },
         sum: function(arr){ // 配列の要素の合計を計算
@@ -205,7 +213,7 @@ export default {
         updateDetail: function() {
             this.isLoadingData = true;      // データを取得している間はローディング画面を表示する
             this.isLoadingPhoto = true;      
-            getSpot(this.spot_id, "", "", "", "")
+            getReviewBySpotId(this.spot_id, "", "", "", "")
                 .then(res => {
                     this.reviews = res.review;
                     //this.isLoadingData = false;
@@ -216,7 +224,6 @@ export default {
                                                 this.reviews.map(r =>  Number(r.score4)),
                                                 this.reviews.map(r =>  Number(r.score5)));
                     this.num_page = Math.ceil(this.reviews.length/this.REVIEW_NUM_PER_PAGE) // 総ページ数
-                    
                 }).then( () => {
                     return this.getUserInformation() //レヴューからユーザー名を取得する関数
                 })
@@ -244,7 +251,7 @@ export default {
                 getUserById(this.reviews[i].user_id)
                     .then(result => {
                         
-                        this.user_list[i]=result[0];            
+                        this.user_list[i]=result[0];           
                         getProfileImage( this.reviews[i].user_id )
                             .then(res => {
                                 if(!res.success) {
@@ -260,6 +267,13 @@ export default {
                 })
             }
         },
+        getUserInformationByReviewer: function(user){
+            this.user = user
+            this.showUserDialog = true;         
+        },
+        closeUserProfile() {
+            this.showUserDialog = false;
+        },
         onClickEditButton: function() {
             this.isEditMode = true;
         },
@@ -268,7 +282,6 @@ export default {
             this.updateDetail();
         }
     },
-
     computed: {
         //現在のページに表示するレビューを返す
         slicedReviews: function() {
@@ -276,35 +289,34 @@ export default {
             const end = start + this.REVIEW_NUM_PER_PAGE;
             const raw_reviews = this.reviews.slice(start, end)
             const raw_users = this.user_list.slice(start, end)
-
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
             for(var i = 0; i < raw_reviews.length; i++) {
                 enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
             }
-            console.log('cut reviewer data:',enumerated_reviews)
+            // console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
             return this.isLoadingData || this.isLoadingPhoto
         },
-
         canShowViewMode: function() { //閲覧モードを表示できるか
             return !this.isLoadingData && !this.isLoadingPhoto && !this.isEditMode
         },
         canShowEditMode: function() { //編集モードを表示できるか
             return !this.isLoadingData && !this.isLoadingPhoto && this.isEditMode
         },
-
         checkCreatedMyself: function() { //自分自身が作成したスポットであるか
             if(this.$store.state.userData == null) return false;
             return this.spotData.user_id == this.$store.state.userData.userId
         }
     },
-
     watch: {
         showDialog: function() {    //spot詳細ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
+            this.spotData.spot_name=this.spot_name;
+            this.spotData.spot_type=this.spot_type;
+            this.spotData.user_id=this.user_id;
             this.updateDetail()
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]

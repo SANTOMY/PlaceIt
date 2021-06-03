@@ -42,6 +42,9 @@ export default {
             time:0,//タイマー用変数
             showDialog:false, //ダイアログを表示するか
             selectedSpotID: "", //クリックして選択しているspotのid
+            selectedSpotName: "",
+            selectedSpotType: "",
+            selectedSpotUserId: "",
             markers:null,//マーカーリストのレイヤー群
             univFlag:false,//大学別検索の有効化・無効化
             user:{
@@ -78,6 +81,7 @@ export default {
                     marker.spot_id = spot.spot_id;
                     marker.spot_type = spot.spot_type;
                     marker.spot_picture = spot.spot_picture;
+                    marker.user_id = spot.user_id;
                     markerSet.push(marker)
                 });
                 this.markers = L.layerGroup(markerSet).addTo(this.map)
@@ -113,8 +117,10 @@ export default {
         //Markerがクリックされた時に起動する関数
         markerClickEvent(event){
             this.showDialog = true;
-            this.selectedSpotID = event.target.spot_id
-            console.log(this.selectedSpotID)
+            this.selectedSpotID = event.target.spot_id;
+            this.selectedSpotName = event.target.spot_name;
+            this.selectedSpotType = event.target.spot_type;
+            this.selectedSpotUserId = event.target.user_id;
         },
 
         //現在地アイコンを更新する関数(予定)
