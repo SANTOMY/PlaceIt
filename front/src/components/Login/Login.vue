@@ -74,7 +74,7 @@ export default {
             login(this.model.email, this.model.password)
                 .then(res => {
                     if (res.success && res.data.is_active) {
-                        const userData = new User(res.data.id, res.data.username, res.data.email, null, res.data.university, res.data.isActive)
+                        const userData = new User(res.data.id, res.data.username, res.data.email, null, res.data.university, res.data.is_active)
                         this.$store.commit("login", userData);
                         this.$router.push('/map');
                     } 

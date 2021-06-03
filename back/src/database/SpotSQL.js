@@ -68,6 +68,7 @@ async function getSpotByKeywords(keywords){
     const client = await pool.connect();
     return client.query(query1)
     .then((results1)=>{
+        client.release();
         if (results1.rowCount == 0)
             return {"success":false, "data":"spot does not exist"};
         info(fileLabel,"get spot: " + util.inspect(results1.rows,{showHidden: false, depth: null}));
