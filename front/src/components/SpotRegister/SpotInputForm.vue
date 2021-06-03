@@ -208,7 +208,9 @@ export default {
             ],
             typeRules: [
                 v => v.length > 0 || "必ず一つ以上選択してください。"
-            ]
+            ],
+
+            doneInitTags: false  // タグを初期化しているか
 
         }
     },
@@ -271,12 +273,17 @@ export default {
             }
             return strs;
         },
+        initTags: function() {
+            var splited_tags = this.initialSpotData.spot_type.split(",");
+            splited_tags.shift()
+            this.selected_tags = splited_tags;            
+        }
     },
 
     mounted: function() {
         console.log(this.initialSpotData)
         this.spot_data.name = this.initialSpotData.spot_name;
-        this.spot_data.types = this.initialSpotData.spot_type;
+        this.spot_data.types = this.initialSpotData.spot_type.split(",")[0];
         this.spot_data.scores = this.initialScores;
         if(this.initialPicture == ""
         || this.initialPicture == require("@/assets/noimage.png")) {
@@ -307,6 +314,10 @@ export default {
                 return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
             });
             this.$nextTick(() => (this.chart_disp = true));
+            if(!this.doneInitTags) {
+                this.initTags();
+                this.doneInitTags = true;
+            }
         },
         'spot_data.scores': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
             this.chart_disp = false
