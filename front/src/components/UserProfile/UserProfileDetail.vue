@@ -98,6 +98,8 @@ export default {
             const imageFile = this.createImageFile(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
             uploadProfileImage(imageFile, this.$store.state.userData.userId)
         },
+        deleteUser: function() {
+        },
 
         createImageFile: function(base64image, name) {
             var bin = atob(base64image.replace(/^.*,/, ''));

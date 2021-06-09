@@ -29,6 +29,7 @@
 <script>
 import {getReviewBySpotId, deleteReview} from '../../routes/reviewRequest';
 import {deleteSpot} from '../../routes/spotRequest';
+import {deleteSpotImage} from '../../routes/imageRequest';
 export default {
     props: {
         showDialog: Boolean,
@@ -41,9 +42,9 @@ export default {
             for (let i = 0; i < review_id_list.length; i++) {
                 await deleteReview(review_id_list[i]);
             }
-            await deleteSpot(this.spotId)
-            this.$router.go({path: this.$router.currentRoute.path, force: true})
-            
+            await deleteSpot(this.spotId);
+            await deleteSpotImage(this.spotId);
+            this.$router.go({path: this.$router.currentRoute.path, force: true})       
         },
         onCancel: function() {
             this.$emit("cancel");
