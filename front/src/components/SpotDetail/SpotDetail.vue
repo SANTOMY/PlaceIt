@@ -301,9 +301,6 @@ export default {
         onClickedDeleteButton: function() {
             this.showDeleteDialog = true;
         },
-        onDelete: function() {
-
-        },
         cancelDelete: function() {
             this.showDeleteDialog = false;
         }
