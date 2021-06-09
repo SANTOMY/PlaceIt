@@ -8,6 +8,7 @@ const reviewSQL = require("../database/ReviewSQL");
 module.exports = class ReviewController{
     constructor(){
         this.saveReview.bind(this);
+        this.getReviewBySpotId.bind(this)
     }
     
     async saveReview(req, res){
@@ -58,6 +59,23 @@ module.exports = class ReviewController{
         }).catch((exception)=>{
             info(fileLabel, "ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}) +": " + JSON.stringify(result));
             error(fileLabel, "Error in attempt to load: " + exception )
+            return res.status(400).json({"success": false, "error": exception});
+        })
+    }
+
+    async deleteReview(req,res){
+        const reviewId = req.body.reviewId;
+        return reviewSQL.deleteReview(reviewId).then((result)=>{
+            if(result.success){
+                info(fileLabel,"Successfully deleted review");
+                return res.status(200).json({"success": true})
+            } else{
+                info(fileLabel, "Unsuccessful deletion for review " + JSON.stringify(result));
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+        }).catch((exception)=>{
+            error(fileLabel, "ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}) +": " + JSON.stringify(result));
+            error(fileLabel, "Error while trying to delete review: " + exception);
             return res.status(400).json({"success": false, "error": exception});
         })
     }

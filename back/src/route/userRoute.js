@@ -6,6 +6,8 @@ const userController = new UserController();
 router.post("/register",userController.register);
 router.get("/getUserByEmail/:email",userController.getUserByEmail);
 router.put("/editUser",userController.editUser);
+router.put("/confirmPassword",userController.confirmPassword);
+router.put("/deleteUser",userController.deleteUser);
 router.get("/getUserById/:userId",userController.getUserById);
 router.get("/getAllUniversities",userController.getAllUniversities);
 

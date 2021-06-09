@@ -7,7 +7,7 @@
         <spot-reg-button :regFlag="regFlag" v-on:click.native="changeMode()" v-if='this.$store.state.userData != null'/>
         <!-- 現在地ボタン -->
         <now-loc-button v-on:click.native="setNowLocation()"/>
-        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
+        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedSpotUserId" @close="closeDialog()"/>
     </div>  
 </template>
 
