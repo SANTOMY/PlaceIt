@@ -18,6 +18,7 @@
 
                         <!-- スポットの種類 -->
                         <v-select
+                            :disabled="doneInitTags"
                             :rules="typeRules"
                             v-model="spot_data.types"
                             :items="all_types_name"
