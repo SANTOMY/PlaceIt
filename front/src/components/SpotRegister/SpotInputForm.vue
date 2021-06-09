@@ -62,7 +62,7 @@
                         </v-autocomplete>
 
                         <!-- スポットの説明 -->
-                        <v-textarea v-if="submitFirstReview"
+                        <v-textarea v-if="registerMode"
                             v-model="spot_data.comment"
                             solo
                             name="input-7-4"
@@ -70,9 +70,9 @@
                         ></v-textarea>
 
 
-                        <h3 v-if="chart_disp==true && submitFirstReview && spot_data.types">スコア</h3>
+                        <h3 v-if="chart_disp==true && registerMode && spot_data.types">スコア</h3>
 
-                        <v-row v-if="chart_disp==true && submitFirstReview && spot_data.types">
+                        <v-row v-if="chart_disp==true && registerMode && spot_data.types">
                             <!-- レーダーチャート表示 -->
                             <v-col cols="5" justify="center">
                                 <radarChartDisp
@@ -217,7 +217,7 @@ export default {
     },
 
     props: {
-        submitFirstReview: Boolean,
+        registerMode: Boolean,
         title: String,
         regButtonText: String,
         initialSpotData: Object,
@@ -315,7 +315,7 @@ export default {
                 return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
             });
             this.$nextTick(() => (this.chart_disp = true));
-            if(!this.doneInitTags) {
+            if(!this.doneInitTags && !this.registerMode) {
                 this.initTags();
                 this.doneInitTags = true;
             }
