@@ -27,8 +27,8 @@ export default {
     },
     data: function() {
         return {
-            type_dict: getTagTypeDict('icon')
+            type_dict: getTagTypeDict("dict")
         }
-    }  
+    } 
 }
 </script>

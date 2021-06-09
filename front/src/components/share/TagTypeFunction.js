@@ -1,5 +1,20 @@
+const TagType = require("./TagType");
 export function getTagTypeDict(value) {
     // spot type の追加や削除を一括で行うファイル
+    var tagTypes = [new TagType("noodle", "mdi-noodles", "麺類", ["restaurant"]),
+                    new TagType("hamburger", "mdi-hamburger", "ハンバーガー", ["restaurant"]),
+    ]
+
+    if (value == "all")
+        return tagTypes
+    else {
+        var tagDict = {}
+        tagTypes.forEach(function(tag) {
+            tagDict[tag.getType()] = tag.getIcon()
+        })
+        return tagDict
+    }
+    /*
     var type_dict = {
         noodle: "mdi-noodles",                   // noodleのアイコン
         hamburger: "mdi-hamburger",             // hamburgerのアイコン
@@ -13,6 +28,33 @@ export function getTagTypeDict(value) {
         electric: "mdi-fridge-bottom",
         hospital: "mdi-hospital-box",
     }
+    var name_dict = {
+        
+        noodle: '麺類',
+        hamburger: 'ハンバーガー',
+        karaoke: 'カラオケ',
+        hotel: 'ホテル',
+        onsen: '温泉',
+        soccer: 'サッカー',
+        tennis: 'テニス',
+        baseball: '野球',
+        convenience: 'コンビニ',
+        hospital: '病院',
+        
+        
+        //{type:'noodle', text:'麺類'},
+        //{type:'hamburger', text:'ハンバーガー'},
+        //{type:'karaoke',text:'カラオケ'},
+        //{type:'hotel', text:'ホテル'},
+        //{type:'onsen', text:'温泉'},
+        //{type:'soccer', text:'サッカー'},
+        //{type:'tennis', text:'テニス'},
+        //{type:'baseball', text:'野球'},
+        //{type:'convenience', text:'コンビニ'},
+        //{type:'hospital', text:'病院'},
+        
+    }
+
     //カラーは使ってないからとりあえず適当
     var color_dict = {
         noodle: 'orange',
@@ -40,16 +82,5 @@ export function getTagTypeDict(value) {
         electric: ["shopping"],
         hospital: ["lifework"],
     }
-    var tag_types = Object.keys(type_dict)
-    if (value=='icon'){
-        return type_dict;
-    }else if(value=='type'){
-        return tag_types;
-    }else if(value=='color'){
-        return color_dict;
-    }else if(value=='stype'){
-        return spot_type_dict;
-    }
-
+    */
 }
-

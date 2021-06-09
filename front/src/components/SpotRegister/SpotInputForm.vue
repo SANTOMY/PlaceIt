@@ -196,7 +196,7 @@ export default {
             criteria_list: [],
             all_spot_types: getSpotTypeDict('type'), //spot typeを取得
             all_types_name: getSpotTypeDict('name'), //spotの内容説明を取得
-            all_tags: getTagTypeDict('type'), // 全てのタグ
+            all_tags: getTagTypeDict("all"), // 全てのタグ
             filterd_tags: [], // spot typeに紐づいたタグのリスト
             selected_tags: [], // ユーザが選択したタグのリスト
 
@@ -296,9 +296,9 @@ export default {
             this.selected_tags = []
             let spotType = this.spot_data.types
             this.filterd_tags = this.all_tags.filter(function(tag){
-                console.log(spotType)
-                console.log(getTagTypeDict("stype")[tag.toString()].indexOf(spotType))
-                return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
+                return tag.getSpotTypes().indexOf(spotType) != -1;
+            }).map(function(tag) {
+                return tag.getType()
             });
             this.$nextTick(() => (this.chart_disp = true));
         },

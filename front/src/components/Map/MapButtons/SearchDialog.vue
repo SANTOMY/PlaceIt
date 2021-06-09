@@ -171,7 +171,7 @@ export default {
       typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
       nowUniv:false,//現在の大学
       dialog:false,//検索ダイアログ表示管理
-      tagNameList: getTagTypeDict('type'),
+      tagTypes: getTagTypeDict("all"),
       filterdTags: [],
       selectedTags: [],
       keyword:"",//検索キーワード
@@ -199,11 +199,6 @@ export default {
             //選ばれた検索条件をMapに送信
             this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.rating,this.selectedTags);
         },
-        filterTags: function() {
-            return this.tagNameList.filter(function(tag){
-                return getTagTypeDict("stype")[tag].includes(this.nowType);
-            });
-        },
         remove :function(item) {
             const index = this.selectedTags.indexOf(item)
             if (index >= 0) this.selectedTags.splice(index, 1)
@@ -213,8 +208,10 @@ export default {
         'nowType': function(){ // spot type を変えた時の処理
             this.selectedTags = []
             let spotType = this.nowType
-            this.filterdTags = this.tagNameList.filter(function(tag){
-                return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
+            this.filterdTags = this.tagTypes.filter(function(tag) {
+                return tag.getSpotTypes().indexOf(spotType) != -1;
+            }).map(function(tag) {
+                return tag.getType()
             });
             if (spotType == "reset")
                 this.filterdTags = [];
