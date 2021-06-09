@@ -64,32 +64,15 @@ async function saveSpot(newSpot){
 }
 
 async function getSpotByKeywords(keywords){
-    var spotIds = [];
     const query1 = makeSQL.getSpotQueryBuilder(keywords);
     const client = await pool.connect();
     return client.query(query1)
     .then((results1)=>{
+        client.release();
         if (results1.rowCount == 0)
             return {"success":false, "data":"spot does not exist"};
-        for(var i=0; i<results1.rows.length; i++){
-            const spot = results1.rows[i];
-            spotIds.push(spot.spot_id);
-        }
-
-        const query2 = makeSQL.getReviewsQueryBuilder(spotIds);
-        return client.query(query2)
-        .then( (results2) => {
-            client.release();
-            if (results2.rowCount == 0)
-                return {"success":false, "data":"review does not exist"};
-            info(fileLabel,"get review: " + util.inspect(spotIds,{showHidden: false, depth: null}));
-            return {"success":true, "spots":results1.rows, "review":results2.rows};
-        }).catch((exception)=>{
-            client.release();
-            error(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));
-            error(fileLabel,"Error while getting review. " + exception);
-            return {"success":false, "data":exception};      
-        });
+        info(fileLabel,"get spot: " + util.inspect(results1.rows,{showHidden: false, depth: null}));
+        return {"success":true, "spots":results1.rows};
     }).catch((exception)=>{
         client.release();
         error(fileLabel,"ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}));

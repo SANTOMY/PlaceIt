@@ -7,22 +7,6 @@ const client = new Client({
   port: 5432,
   password: "password"
 });
-/*
-pool.connect( function(err, client) {
-    if (err) {
-      console.log(err);
-    } else {
-        console.log("success"); //コンソール上での確認用なため、この1文は必須ではない。
-    }
-})
-*/
-
-/*
-const query = {
-    text: 'INSERT INTO users(id, username, email, password) VALUES($1, $2, $3, $4)',
-    values: [4, 'shiro', 'ddd@com', 'pass3']
-}
-*/
 
 exports.connect = function(query) {
     client.connect()

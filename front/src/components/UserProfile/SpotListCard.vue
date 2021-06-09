@@ -168,7 +168,6 @@
         methods:  {
             getNumber: function(number){
                 // < 1 2 ... 10 > ←このタイプのボタンから入力を受け取る
-                // console.log(number)
                 this.jumpSpotPage(number)
             },
             ChangeCategory: function( i ) {

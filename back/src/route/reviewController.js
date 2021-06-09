@@ -8,6 +8,7 @@ const reviewSQL = require("../database/ReviewSQL");
 module.exports = class ReviewController{
     constructor(){
         this.saveReview.bind(this);
+        this.getReviewBySpotId.bind(this)
     }
     
     async saveReview(req, res){
