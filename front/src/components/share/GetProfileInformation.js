@@ -20,8 +20,6 @@ async function getSpotByUserId (user_id){
                     }
                 }
                 good = Math.round(10 * average(scores)) / 10;
-                console.log(good);
-
 
                 getSpotImage(spt_id).then((result) => {
                     if (result.success && result.data != undefined) {
