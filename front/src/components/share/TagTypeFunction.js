@@ -3,6 +3,16 @@ export function getTagTypeDict(value) {
     // spot type の追加や削除を一括で行うファイル
     var tagTypes = [new TagType("noodle", "mdi-noodles", "麺類", ["restaurant"]),
                     new TagType("hamburger", "mdi-hamburger", "ハンバーガー", ["restaurant"]),
+                    new TagType("karaoke", "mdi-microphone-variant", "カラオケ", ["amusements"]),
+                    new TagType("hotel", "mdi-home-city-outline", "ホテル", ["accomodation"]),
+                    new TagType("onsen", "mdi-hot-tub", "温泉", ["travel", "accomodation"]),
+                    new TagType("soccer", "mdi-soccer", "サッカー", ["amusements"]),
+                    new TagType("tennis", "mdi-tennis", "テニス", ["amusements"]),
+                    new TagType("baseball", "mdi-baseball-bat", "野球", ["amusements"]),
+                    new TagType("convenience", "mdi-store-24-hour", "コンビニ", ["shopping"]),
+                    new TagType("electric", "mdi-fridge-bottom", "家電", ["shopping"]),
+                    new TagType("hospital", "mdi-hospital-box", "病院", ["lifework"]),
+
     ]
 
     if (value == "icon") {
