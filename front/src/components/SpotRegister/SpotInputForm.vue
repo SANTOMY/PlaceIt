@@ -43,6 +43,7 @@
                         <v-autocomplete
                             v-model="selected_tags"
                             :items="filterd_tags"
+                            item-text="jp"
                             label="タグ"
                             solo
                             multiple
@@ -55,8 +56,8 @@
                                     color="grey lighten-4"
                                     @click="removeTag(item)"
                                 >
-                                    <tag-type-icon :type="item" :isLarge="true" classType="mr-5"/>
-                                    <h3>{{ item }}</h3>
+                                    <tag-type-icon :type="item.type" :isLarge="true" classType="mr-5"/>
+                                    <h3>{{ item.jp }}</h3>
                                 </v-chip>
                             </template>
                         </v-autocomplete>
@@ -297,8 +298,6 @@ export default {
             let spotType = this.spot_data.types
             this.filterd_tags = this.all_tags.filter(function(tag){
                 return tag.getSpotTypes().indexOf(spotType) != -1;
-            }).map(function(tag) {
-                return tag.getType()
             });
             this.$nextTick(() => (this.chart_disp = true));
         },

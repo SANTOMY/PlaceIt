@@ -46,6 +46,7 @@
         <v-autocomplete
             v-model="selectedTags"
             :items="filterdTags"
+            item-text="jp"
             label="タグ"
             multiple
             single-line
@@ -59,7 +60,7 @@
                     color="grey lighten-4"
                     @click="remove(item)"
                 >
-                    <tag-type-icon :type="item" :isLarge="false" toolTip/>
+                    <tag-type-icon :type="item.type" :isLarge="false" toolTip/>
                     <!--
                     <h4>{{ item }}</h4>
                     -->
@@ -210,8 +211,6 @@ export default {
             let spotType = this.nowType
             this.filterdTags = this.tagTypes.filter(function(tag) {
                 return tag.getSpotTypes().indexOf(spotType) != -1;
-            }).map(function(tag) {
-                return tag.getType()
             });
             if (spotType == "reset")
                 this.filterdTags = [];
