@@ -21,11 +21,8 @@ var upload = multer({imageFilter:imageFilter});
 
 
 router.post("/spot-image/:spotId", upload.single('file'), async function(req, res) {
-    console.log(req.file);
-    console.log(req.params);
     var encoded_image = req.file.buffer.toString("base64");
     var newImage = {spotId:req.params.spotId,image:encoded_image};
-    console.log(newImage.spotId);
 
     return imageSQL.uploadSpotPicture(newImage).then((result) => {
         if(result.success){            
@@ -45,7 +42,6 @@ router.get("/spot-image/:spotId", async function(req,res){
 
     return imageSQL.getSpotPicture(spotId).then((result)=>{
         if(result.success){
-            console.log(result);
             info(fileLabel, "Fetched spot images successfully");
             return res.status(200).json({"data":result.data}); //result.data is all the rows with corresponding spotId
         }else{
@@ -60,11 +56,8 @@ router.get("/spot-image/:spotId", async function(req,res){
 
 
 router.post("/profile-image/:userId", upload.single('file'), (req, res, cb) => {
-    console.log(req.file);
-    //console.log(req.files);
     var encoded_image = req.file.buffer.toString("base64");
     var newImage = {userId:req.params.userId,image:encoded_image};
-    console.log(newImage);
 
     return imageSQL.uploadProfilePicture(newImage).then((result) => {
         if(result.success){            
@@ -82,7 +75,6 @@ router.get("/profile-image/:userId", async function(req, res){
     const userId = req.params.userId;
     return imageSQL.getProfilePicture(userId).then((result)=>{
         if(result.success){
-            console.log(result);
             info(fileLabel, "Fetched profile image successfully");
             //var buffer = Buffer.from(result.data.image)
             return res.status(200).json({image:result.data});

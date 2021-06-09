@@ -27,6 +27,16 @@ export default {
                 spot_name: "",
                 spot_type: ""
             },
+            criteria_list: [],
+            // アップロードされたファイルを一時的に保管する変数
+            // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
+            uploadedFiles: [],
+            nameRules: [
+                v => !!v || "スポット名は必須項目です。"
+            ],
+            typeRules: [
+                v => v.length > 0 || "必ず一つ以上選択してください。"
+            ],
             initialImages: [],
             initialScores: [3, 3, 3, 3, 3]
         }
@@ -34,7 +44,8 @@ export default {
 
     methods: {
         OnRegister: function(spotData, imageFile) {
-            saveSpot(spotData.name, this.$route.query.lon, this.$route.query.lat, "", spotData.types, spotData.userId, spotData.comment, spotData.scores, spotData.university)
+            console.log(spotData)
+            saveSpot(spotData.name, this.$route.query.lon, this.$route.query.lat, "", spotData.types + "," + spotData.tags, spotData.userId, spotData.comment, spotData.scores, spotData.university)
                 .then(res => {
                     if(!res.success) return
                     uploadSpotImage(imageFile, res.spotId)

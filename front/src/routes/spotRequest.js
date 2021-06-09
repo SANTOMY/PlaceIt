@@ -16,7 +16,6 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
         });
         return await reponse.json();
     }catch(exception){
-        console.log(exception);
         return{success:false, data:exception};
     }
 }
@@ -47,7 +46,6 @@ async function getSpot(spotId, spotName, spotType, userId, university){
         }
 
     } catch(exception){
-        console.log(exception);
         return {success:false, data:exception};
     }
 }

@@ -42,6 +42,9 @@ export default {
             time:0,//タイマー用変数
             showDialog:false, //ダイアログを表示するか
             selectedSpotID: "", //クリックして選択しているspotのid
+            selectedSpotName: "",
+            selectedSpotType: "",
+            selectedSpotUserId: "",
             markers:null,//マーカーリストのレイヤー群
             univFlag:false,//大学別検索の有効化・無効化
             user:{
@@ -49,17 +52,17 @@ export default {
                 email: null,
                 password: null,
                 univ:"",
-            }
+            },
+            tags: []
         };
     },
     methods: {
         //Map上に検索条件にあったスポットを表示する関数
-        showSpot: async function(type,univ,keyword,rating){
-            if (type=="reset") type = "";
-            var data = await getSpot("","",type,"",univ);
+        showSpot: async function (type, univ, keyword) {
+            if (type == "reset") type = "";
+            var data = await getSpot("", "", type, "", univ);
             if (data.success){
                 var spots = data.spots;
-                var review = data.review;  
                 //キーワードを含まないスポットを除外
                 spots = spots.filter(function(spot){
                     return spot.spot_name.indexOf(keyword) != -1;
@@ -69,17 +72,17 @@ export default {
                 const icon_dict = getSpotTypeDict('icon')
                 const color_dict = getSpotTypeDict('color')
 
+                //TODO : filter by rating
                 spots.forEach(spot => {
-                    if(this.culSpotRating(spot.spot_id,review) > rating){
-                        var marker =  L.marker([spot.y, spot.x], 
-                            {icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type], color: color_dict[spot.spot_type] }) })
+                    var marker = L.marker([spot.y, spot.x],
+                        { icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type], color: color_dict[spot.spot_type] }) })
                         .on('click', this.markerClickEvent);
-                        marker.spot_name = spot.spot_name;
-                        marker.spot_id = spot.spot_id;
-                        marker.spot_type = spot.spot_type;
-                        marker.spot_picture = spot.spot_picture;
-                        markerSet.push(marker)
-                    }
+                    marker.spot_name = spot.spot_name;
+                    marker.spot_id = spot.spot_id;
+                    marker.spot_type = spot.spot_type;
+                    marker.spot_picture = spot.spot_picture;
+                    marker.user_id = spot.user_id;
+                    markerSet.push(marker)
                 });
                 this.markers = L.layerGroup(markerSet).addTo(this.map)
             } else {
@@ -87,16 +90,15 @@ export default {
             }
         },
 
+        //TODO
         //画面の枠組みの経緯度を取得する関数
-        getWindow: function(){
-            var mapframe = this.map.getBounds()
-            var west = mapframe.getWest()
-            var east = mapframe.getEast()
-            var north = mapframe.getNorth()
-            var south = mapframe.getSouth()
-            console.log([west,east,north,south])
-
-        },
+        // getWindow: function(){
+        //     var mapframe = this.map.getBounds()
+        //     var west = mapframe.getWest()
+        //     var east = mapframe.getEast()
+        //     var north = mapframe.getNorth()
+        //     var south = mapframe.getSouth()
+        // },
         //Map上のどこかををクリックした時に起動する関数
         mapClickEvent(event){
             if(this.flag){
@@ -115,8 +117,10 @@ export default {
         //Markerがクリックされた時に起動する関数
         markerClickEvent(event){
             this.showDialog = true;
-            this.getWindow()
-            this.selectedSpotID = event.target.spot_id
+            this.selectedSpotID = event.target.spot_id;
+            this.selectedSpotName = event.target.spot_name;
+            this.selectedSpotType = event.target.spot_type;
+            this.selectedSpotUserId = event.target.user_id;
         },
 
         //現在地アイコンを更新する関数(予定)
@@ -147,32 +151,48 @@ export default {
             //現在地マーカーを設置
         },
 
+        // tagのリストを文字列に変換
+        typesToStrs: function(types) {
+            var strs = ""
+            for (var i = 0; i < types.length; i++) {
+                if (i != types.length - 1) {
+                    strs = strs + types[i] + ",";
+                } else {
+                    strs = strs + types[i];
+                }
+            }
+            return strs;
+        },
+
         //検索ジャンルを更新するメソッド
         search: async function(...args){
-            const [type,univ,keyword,rating] = args
+            const [type,univ,keyword,rating,tags] = args
             this.markers.clearLayers();
             this.marker = [];
-            this.nowType = type;    
+            this.nowType = type;
+            this.tags = tags;
+            let typeAndTags = type + ((tags.length > 0)? ("," + this.typesToStrs(tags)) : "");
 
             if(univ){
-                await this.showSpot(type,this.user.univ,keyword,rating);
+                await this.showSpot(typeAndTags,this.user.univ,keyword,rating);
             } else{
-                await this.showSpot(type,"",keyword,rating);
+                await this.showSpot(typeAndTags,"",keyword,rating);
             }
         },
+        //TODO : filter by rating
         //スポットごとのレビュー評価平均を計算する関数
-        culSpotRating: function(spot_id,reviews){
-            reviews = reviews.filter(function(review){
-                return review.spot_id == spot_id
-              });
-            var sumRate=0;
-            var dataNum=0;
-            reviews.forEach(review => {
-                sumRate = sumRate+review.score;
-                dataNum += 1;
-            });
-            return sumRate/dataNum;
-        },
+        // culSpotRating: function(spot_id,reviews){
+        //     reviews = reviews.filter(function(review){
+        //         return review.spot_id == spot_id
+        //       });
+        //     var sumRate=0;
+        //     var dataNum=0;
+        //     reviews.forEach(review => {
+        //         sumRate = sumRate+review.score;
+        //         dataNum += 1;
+        //     });
+        //     return sumRate/dataNum;
+        // },
         closeDialog() {
             this.showDialog = false;
     }
@@ -202,8 +222,9 @@ export default {
         //this.map.on("locationfound",this.locationMarker);
         //spot表示
         this.showSpot(this.nowType,"","",0);
-        var data = await getSpot("","","","","");
-        this.spotNameList = data.spots;
+        // var data = await getSpot("","","","","");
+        // this.spotNameList = data.spots;
+        this.spotNameList = [];
     }, 
     //現在地追跡のために利用(予定)
     watch: {

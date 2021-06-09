@@ -101,10 +101,10 @@ export default {
     methods: {
         onClickedRegisterButton: function() {
             this.showDialog = false;
+            console.log(this.spot_id);
             for(var i = 0; i < 5; i++) {
                 console.log("score " + i + ": " + this.review_data.scores[i]);
             }
-            console.log();
             saveReview(this.spot_id, this.review_data.comment, this.review_data.scores, this.$store.state.userData.userId)
                 .then(res => {
                     console.log('saveReview response:',res)        // Debug
@@ -115,8 +115,7 @@ export default {
     },
 
     mounted: function() {
-        this.criteria_list = getSpotTypeDict('review')[this.spot_type]; // レーダーチャートパラメータの項目リスト
-        // console.log('Item list of radar chart parameters:',this.criteria_list) //レーダーチャートパラメータの項目リストdebug
+        this.criteria_list = getSpotTypeDict('review')[this.spot_type];
     },
 
     watch:{
