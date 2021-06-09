@@ -136,7 +136,7 @@
                 </v-btn>
                 <spot-delete-dialog 
                     :showDialog="showDeleteDialog"
-                    :spotId="spotData.spot_id"
+                    :spotId="spot_id"
                     @cancel="cancelDelete"
                 />
             </v-row>

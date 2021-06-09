@@ -27,19 +27,19 @@
 </template>
 
 <script>
-import {deleteSpot} from '../../routes/spotRequest';
+import {getReviewBySpotId} from '../../routes/reviewRequest';
+//import {deleteSpot} from '../../routes/spotRequest';
 export default {
     props: {
         showDialog: Boolean,
         spotId: String
     },
     methods: {
-        clickedYes: function() {
-            deleteSpot(this.spotId)
-                .then(res => {
-                    console.log(res)
-                    //this.$router.go({path: this.$router.currentRoute.path, force: true})
-                })
+        clickedYes:  async function() {
+            const res = await getReviewBySpotId(this.spotId);
+            const review_id_list = res.review.map(item => item.review_id);
+            console.log(review_id_list);
+            //await deleteSpot(this.spotId)
         },
         clickedNo: function() {
             this.$emit("cancel");
