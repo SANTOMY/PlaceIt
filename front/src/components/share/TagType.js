@@ -20,9 +20,12 @@ module.exports = class TagType {
     }
 
     getJp() {
+        /*
         return {
             [this.type]: this.jp
         }
+        */
+       return this.jp
     }
 
     getSpotTypes() {

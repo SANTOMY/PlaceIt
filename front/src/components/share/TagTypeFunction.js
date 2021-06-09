@@ -5,15 +5,21 @@ export function getTagTypeDict(value) {
                     new TagType("hamburger", "mdi-hamburger", "ハンバーガー", ["restaurant"]),
     ]
 
-    if (value == "all")
-        return tagTypes
-    else {
-        var tagDict = {}
+    if (value == "icon") {
+        var iconDict = {}
         tagTypes.forEach(function(tag) {
-            tagDict[tag.getType()] = tag.getIcon()
+            iconDict[tag.getType()] = tag.getIcon()
         })
-        return tagDict
+        return iconDict
+    } else if (value == "jp") {
+        var jpDict = {}
+        tagTypes.forEach(function(tag) {
+            jpDict[tag.getType()] = tag.getJp()
+        })
+        return jpDict
     }
+
+    return tagTypes
     /*
     var type_dict = {
         noodle: "mdi-noodles",                   // noodleのアイコン
