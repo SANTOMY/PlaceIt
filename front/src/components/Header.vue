@@ -122,9 +122,9 @@ export default {
         },
         toUserPage() {
             this.$store.commit("myPageDisp")
-            if(location.pathname=='/user'){
+            if(location.pathname=='/user'){ // ユーザーページにいる場合
                 this.$router.go({path: this.$router.currentRoute.path, force: true})       
-            }else{
+            }else{ // ユーザーページ以外にいる場合
                 this.$router.push({ path: 'user'})
             }
         }
