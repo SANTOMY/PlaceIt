@@ -201,7 +201,6 @@ export default {
             this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.rating,this.selectedTags);
         },
         remove :function(item) {
-            //removeできるように修正
             const index = this.selectedTags.indexOf(item.getJp());
             if (index >= 0) this.selectedTags.splice(index, 1);
         },
