@@ -2,12 +2,13 @@
   <spot-input-form 
     @register="OnRegister"
     @cancel="OnCancel"
-    submitFirstReview
+    registerMode
     title="新しいスポットを登録"
     regButtonText="登録"
     :initialSpotData="initialSpotData"
     :initialImages="initialImages"
     :initialScores="initialScores"
+    initialPicture=""
   />
 </template>
 
@@ -48,6 +49,7 @@ export default {
             saveSpot(spotData.name, this.$route.query.lon, this.$route.query.lat, "", spotData.types + "," + spotData.tags, spotData.userId, spotData.comment, spotData.scores, spotData.university)
                 .then(res => {
                     if(!res.success) return
+                    if(imageFile == undefined) return 
                     uploadSpotImage(imageFile, res.spotId)
                         .then(res => {
                             console.log(res)
