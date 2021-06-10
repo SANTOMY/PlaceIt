@@ -125,8 +125,20 @@
                             />
                         </v-col>
                     </v-row>
-
                 </v-col>
+            </v-row>
+            <v-row>
+                <v-btn dark block color="red"
+                    v-if="checkCreatedMyself"
+                    @click="onClickedDeleteButton"
+                >
+                    <h3>スポットを削除する</h3>
+                </v-btn>
+                <spot-delete-dialog 
+                    :showDialog="showDeleteDialog"
+                    :spotId="spot_id"
+                    @cancel="cancelDelete"
+                />
             </v-row>
             </v-container>
             
@@ -146,6 +158,7 @@ import {average, getReviewBySpotId} from '../../routes/reviewRequest'
 import {getSpotImage} from '../../routes/imageRequest'
 import { getUserById } from '../../routes/userRequest.js'
 import {getProfileImage} from "../../routes/imageRequest"
+import SpotDeleteDialog from './SpotDeleteDialog.vue'
 
 
 export default {
@@ -156,7 +169,8 @@ export default {
         tagTypeIcon,
         spotReviewRegister,
         radarChartDisp, 
-        spotEdit
+        spotEdit,
+        SpotDeleteDialog
     },
     data: function() {
         return {
@@ -176,8 +190,9 @@ export default {
             },
             isLoadingData: true,   //spotデータを読み込んでいるか
             isLoadingPhoto: true,   // spotイメージを読み込んでいるか
+            isEditMode: false, // 修正モードであるか
+            showDeleteDialog: false,
             showUserDialog: false,   //他のユーザープロフィール表示するか
-            isEditMode: false, // Spot情報を修正するか
             otherUser: true,
         }
     },
@@ -282,6 +297,12 @@ export default {
         onUpdate: function() {
             this.isEditMode = false;
             this.updateDetail();
+        },
+        onClickedDeleteButton: function() {
+            this.showDeleteDialog = true;
+        },
+        cancelDelete: function() {
+            this.showDeleteDialog = false;
         }
     },
     computed: {
