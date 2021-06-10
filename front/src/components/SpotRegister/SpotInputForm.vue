@@ -36,6 +36,28 @@
                                 </v-chip>
                             </template>
                         </v-select>
+
+                        <!-- タグ登録 -->
+                        <v-autocomplete
+                            v-model="selected_tags"
+                            :items="filterd_tags"
+                            label="タグ"
+                            solo
+                            multiple
+                            height="80px"
+                        >
+                            <template v-slot:selection="{ item }">
+                                <v-chip
+                                    large
+                                    label
+                                    color="grey lighten-4"
+                                >
+                                    <tag-type-icon :type="item" :isLarge="true" classType="mr-5"/>
+                                    <h3>{{ item }}</h3>
+                                </v-chip>
+                            </template>
+                        </v-autocomplete>
+
                         <!-- スポットの説明 -->
                         <v-textarea v-if="submitFirstReview"
                             v-model="spot_data.comment"
@@ -144,7 +166,9 @@
 
 <script>
 import SpotTypeIcon from "../share/SpotTypeIcon.vue"
+import TagTypeIcon from "../share/TagTypeIcon.vue"
 import {getSpotTypeDict} from "../share/SpotTypeFunction"
+import {getTagTypeDict} from "../share/TagTypeFunction"
 import StarRating from 'vue-star-rating'
 import radarChartDisp from '../share/RadarChartDisp'
 
@@ -152,6 +176,7 @@ export default {
 
     components: {
         SpotTypeIcon,
+        TagTypeIcon,
         StarRating,
         radarChartDisp,
     },
@@ -162,6 +187,7 @@ export default {
                 name: "",
                 photos: [],
                 types: "",
+                tags: "",
                 userId: this.$store.state.userData.userId,
                 comment: "",
                 scores: [0,0,0,0,0],
@@ -169,6 +195,9 @@ export default {
             },
             criteria_list: [],
             all_spot_types: getSpotTypeDict('type'), //spot typeを取得
+            all_tags: getTagTypeDict('type'), // 全てのタグ
+            filterd_tags: [], // spot typeに紐づいたタグのリスト
+            selected_tags: [], // ユーザが選択したタグのリスト
 
             // アップロードされたファイルを一時的に保管する変数
             // 適切な形式に変換された画像データをspot_data.photosに入れるために必要
@@ -224,7 +253,18 @@ export default {
         },
         currentRating: function (val) {
             this.$emit('current-rating',val)
-        }
+        },
+        typesToStrs: function(types) {
+            var strs = ""
+            for (var i = 0; i < types.length; i++) {
+                if (i != types.length - 1) {
+                    strs = strs + types[i] + ",";
+                } else {
+                    strs = strs + types[i];
+                }
+            }
+            return strs;
+        },
     },
 
     mounted: function() {
@@ -248,12 +288,20 @@ export default {
         'spot_data.types': function(){ // spot type を変えた時の処理
             this.chart_disp = false
             this.criteria_list = getSpotTypeDict('review')[this.spot_data.types];
+            this.selected_tags = []
+            let spotType = this.spot_data.types
+            this.filterd_tags = this.all_tags.filter(function(tag){
+                return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
+            });
             this.$nextTick(() => (this.chart_disp = true));
         },
         'spot_data.scores': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
             this.chart_disp = false
             this.$nextTick(() => (this.chart_disp = true));
         },
+        'selected_tags': function(){
+            this.spot_data.tags = this.typesToStrs(this.selected_tags);
+        }
     },
 }
 </script>
