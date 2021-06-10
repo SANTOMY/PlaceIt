@@ -269,7 +269,7 @@ export default {
             return strs;
         },
         removeTag :function(item) {
-            const index = this.selected_tags.indexOf(item)
+            const index = this.selected_tags.indexOf(item.getType())
             if (index >= 0) this.selected_tags.splice(index, 1)
         }
     },
