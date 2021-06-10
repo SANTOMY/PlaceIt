@@ -54,8 +54,8 @@ export default {
                         .then(res => {
                             console.log(res)
                         })
+                    this.$router.push('/map')
                 })
-            this.$router.push('/map')            
         },
         OnCancel: function() {
             this.$router.push('/map')

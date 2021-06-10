@@ -22,7 +22,6 @@ async function uploadProfilePicture(newImage){
         };
     }
     return client.query(query).then((result)=>{
-        console.log(query);
         client.release();
         info(fileLabel,"Saved profile image");
         return {"success":true};
@@ -78,7 +77,6 @@ async function uploadSpotPicture(newImage){
 
     return client.query(query).then((result)=>{
         info(fileLabel,"Inside query");
-        //console.log(query);
         client.release();
         info(fileLabel,"Saved spot image");
         return {"success":true};
@@ -113,9 +111,31 @@ async function getSpotPicture(spotId){
     });
 }
 
+async function deleteSpotPicture(spotId) {
+
+    const deleteImageQuery = {
+        text: `DELETE FROM images.spot where spot_id = $1`,
+        values: [spotId]
+    };
+    const client = await pool.connect();
+
+    return client.query(deleteImageQuery).then(() => {
+        client.release();
+        info(fileLabel, "removed Image with id: " + spotId);
+        return { "success": true };
+    })
+        .catch(err => {
+            client.release();
+            error(fileLabel, "Error while deleting image with id: " + spotId);
+            error(fileLabel, "ERROR OBJECT: " + util.inspect(err, { showHidden: false, depth: null }));
+            return { "success": false, "data": err };
+        });
+}
+
 module.exports = {
     uploadProfilePicture:uploadProfilePicture,
     getProfilePicture: getProfilePicture,
     uploadSpotPicture:uploadSpotPicture,
-    getSpotPicture:getSpotPicture
+    getSpotPicture:getSpotPicture,
+    deleteSpotPicture:deleteSpotPicture
 };

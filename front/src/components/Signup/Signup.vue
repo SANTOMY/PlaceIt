@@ -138,10 +138,8 @@ export default {
             if (!this.$refs.loginForm.validate()) return;
             register(this.username,this.email,this.password,this.university)
                 .then(res => {
-                    console.log(res)
                     //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
                     const userData = new User(res.userId, res.userName, res.email, null, res.university)
-                    console.log(userData)
                     this.$store.commit("login", userData)
                     this.$router.push('/map')
                 });

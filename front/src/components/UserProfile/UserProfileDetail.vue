@@ -25,6 +25,7 @@
                     </v-avatar>
                 </v-layout>
                 <avatar-register v-if="!otherUser" @submit="editAvatarImage"/>
+                <user-delete v-if="!otherUser" @submit="deleteUser"/>
             </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
@@ -62,6 +63,7 @@ import UserEdit from "./UserEdit.vue";
 import {uploadProfileImage} from "../../routes/imageRequest"
 import AvatarRegister from "./AvatarRegister.vue"
 import {ConvertToFileFromBase64} from '../share/ConvertImageFunctions';
+import UserDelete from "./UserDelete.vue";
 
 export default {
 
@@ -69,6 +71,7 @@ export default {
         SpotListCard,
         UserEdit,
         AvatarRegister,
+        UserDelete,
     },
     props: {
         otherUser: Boolean,
