@@ -31,7 +31,6 @@
                                 @click:append="showPassword = !showPassword"
                                 v-model="password"
                                 :counter="32"
-                                :rules="passwordRules"
                             />
                             <v-btn 
                                 block
@@ -89,7 +88,6 @@
                                 @click:append="showPassword = !showPassword"
                                 v-model="password"
                                 :counter="32"
-                                :rules="passwordRules"
                             />
                             <v-btn 
                                 block

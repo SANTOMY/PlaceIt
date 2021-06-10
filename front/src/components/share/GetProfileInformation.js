@@ -9,37 +9,30 @@ async function getSpotByUserId (user_id){
         for( var spt of result.spots ){
             const spt_id = spt.spot_id;
             const name = spt.spot_name;
-            var good = 0;
-            var scores = [];
 
             // レビューの計算
             getReviewBySpotId(spt_id).then(result => {
-                var scores = [];
+                const scores = [];
                 for (var rev of result.review) {
                     scores.push(rev.score);
                 }
 
+                const good = Math.round(10 * average(scores)) / 10;
                 getSpotImage(spt_id).then((result) => {
                     if (result.success && result.data != undefined) {
-                        good = Math.round(10 * average(scores)) / 10;
                         const src = "data:image/jpeg;base64," + result.data[0].image
                         my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                     } else {
-                        good = Math.round(10 * average(scores)) / 10;
                         const src = require("@/assets/noimage.png");
                         my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                     }
                 }).catch((exception) => {
-                    good = Math.round(10 * average(scores)) / 10;
                     console.log("Error in getSpotImage: ", exception)
                     const src = require("@/assets/noimage.png");
                     my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                 })
             }).catch((exception) => {
-                good = Math.round(10 * average(scores)) / 10;
                 console.log("Error in getReviewBySpotId: ", exception)
-                const src = require("@/assets/noimage.png");
-                my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
             })
         }
         return my_spot
@@ -62,27 +55,23 @@ async function getSpotYouReviewed( user_id ){
                 const spt = result.spots[ 0 ];
                 const spt_id = spt.spot_id;
                 const name = spt.spot_name;
-                var good = 0;
  
                 // レビューの計算
                 getReviewBySpotId(spt_id).then(result => {
-                    var scores = [];
+                    const scores = [];
                     for (var rev of result.review) {
                         scores.push(rev.score);
                     }
-
+                    const good = Math.round(10 * average(scores)) / 10;
                     getSpotImage(spt_id).then((result) => {
                         if (result.success && result.data != undefined) {
-                            good = Math.round(10 * average(scores)) / 10;
                             const src = "data:image/jpeg;base64," + result.data[0].image
                             good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                         } else {
-                            good = Math.round(10 * average(scores)) / 10;
                             const src = require("@/assets/noimage.png");
                             good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                         }
                     }).catch((exception) => {
-                        good = Math.round(10 * average(scores)) / 10;
                         console.log("Error in getSpotImage: ", exception)
                         const src = require("@/assets/noimage.png");
                         good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
