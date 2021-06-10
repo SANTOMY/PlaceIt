@@ -99,6 +99,9 @@ export default {
             uploadProfileImage(imageFile, this.$store.state.userData.userId)
         },
 
+        deleteUser: function(){
+        },
+
         createImageFile: function(base64image, name) {
             var bin = atob(base64image.replace(/^.*,/, ''));
             var buffer = new Uint8Array(bin.length);
