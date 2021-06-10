@@ -3,6 +3,19 @@ import {average} from '../../routes/reviewRequest';
 import {getReviewByUserId} from '../../routes/reviewRequest';
 import {getSpotImage} from "../../routes/imageRequest"
 
+// async function sortSpotsByScore (array){
+//     var new_array = array
+//     return new_array.sort( function( a, b ){
+//         var good1 = a.good;
+//         var good2 = b.good;
+//         if( good1 > good2 ){
+//             return -1
+//         }else{
+//             return 1
+//         }
+//     } )
+// }
+
 async function getSpotByUserId (user_id){
     return getSpot('', '', '', user_id, '').then(result => {
         var my_spot = []
@@ -45,8 +58,6 @@ async function getSpotYouReviewed( user_id ){
         for( let rev of result.review ){
             reviewd_spot_ids.add( rev.spot_id );
         }
-        // const all = reviewd_spot_ids.size;
-        // var added = 0;
         for( let reviewd_spot_id of reviewd_spot_ids ){
             getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
                 const spt = result.spots[ 0 ];
@@ -85,10 +96,60 @@ async function getSpotYouReviewed( user_id ){
     })
 }
 
+async function getRecommendedSpots (user_univ, recommended_border, show_count){
+    return getSpot('', '', '', '', user_univ).then( result => {
+        var recommended_spots = [];
+        var progress = 0;
+        var goal = result.spots.length;
+        for( var spt of result.spots ){
+            const spt_id = spt.spot_id;
+            const name = spt.spot_name;
+
+            // レビューの計算
+            var scores = [];
+            for( var rev of result.review ){
+                if( spt.spot_id == rev.spot_id ){
+                    scores.push( rev.score );
+                }
+            }
+            const good = Math.round( 10 * average( scores ) ) / 10;
+            const review_length = scores.length
+
+            getSpotImage( spt_id ).then( ( result ) =>{
+                if( result.success && result.data != undefined ){
+                    const src = "data:image/jpeg;base64," + result.data[0].image
+                    if( review_length > recommended_border ){
+                        recommended_spots.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                    }
+                }else{
+                    const src = require( "@/assets/noimage.png" );
+                    if( review_length > recommended_border ){
+                        recommended_spots.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                    }
+                }
+            } ).catch((exception)=>{
+                console.log( "Error in getSpotImage: ", exception )
+                const src = require( "@/assets/noimage.png" );
+                if( review_length > recommended_border ){
+                    recommended_spots.push( { "spotId": spt_id, "name": name, "src": src, "good": good } );
+                }
+            }).finally( () => {
+                progress += 1;
+                if( progress >= goal ){
+                    show_count[ 0 ].value += 1;
+                    // return sortSpotsByScore( recommended_spots )
+                    return recommended_spots
+                }
+            } )
+        }
+    }).catch((exception) => {
+        console.log( "Error in getRecommendedSpots: ", exception );
+    })
+}
 async function getLatestSpots( left = 0, right ,spot){ //スポットが多すぎるときの処理。
     // TODO: 他のスポットにも対応
     console.log( "latestSpots", ( spot ).slice( left, right ) )
     return ( spot ).slice( left, right )
 }
 
-export {getSpotByUserId,getSpotYouReviewed,getLatestSpots}
+export {getSpotByUserId,getSpotYouReviewed,getRecommendedSpots,getLatestSpots}
