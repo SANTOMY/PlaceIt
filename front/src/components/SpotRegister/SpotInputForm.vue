@@ -18,6 +18,7 @@
 
                         <!-- スポットの種類 -->
                         <v-select
+                            :disabled="doneInitTags"
                             :rules="typeRules"
                             v-model="spot_data.types"
                             :items="all_types_name"
@@ -61,7 +62,7 @@
                         </v-autocomplete>
 
                         <!-- スポットの説明 -->
-                        <v-textarea v-if="submitFirstReview"
+                        <v-textarea v-if="registerMode"
                             v-model="spot_data.comment"
                             solo
                             name="input-7-4"
@@ -69,9 +70,9 @@
                         ></v-textarea>
 
 
-                        <h3 v-if="chart_disp==true && submitFirstReview && spot_data.types">スコア</h3>
+                        <h3 v-if="chart_disp==true && registerMode && spot_data.types">スコア</h3>
 
-                        <v-row v-if="chart_disp==true && submitFirstReview && spot_data.types">
+                        <v-row v-if="chart_disp==true && registerMode && spot_data.types">
                             <!-- レーダーチャート表示 -->
                             <v-col cols="5" justify="center">
                                 <radarChartDisp
@@ -170,6 +171,7 @@ import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import {getTagTypeDict} from "../share/TagTypeFunction"
 import StarRating from 'vue-star-rating'
 import radarChartDisp from '../share/RadarChartDisp'
+import {ConvertToFileFromBase64} from '../share/ConvertImageFunctions'
 
 export default {
 
@@ -207,18 +209,21 @@ export default {
             ],
             typeRules: [
                 v => v.length > 0 || "必ず一つ以上選択してください。"
-            ]
+            ],
+
+            doneInitTags: false  // タグを初期化しているか
 
         }
     },
 
     props: {
-        submitFirstReview: Boolean,
+        registerMode: Boolean,
         title: String,
         regButtonText: String,
         initialSpotData: Object,
         initialImages: Array,
-        initialScores: Array
+        initialScores: Array,
+        initialPicture: String
     },
 
     methods: {
@@ -228,7 +233,11 @@ export default {
                 return
             }
             if(this.check_database()) {
-                this.$emit("register", this.spot_data, this.uploadedFiles[0]);
+                var file = undefined;
+                if(this.spot_data.photos.length > 0) {
+                    file = ConvertToFileFromBase64(this.spot_data.photos[0], "hoge.jpeg");
+                }
+                this.$emit("register", this.spot_data, file);
             }
             else {
                 console.log("failed to send database")
@@ -265,13 +274,25 @@ export default {
             }
             return strs;
         },
+        initTags: function() {
+            var splited_tags = this.initialSpotData.spot_type.split(",");
+            splited_tags.shift()
+            this.selected_tags = splited_tags;            
+        }
     },
 
     mounted: function() {
         console.log(this.initialSpotData)
         this.spot_data.name = this.initialSpotData.spot_name;
-        this.spot_data.types = this.initialSpotData.spot_type;
+        this.spot_data.types = this.initialSpotData.spot_type.split(",")[0];
         this.spot_data.scores = this.initialScores;
+        if(this.initialPicture == ""
+        || this.initialPicture == require("@/assets/noimage.png")) {
+            this.spot_data.photos = [];    
+        }
+        else {
+            this.spot_data.photos = [this.initialPicture];
+        }
     },
 
     watch: {
@@ -294,6 +315,10 @@ export default {
                 return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
             });
             this.$nextTick(() => (this.chart_disp = true));
+            if(!this.doneInitTags && !this.registerMode) {
+                this.initTags();
+                this.doneInitTags = true;
+            }
         },
         'spot_data.scores': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
             this.chart_disp = false

@@ -71,15 +71,15 @@ export default {
 
                 const icon_dict = getSpotTypeDict('icon')
                 const color_dict = getSpotTypeDict('color')
-
                 //TODO : filter by rating
                 spots.forEach(spot => {
+                    
                     var marker = L.marker([spot.y, spot.x],
-                        { icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type], color: color_dict[spot.spot_type] }) })
+                        { icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type.split(",")[0]], color: color_dict[spot.spot_type.split(",")[0]] }) })
                         .on('click', this.markerClickEvent);
                     marker.spot_name = spot.spot_name;
                     marker.spot_id = spot.spot_id;
-                    marker.spot_type = spot.spot_type;
+                    marker.spot_type = spot.spot_type.split(",")[0];
                     marker.spot_picture = spot.spot_picture;
                     marker.user_id = spot.user_id;
                     markerSet.push(marker)

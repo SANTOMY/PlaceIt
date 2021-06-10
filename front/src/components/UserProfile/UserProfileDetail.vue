@@ -72,6 +72,7 @@ import SpotListCard from "./SpotListCard.vue";
 import UserEdit from "./UserEdit.vue";
 import {uploadProfileImage} from "../../routes/imageRequest"
 import AvatarRegister from "./AvatarRegister.vue"
+import {ConvertToFileFromBase64} from '../share/ConvertImageFunctions';
 import UserDelete from "./UserDelete.vue";
 
 export default {
@@ -105,8 +106,11 @@ export default {
         },
         editAvatarImage: function(image) {
             this.user.src = image;
-            const imageFile = this.createImageFile(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
+            const imageFile = ConvertToFileFromBase64(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
             uploadProfileImage(imageFile, this.$store.state.userData.userId)
+        },
+
+        deleteUser: function(){
         },
 
         createImageFile: function(base64image, name) {
