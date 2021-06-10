@@ -9,18 +9,15 @@ async function getSpotByUserId (user_id){
         for( var spt of result.spots ){
             const spt_id = spt.spot_id;
             const name = spt.spot_name;
-            var good = 0;
 
             // レビューの計算
             getReviewBySpotId(spt_id).then(result => {
-                var scores = [];
+                const scores = [];
                 for (var rev of result.review) {
-                    if (spt.spot_id == rev.spot_id) {
-                        scores.push(rev.score);
-                    }
+                    scores.push(rev.score);
                 }
-                good = Math.round(10 * average(scores)) / 10;
 
+                const good = Math.round(10 * average(scores)) / 10;
                 getSpotImage(spt_id).then((result) => {
                     if (result.success && result.data != undefined) {
                         const src = "data:image/jpeg;base64," + result.data[0].image
@@ -36,8 +33,6 @@ async function getSpotByUserId (user_id){
                 })
             }).catch((exception) => {
                 console.log("Error in getReviewBySpotId: ", exception)
-                const src = require("@/assets/noimage.png");
-                my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
             })
         }
         return my_spot
@@ -60,18 +55,14 @@ async function getSpotYouReviewed( user_id ){
                 const spt = result.spots[ 0 ];
                 const spt_id = spt.spot_id;
                 const name = spt.spot_name;
-                var good = 0;
  
                 // レビューの計算
                 getReviewBySpotId(spt_id).then(result => {
-                    var scores = [];
+                    const scores = [];
                     for (var rev of result.review) {
-                        if (spt.spot_id == rev.spot_id) {
-                            scores.push(rev.score);
-                        }
+                        scores.push(rev.score);
                     }
-                    good = Math.round(10 * average(scores)) / 10;
-
+                    const good = Math.round(10 * average(scores)) / 10;
                     getSpotImage(spt_id).then((result) => {
                         if (result.success && result.data != undefined) {
                             const src = "data:image/jpeg;base64," + result.data[0].image

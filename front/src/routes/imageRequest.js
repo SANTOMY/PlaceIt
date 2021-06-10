@@ -60,5 +60,25 @@ async function getSpotImage(spotId){
         return {success:false};
     }
 }
+
+async function deleteSpotImage(spotId){
+    const url = serverIP + '/upload/spot-image/' + spotId;
+    try{
+        let reponse = await fetch(url,{
+            mode: 'cors',
+            method: 'DELETE',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Origin': 'http://localhost:8080'
+            },
+            body: JSON.stringify({spotId: spotId})
+        });
+        return await reponse.json();
+    }catch(exception){
+        console.log(exception);
+        return{success:false, data:exception};
+    }
+}
  
-export {uploadProfileImage, getProfileImage, uploadSpotImage, getSpotImage}
+export {uploadProfileImage, getProfileImage, uploadSpotImage, getSpotImage, deleteSpotImage}

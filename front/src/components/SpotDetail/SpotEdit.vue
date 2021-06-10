@@ -8,6 +8,7 @@
             :initialSpotData="spotData"
             :initialImages="photos"
             :initialScores="rating5"
+            :initialPicture="base64Image"
         />
     </v-container>
 </template>
@@ -33,7 +34,9 @@ export default {
             console.log(this.spotId, spotData.name, spotData.types + "," + spotData.tags);
             editSpot(this.spotId, spotData.name, spotData.types + "," + spotData.tags)
                 .then(res => {
-                    if(!res.success) return
+                    if(!res.success || imageFile == undefined) {
+                        this.$emit("update");   
+                    }
                     uploadSpotImage(imageFile, this.spotId)
                         .then(res => {
                             console.log(res)
@@ -43,6 +46,12 @@ export default {
         },
         onCancel: function() {
             this.$emit("update")
+        }
+    },
+
+    computed: {
+        base64Image: function() {
+            return this.photos.map(item => item.image)[0];
         }
     }
 
