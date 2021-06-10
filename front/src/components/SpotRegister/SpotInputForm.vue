@@ -44,6 +44,7 @@
                             v-model="selected_tags"
                             :items="filterd_tags"
                             item-text="jp"
+                            item-value="type"
                             label="タグ"
                             solo
                             multiple

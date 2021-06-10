@@ -47,6 +47,7 @@
             v-model="selectedTags"
             :items="filterdTags"
             item-text="jp"
+            item-value="type"
             label="タグ"
             multiple
             single-line
@@ -202,7 +203,7 @@ export default {
             this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.rating,this.selectedTags);
         },
         remove :function(item) {
-            const index = this.selectedTags.indexOf(item.getJp());
+            const index = this.selectedTags.indexOf(item.getType());
             if (index >= 0) this.selectedTags.splice(index, 1);
         },
     },
