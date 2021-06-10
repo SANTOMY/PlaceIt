@@ -25,10 +25,10 @@
                     </v-avatar>
                 </v-layout>
                 <avatar-register v-if="!otherUser" @submit="editAvatarImage"/>
-                <user-delete v-if="!otherUser" @submit="deleteUser"/>
             </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
+  
                 ユーザー名
                 <h1>{{ user.username }}</h1>
                 
@@ -43,6 +43,16 @@
                 ><!-------editerのtrue/false変更され、editProfile()が起動するボタン----->
                 edit
                 </v-btn> 
+
+                <v-btn
+                    v-model="editer"
+                    @click="editProfile"
+                    v-if="!otherUser"
+                ><!-------editerのtrue/false変更され、editProfile()が起動するボタン----->
+                ユーザー情報修正
+                </v-btn>
+
+                <user-delete v-if="!otherUser" @submit="deleteUser"/>
             </v-col>
         </v-row>
 <!----------------------スポットリストカード------------------------------------------------->
@@ -106,6 +116,10 @@ export default {
                 buffer[i] = bin.charCodeAt(i);
             }
             return new File([buffer.buffer], name, {type: "image/jpeg"});
+        },
+
+        deleteUser: function(){
+
         },
 
     },

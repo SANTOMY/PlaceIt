@@ -72,11 +72,9 @@ export default {
             alert("ERROR:読み込めませんでした。");
             return
         }
-        // console.log('user information ',this.user)
         this.show_count = 0
         getProfileImage( this.user.id )
             .then(result => {
-                // console.log('test, UserProfile getProfileImage success')
                 if(!result.success) return;
                 this.user.src = "data:image/jpeg;base64," + result.data.image;
             }) 
@@ -98,11 +96,6 @@ export default {
             if(this.show_count!=2) return;
             if(this.show_count==2) {
                 this.isLoading=false
-                // console.log('=========finish loading===========')
-                // console.log('my_spot',this.my_spot)
-                // console.log('good_spot',this.good_spot)
-                // console.log('user',this.user)
-                // console.log('otherUser',this.otherUser)
             }
         },
     },

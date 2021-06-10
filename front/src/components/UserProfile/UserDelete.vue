@@ -31,7 +31,6 @@
                                 @click:append="showPassword = !showPassword"
                                 v-model="password"
                                 :counter="32"
-                                :rules="passwordRules"
                             />
                             <v-btn 
                                 block
@@ -67,7 +66,7 @@
                         <v-btn 
                             block
                             class="pa-5" 
-                            @click="deleteUser()"
+                            @click="deleteUserRun()"
                         >
                             <h3>はい</h3>
                         </v-btn>
@@ -89,7 +88,6 @@
                                 @click:append="showPassword = !showPassword"
                                 v-model="password"
                                 :counter="32"
-                                :rules="passwordRules"
                             />
                             <v-btn 
                                 block
@@ -128,7 +126,7 @@ export default {
     },
 
     methods: {
-        deleteUser: function() {
+        deleteUserRun: function() {
 
             deleteUser(this.$store.state.userData.userId)
                 .then(res => {
