@@ -115,13 +115,14 @@
                 class="transition-fast-in-fast-out v-card--moreDetail"
                 style="height: 100%;"
                 outlined>
-                <v-container>
+                <!-- TODO : fileter by rating -->
+                <!-- <v-container>
                     評価の下限
                     <star-rating 
                     v-model="rating"
                     v-bind:increment="0.1"
                     small />
-                </v-container>
+                </v-container> -->
 
                 <!-- 大学別検索 -->
                 <v-container>
@@ -160,7 +161,7 @@
 import {getSpotTypeDict} from "../../share/SpotTypeFunction"
 import {getTagTypeDict} from "../../share/TagTypeFunction"
 import tagTypeIcon from "../../share/TagTypeIcon"
-import StarRating from 'vue-star-rating'
+// import StarRating from 'vue-star-rating'
 
 export default {
   data: function(){
@@ -183,8 +184,8 @@ export default {
   },
   components: {
     //typeButton
-    tagTypeIcon,
-    StarRating
+    tagTypeIcon
+    // StarRating
     },
   props:['spotNameList'],//スポット一覧
 
