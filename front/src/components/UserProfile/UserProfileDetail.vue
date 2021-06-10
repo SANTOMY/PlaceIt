@@ -99,6 +99,19 @@ export default {
             const imageFile = ConvertToFileFromBase64(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
             uploadProfileImage(imageFile, this.$store.state.userData.userId)
         },
+
+        deleteUser: function(){
+        },
+
+        createImageFile: function(base64image, name) {
+            var bin = atob(base64image.replace(/^.*,/, ''));
+            var buffer = new Uint8Array(bin.length);
+            for (var i = 0; i < bin.length; i++) {
+                buffer[i] = bin.charCodeAt(i);
+            }
+            return new File([buffer.buffer], name, {type: "image/jpeg"});
+        },
+
     },
 
 };
