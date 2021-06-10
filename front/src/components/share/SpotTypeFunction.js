@@ -5,7 +5,7 @@ export function getSpotTypeDict(value) {
         travel: "mdi-bag-suitcase",             // travelのアイコン
         shopping: "mdi-cart",                   // shoppingのアイコン
         amusements: "mdi-baseball-bat",         // amusementsのアイコン
-        accomodetion: "mdi-bed",                // accomodationのアイコン
+        accomodation: "mdi-bed",                // accomodationのアイコン
         lifework: "mdi-mother-heart",           // lifeworkのアイコン
     }
     var review_dict = {
@@ -13,7 +13,7 @@ export function getSpotTypeDict(value) {
         travel: ["サービス", "立地", "価格", "雰囲気", "リピート"],            // travelで登録されたスポットの評価項目
         shopping: ["サービス", "品揃え", "立地", "価格", "人気度"],            // shoppingで登録されたスポットの評価項目
         amusements: ["サービス","立地","価格","待ち時間","人気度"],            // amusementsの評価項目
-        accomodetion: ["サービス", "立地", "価格", "アメニティ", "雰囲気"],    //accomodetionのスポット評価項目
+        accomodation: ["サービス", "立地", "価格", "アメニティ", "雰囲気"],    //accomodationのスポット評価項目
         lifework: ["サービス","立地","料金設定","雰囲気","リピート"],              // lifeworkのスポット評価項目
     }
     var name_list = [
@@ -21,7 +21,7 @@ export function getSpotTypeDict(value) {
         {type:'travel', text:'旅行/観光'},                // travelの内容
         {type:'shopping',text:'買い物'},                // shoppingの内容
         {type:'amusements', text:'スポーツ/レジャー'},     // amusementsの内容
-        {type:'accomodetion', text:'宿泊/温泉'},          // accomodationの内容
+        {type:'accomodation', text:'宿泊/温泉'},          // accomodationの内容
         {type:'lifework', text:'生活/交通施設/学校/会社'},  // lifeworkの内容
     ]
     var color_dict = {
@@ -29,7 +29,7 @@ export function getSpotTypeDict(value) {
         travel: 'green',        // travelのiconなどの色
         shopping: 'blue',       // shoppingのiconなどの色
         amusements:'yellow',    // amusementsのiconなどの色
-        accomodetion:'orange',  // accomodationのiconなどの色
+        accomodation:'orange',  // accomodationのiconなどの色
         lifework:'violet',      // lifeworkのiconなどの色
     }
     var spot_types = Object.keys(type_dict)
