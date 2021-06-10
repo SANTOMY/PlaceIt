@@ -344,7 +344,6 @@ export default {
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
             this.isEditMode = false;
-            console.log(this.spot_id)
         }
     }
 }
