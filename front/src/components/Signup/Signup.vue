@@ -89,7 +89,7 @@ import 'vue-select/dist/vue-select.css';
 Vue.component('v-select', vSelect);
 */
 
-import {register} from '../../routes/userRequest'
+import {register, getUser} from '../../routes/userRequest'
 import {getAllUniversities} from '../../routes/userRequest'
 const User = require("../../store/user");
 export default {
@@ -134,15 +134,18 @@ export default {
     },
 
     methods: {
-        createUser: function() {
+        createUser: async function() {
             if (!this.$refs.loginForm.validate()) return;
-            register(this.username,this.email,this.password,this.university)
-                .then(res => {
-                    //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
-                    const userData = new User(res.userId, res.userName, res.email, null, res.university)
-                    this.$store.commit("login", userData)
-                    this.$router.push('/map')
-                });
+            const users = await getUser(this.email);
+            if(users != "User does not exist") {
+                alert("this email is already used");
+                return;
+            }
+            const res = await register(this.username,this.email,this.password,this.university);
+            //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
+            const userData = new User(res.userId, res.userName, res.email, null, res.university)
+            this.$store.commit("login", userData)
+            this.$router.push('/map')
         },
     },
     
