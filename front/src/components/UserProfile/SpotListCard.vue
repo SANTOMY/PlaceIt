@@ -90,7 +90,7 @@
                             <v-toolbar-title
                                 class="px-2"
                             >
-                                {{ card.name }}
+                                {{ card.spotName }}
                             </v-toolbar-title>
               
                         <v-spacer></v-spacer>
@@ -123,7 +123,7 @@
             </v-card-actions>
 
         </v-container>
-        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
+        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeDialog()"/>
     </v-card>  
 </template>
 <script>
@@ -156,12 +156,17 @@
             num_per_page: 3, // 1ページの表示スポット数
             num_page: 1, // ページ数
             num_page_array: [ 10, 10, 10 ],
+            showNoCard: false,
+            //以下spotDetailへのprops渡し用変数
             showDialog: false,
             selectedSpotID: "",
-            showNoCard: false
+            selectedSpotName:"",
+            selectedSpotType:"",
+            selectedUserID:"",
         }),
         mounted() {
             this.spot = this.spot_list
+            console.log(this.spot)//debug
             // カテゴリ（おすすめ，作成，いいね）毎のページ数計算
             this.ChangeCategory( this.CategorySelect )
         },
@@ -216,6 +221,9 @@
                 // console.log("spotInformationPage: ", this.spot[value]) // Debug
                 this.showDialog = true;
                 this.selectedSpotID = this.spot[value].spotId;
+                this.selectedSpotName = this.spot[value].spotName;
+                this.selectedSpotType = this.spot[value].spotType;
+                this.selectedUserID = this.spot[value].userId;
             },
             // spotInformationPage: function(value) { // TODO: spotのカードをクリックしたときに動く関数
             //     console.log(this.spot_list[value].spotId) // Debug

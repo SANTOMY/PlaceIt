@@ -9,6 +9,8 @@ async function getSpotByUserId (user_id){
         for( var spt of result.spots ){
             const spt_id = spt.spot_id;
             const name = spt.spot_name;
+            const type = spt.spot_type;
+            const usr_id = spt.user_id;
 
             // レビューの計算
             getReviewBySpotId(spt_id).then(result => {
@@ -21,15 +23,15 @@ async function getSpotByUserId (user_id){
                 getSpotImage(spt_id).then((result) => {
                     if (result.success && result.data != undefined) {
                         const src = "data:image/jpeg;base64," + result.data[0].image
-                        my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                        my_spot.push({ "spotId": spt_id, "spotName": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
                     } else {
                         const src = require("@/assets/noimage.png");
-                        my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                        my_spot.push({ "spotId": spt_id, "spotName": name, "src": src, "good": good,"spotType":type, "userId":usr_id });
                     }
                 }).catch((exception) => {
                     console.log("Error in getSpotImage: ", exception)
                     const src = require("@/assets/noimage.png");
-                    my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                    my_spot.push({ "spotId": spt_id, "spotName": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
                 })
             }).catch((exception) => {
                 console.log("Error in getReviewBySpotId: ", exception)
@@ -55,6 +57,8 @@ async function getSpotYouReviewed( user_id ){
                 const spt = result.spots[ 0 ];
                 const spt_id = spt.spot_id;
                 const name = spt.spot_name;
+                const type = spt.spot_type;
+                const usr_id = spt.user_id;
  
                 // レビューの計算
                 getReviewBySpotId(spt_id).then(result => {
@@ -66,15 +70,15 @@ async function getSpotYouReviewed( user_id ){
                     getSpotImage(spt_id).then((result) => {
                         if (result.success && result.data != undefined) {
                             const src = "data:image/jpeg;base64," + result.data[0].image
-                            good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                            good_spot.push({ "spotId": spt_id, "spotName": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
                         } else {
                             const src = require("@/assets/noimage.png");
-                            good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                            good_spot.push({ "spotId": spt_id, "spotName": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
                         }
                     }).catch((exception) => {
                         console.log("Error in getSpotImage: ", exception)
                         const src = require("@/assets/noimage.png");
-                        good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                        good_spot.push({ "spotId": spt_id, "spotName": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
                     })
                 }).catch((exception => {
                     console.log("Error in getReviewBySpotId: ", exception)

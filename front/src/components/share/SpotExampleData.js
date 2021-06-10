@@ -2,7 +2,7 @@ export function SpotExampleData() {
     // おすすめスポットの仮データ取得関数
     var spot = [ // spot仮データ
         {
-            name: 'マクドナルド',
+            spotName: 'マクドナルド',
             spotId: '000000',
             type: 'restaurant',
             user_id: '2bedc185-298d-49c4-b1e7-20897646dd92',
@@ -15,7 +15,7 @@ export function SpotExampleData() {
             ]
         },
         {
-            name: 'モスバーガー',
+            spotName: 'モスバーガー',
             spotId: '000001',
             type: 'restaurant',
             username: 'takata',
@@ -28,7 +28,7 @@ export function SpotExampleData() {
             ]
         },      
         {
-            name: 'KFC',
+            spotName: 'KFC',
             spotId: '000002',
             type: 'restaurant',
             user_id: '000002',
@@ -41,7 +41,7 @@ export function SpotExampleData() {
             ]
         },
         {
-            name: 'Lotteria',
+            spotName: 'Lotteria',
             spotId: '000003',
             type: 'restaurant',
             user_id: '000003',
