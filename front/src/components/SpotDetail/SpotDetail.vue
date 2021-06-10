@@ -225,7 +225,6 @@ export default {
             return this.spotData.spot_type.split(',')[0];
         },
         typesToTags: function() {
-            console.log(this.spotData.spot_type)
             return this.spotData.spot_type.split(',').slice(1);
         },
         updateDetail: function() {
