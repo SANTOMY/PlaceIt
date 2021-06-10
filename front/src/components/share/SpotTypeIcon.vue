@@ -11,7 +11,11 @@
         {{ type_dict[type] }}
     </v-icon>
     </template>
-    <span>{{type}}</span>
+    <span>{{ type_jp.filter(function(s) {
+                return s.type == type
+            }).map(function(s) {
+                return s.text
+            })[0] }}</span>
     </v-tooltip>
 </template>
 
@@ -26,7 +30,8 @@ export default {
     },
     data: function() {
         return {
-            type_dict: getSpotTypeDict('icon')
+            type_dict: getSpotTypeDict('icon'),
+            type_jp: getSpotTypeDict('name')
         }
     }  
 }

@@ -44,6 +44,8 @@
                         <v-autocomplete
                             v-model="selected_tags"
                             :items="filterd_tags"
+                            item-text="jp"
+                            item-value="type"
                             label="タグ"
                             solo
                             multiple
@@ -54,9 +56,10 @@
                                     large
                                     label
                                     color="grey lighten-4"
+                                    @click="removeTag(item)"
                                 >
-                                    <tag-type-icon :type="item" :isLarge="true" classType="mr-5"/>
-                                    <h3>{{ item }}</h3>
+                                    <tag-type-icon :type="item.type" :isLarge="true" classType="mr-5"/>
+                                    <h3>{{ item.jp }}</h3>
                                 </v-chip>
                             </template>
                         </v-autocomplete>
@@ -197,7 +200,7 @@ export default {
             criteria_list: [],
             all_spot_types: getSpotTypeDict('type'), //spot typeを取得
             all_types_name: getSpotTypeDict('name'), //spotの内容説明を取得
-            all_tags: getTagTypeDict('type'), // 全てのタグ
+            all_tags: getTagTypeDict("all"), // 全てのタグ
             filterd_tags: [], // spot typeに紐づいたタグのリスト
             selected_tags: [], // ユーザが選択したタグのリスト
 
@@ -274,6 +277,10 @@ export default {
             }
             return strs;
         },
+        removeTag :function(item) {
+            const index = this.selected_tags.indexOf(item.getType())
+            if (index >= 0) this.selected_tags.splice(index, 1)
+        },
         initTags: function() {
             var splited_tags = this.initialSpotData.spot_type.split(",");
             splited_tags.shift()
@@ -312,7 +319,7 @@ export default {
             this.selected_tags = []
             let spotType = this.spot_data.types
             this.filterd_tags = this.all_tags.filter(function(tag){
-                return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
+                return tag.getSpotTypes().indexOf(spotType) != -1;
             });
             this.$nextTick(() => (this.chart_disp = true));
             if(!this.doneInitTags && !this.registerMode) {
