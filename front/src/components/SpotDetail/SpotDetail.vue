@@ -52,7 +52,7 @@
                         toolTip
                         color="gray"
                     />
-                    
+
                     <tag-type-icon v-for="type in typesToTags()" :key="type"
                         :type="type"
                         classType="mr-5"
@@ -120,7 +120,7 @@
                             <spot-review-register  
                                 v-if="this.$store.state.userData != null"
                                 :spot_id="spot_id"
-                                :spot_type="spotData.spot_type"
+                                :spot_type="typesToType()"
                                 @submit="updateDetail()"
                             />
                         </v-col>
