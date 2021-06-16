@@ -54,7 +54,6 @@ export default {
         }
     },
     mounted() {
-        // console.log('query:',this.otherUser)
         if(this.otherUser==true){
             this.user= { 
                 id: this.$store.state.otherUserData.userId,
@@ -81,7 +80,6 @@ export default {
         
         getProfileImage( this.user.id )
             .then(result => {
-                // console.log('test, UserProfile getProfileImage success')
                 if(!result.success) return;
                 this.user.src = "data:image/jpeg;base64," + result.data.image;
             })
@@ -207,6 +205,8 @@ export default {
                 array.splice( k, 1 );
             }
             return newArray;
+            // return newArray.slice( 0, 10 )
+            // みたいにすると，おすすめが毎回変わって面白いかも
         },
 
         sortSpotsByScore: async function( array ){ // スポットをスコアの高い順にソートする関数
@@ -251,6 +251,7 @@ export default {
                             }).finally(()=>{
                                 i += 1;
                                 this.sortSpotsByScore( this.spot )
+                                this.spot = this.spot.slice( 0, 6 ) // 上位6件に限定
                                 if (i==spot_length){
                                     console.log("success getRecommendedSpots ")
                                     this.show_count +=1;
@@ -274,11 +275,6 @@ export default {
 
             if(this.show_count==3) {
                 this.isLoading=false
-                console.log('=========finish loading===========')
-                console.log('my_spot',this.my_spot)
-                console.log('good_spot',this.good_spot)
-                console.log('spot',this.spot)
-                console.log('==================================')
             }
         },
     },
