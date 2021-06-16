@@ -134,15 +134,20 @@ export default {
     },
 
     methods: {
-        createUser: function() {
+        createUser: async function() {
             if (!this.$refs.loginForm.validate()) return;
-            register(this.username,this.email,this.password,this.university)
-                .then(res => {
-                    //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
-                    const userData = new User(res.userId, res.userName, res.email, null, res.university)
-                    this.$store.commit("login", userData)
-                    this.$router.push('/map')
-                });
+            const res = await register(this.username,this.email,this.password,this.university);
+            if(!res.success) {
+                alert(res.error);
+                return;
+            }
+            else {
+                //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
+                const userData = new User(res.userId, res.userName, res.email, null, res.university)
+                this.$store.commit("login", userData)
+                this.$router.push('/map')
+            }
+
         },
     },
     

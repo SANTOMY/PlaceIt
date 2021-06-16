@@ -15,7 +15,7 @@ async function register(userName, email, password, university){
         });
         return await reponse.json();
     }catch(exception){
-        return{success:false, data:exception};
+        return{success:false, error:exception};
     }
 }
 
