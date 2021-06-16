@@ -30,24 +30,6 @@
         group
         mandatory
       >
-      <!--
-        <v-btn
-          v-for="type in types"
-          :key="type" 
-          :value="type" class="mx-auto" fab >
-          <v-tooltip bottom>
-    <template v-slot:activator="{ on, attrs }">
-          <v-icon
-            v-bind="attrs"
-            v-on="on"
-          >
-            {{featureIcons[type]}}
-          </v-icon>
-    </template>
-    <span>{{ featureIcons[type] }}</span>
-    </v-tooltip> 
-        </v-btn>
-        -->
         <v-btn
           v-for="type in types"
           :key="type" 
