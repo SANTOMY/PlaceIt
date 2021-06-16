@@ -18,6 +18,7 @@
 
                         <!-- スポットの種類 -->
                         <v-select
+                            :disabled="doneInitTags"
                             :rules="typeRules"
                             v-model="spot_data.types"
                             :items="all_types_name"
@@ -43,6 +44,8 @@
                         <v-autocomplete
                             v-model="selected_tags"
                             :items="filterd_tags"
+                            item-text="jp"
+                            item-value="type"
                             label="タグ"
                             solo
                             multiple
@@ -53,15 +56,16 @@
                                     large
                                     label
                                     color="grey lighten-4"
+                                    @click="removeTag(item)"
                                 >
-                                    <tag-type-icon :type="item" :isLarge="true" classType="mr-5"/>
-                                    <h3>{{ item }}</h3>
+                                    <tag-type-icon :type="item.type" :isLarge="true" classType="mr-5"/>
+                                    <h3>{{ item.jp }}</h3>
                                 </v-chip>
                             </template>
                         </v-autocomplete>
 
                         <!-- スポットの説明 -->
-                        <v-textarea v-if="submitFirstReview"
+                        <v-textarea v-if="registerMode"
                             v-model="spot_data.comment"
                             solo
                             name="input-7-4"
@@ -69,9 +73,9 @@
                         ></v-textarea>
 
 
-                        <h3 v-if="chart_disp==true && submitFirstReview && spot_data.types">スコア</h3>
+                        <h3 v-if="chart_disp==true && registerMode && spot_data.types">スコア</h3>
 
-                        <v-row v-if="chart_disp==true && submitFirstReview && spot_data.types">
+                        <v-row v-if="chart_disp==true && registerMode && spot_data.types">
                             <!-- レーダーチャート表示 -->
                             <v-col cols="5" justify="center">
                                 <radarChartDisp
@@ -170,6 +174,7 @@ import {getSpotTypeDict} from "../share/SpotTypeFunction"
 import {getTagTypeDict} from "../share/TagTypeFunction"
 import StarRating from 'vue-star-rating'
 import radarChartDisp from '../share/RadarChartDisp'
+import {ConvertToFileFromBase64} from '../share/ConvertImageFunctions'
 
 export default {
 
@@ -195,7 +200,7 @@ export default {
             criteria_list: [],
             all_spot_types: getSpotTypeDict('type'), //spot typeを取得
             all_types_name: getSpotTypeDict('name'), //spotの内容説明を取得
-            all_tags: getTagTypeDict('type'), // 全てのタグ
+            all_tags: getTagTypeDict("all"), // 全てのタグ
             filterd_tags: [], // spot typeに紐づいたタグのリスト
             selected_tags: [], // ユーザが選択したタグのリスト
 
@@ -207,18 +212,21 @@ export default {
             ],
             typeRules: [
                 v => v.length > 0 || "必ず一つ以上選択してください。"
-            ]
+            ],
+
+            doneInitTags: false  // タグを初期化しているか
 
         }
     },
 
     props: {
-        submitFirstReview: Boolean,
+        registerMode: Boolean,
         title: String,
         regButtonText: String,
         initialSpotData: Object,
         initialImages: Array,
-        initialScores: Array
+        initialScores: Array,
+        initialPicture: String
     },
 
     methods: {
@@ -228,7 +236,11 @@ export default {
                 return
             }
             if(this.check_database()) {
-                this.$emit("register", this.spot_data, this.uploadedFiles[0]);
+                var file = undefined;
+                if(this.spot_data.photos.length > 0) {
+                    file = ConvertToFileFromBase64(this.spot_data.photos[0], "hoge.jpeg");
+                }
+                this.$emit("register", this.spot_data, file);
             }
             else {
                 console.log("failed to send database")
@@ -265,13 +277,29 @@ export default {
             }
             return strs;
         },
+        removeTag :function(item) {
+            const index = this.selected_tags.indexOf(item.getType())
+            if (index >= 0) this.selected_tags.splice(index, 1)
+        },
+        initTags: function() {
+            var splited_tags = this.initialSpotData.spot_type.split(",");
+            splited_tags.shift()
+            this.selected_tags = splited_tags;            
+        }
     },
 
     mounted: function() {
         console.log(this.initialSpotData)
         this.spot_data.name = this.initialSpotData.spot_name;
-        this.spot_data.types = this.initialSpotData.spot_type;
+        this.spot_data.types = this.initialSpotData.spot_type.split(",")[0];
         this.spot_data.scores = this.initialScores;
+        if(this.initialPicture == ""
+        || this.initialPicture == require("@/assets/noimage.png")) {
+            this.spot_data.photos = [];    
+        }
+        else {
+            this.spot_data.photos = [this.initialPicture];
+        }
     },
 
     watch: {
@@ -291,9 +319,13 @@ export default {
             this.selected_tags = []
             let spotType = this.spot_data.types
             this.filterd_tags = this.all_tags.filter(function(tag){
-                return getTagTypeDict("stype")[tag.toString()].indexOf(spotType) != -1;
+                return tag.getSpotTypes().indexOf(spotType) != -1;
             });
             this.$nextTick(() => (this.chart_disp = true));
+            if(!this.doneInitTags && !this.registerMode) {
+                this.initTags();
+                this.doneInitTags = true;
+            }
         },
         'spot_data.scores': function(){ // レーダーチャート5項目のパラメータを変えた時の処理
             this.chart_disp = false
