@@ -224,7 +224,6 @@ export default {
         this.showSpot(this.nowType,"","",0);
         var data = await getSpot("","","","","");
         this.spotNameList = data.spots;
-        // this.spotNameList = [];
     }, 
     //現在地追跡のために利用(予定)
     watch: {
