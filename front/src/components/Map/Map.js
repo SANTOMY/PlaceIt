@@ -79,7 +79,7 @@ export default {
                         .on('click', this.markerClickEvent);
                     marker.spot_name = spot.spot_name;
                     marker.spot_id = spot.spot_id;
-                    marker.spot_type = spot.spot_type.split(",")[0];
+                    marker.spot_type = spot.spot_type;
                     marker.spot_picture = spot.spot_picture;
                     marker.user_id = spot.user_id;
                     markerSet.push(marker)

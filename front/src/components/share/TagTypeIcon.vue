@@ -8,10 +8,10 @@
         v-bind="attrs"
         v-on="on"
     >
-        {{ type_dict[type] }}
+        {{ type_icon[type] }}
     </v-icon>
     </template>
-    <span>{{type}}</span>
+    <span>{{ type_jp[type] }}</span>
     </v-tooltip> 
 </template>
 
@@ -27,8 +27,9 @@ export default {
     },
     data: function() {
         return {
-            type_dict: getTagTypeDict('icon')
+            type_icon: getTagTypeDict("icon"),
+            type_jp: getTagTypeDict("jp")
         }
-    }  
+    } 
 }
 </script>
