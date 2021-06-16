@@ -24,6 +24,14 @@ export function getSpotTypeDict(value) {
         {type:'accomodation', text:'宿泊/温泉'},          // accomodationの内容
         {type:'lifework', text:'生活/交通施設/学校/会社'},  // lifeworkの内容
     ]
+    var jp_list = {
+        restaurant: '食事',                 // restrantの内容
+        travel: '旅行/観光',               // travelの内容
+        shopping: '買い物',                 // shoppingの内容
+        amusements: 'スポーツ/レジャー',     // amusementsの内容
+        accomodation: '宿泊/温泉',          // accomodationの内容
+        lifework: '生活/交通施設/学校/会社'  // lifeworkの内容
+    }
     var color_dict = {
         restaurant: 'red',      // restrantのiconなどの色
         travel: 'green',        // travelのiconなどの色
@@ -43,6 +51,8 @@ export function getSpotTypeDict(value) {
         return color_dict
     }else if(value=='name'){
         return name_list
+    }else if(value=='jp'){
+        return jp_list
     }
 }
 
