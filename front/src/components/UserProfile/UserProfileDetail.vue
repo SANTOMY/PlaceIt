@@ -36,13 +36,6 @@
                 大学名
                 <h1>{{ user.university }}</h1>
                 <v-spacer></v-spacer>
-                <v-btn
-                    v-model="editer"
-                    @click="editProfile"
-                    v-if="!otherUser"
-                ><!-------editerのtrue/false変更され、editProfile()が起動するボタン----->
-                edit
-                </v-btn> 
 
                 <v-btn
                     v-model="editer"
