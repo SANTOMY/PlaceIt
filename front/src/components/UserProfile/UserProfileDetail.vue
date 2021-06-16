@@ -121,11 +121,6 @@ export default {
             }
             return new File([buffer.buffer], name, {type: "image/jpeg"});
         },
-
-        deleteUser: function(){
-
-        },
-
     },
 
 };
