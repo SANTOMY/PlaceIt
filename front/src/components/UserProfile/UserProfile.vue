@@ -119,9 +119,9 @@ export default {
                             this.my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                         }).finally(()=>{
                             i += 1;
+                            this.sortSpotsByScore( this.my_spot )
                             if (i==spot_length){
                                 this.show_count +=1;
-                                this.sortSpotsByScore( this.my_spot )
                                 console.log('success getSpotByUserId')
                             }
                         })
@@ -140,8 +140,6 @@ export default {
                 for( let rev of result.review ){
                     reviewd_spot_ids.add( rev.spot_id );
                 }
-                // const all = reviewd_spot_ids.size;
-                // var added = 0;
                 const spot_length = reviewd_spot_ids.size
                 var i = 0;
                 for( let reviewd_spot_id of reviewd_spot_ids ){
@@ -171,9 +169,9 @@ export default {
                                 this.good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                             }).finally(()=>{
                                 i += 1;
+                                this.sortSpotsByScore( this.good_spot )
                                 if (i==spot_length){
                                     this.show_count +=1;
-                                    this.sortSpotsByScore( this.good_spot )
                                     console.log("success getSpotYouReviewed ")
                                 }
                             })
@@ -271,9 +269,7 @@ export default {
         show_count: function() {
             if(this.show_count!=3) {
                 return
-            }
-
-            if(this.show_count==3) {
+            }else{
                 this.isLoading=false
             }
         },
