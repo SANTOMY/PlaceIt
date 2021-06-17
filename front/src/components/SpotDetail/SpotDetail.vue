@@ -31,7 +31,7 @@
                 >
                     <v-carousel-item v-for="photo in photos" :key="photo.id">
                         <v-sheet color="black" height=100%>
-                            <v-img :src="photo.image" height=500 contain />
+                            <v-img :src="photo.image" height=500 contain style="background-color:white;"/>
                         </v-sheet>
                     </v-carousel-item>
                 </v-carousel>
