@@ -121,6 +121,7 @@
                                 v-if="this.$store.state.userData != null"
                                 :spot_id="spot_id"
                                 :spot_type="spotData.spot_type"
+                                :spot_name="spotData.spot_name"
                                 @submit="updateDetail()"
                             />
                         </v-col>
