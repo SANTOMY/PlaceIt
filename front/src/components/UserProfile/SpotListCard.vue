@@ -123,7 +123,7 @@
             </v-card-actions>
 
         </v-container>
-        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
+        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeDialog()"/>
     </v-card>  
 </template>
 <script>
@@ -158,6 +158,9 @@
             num_page_array: [ 10, 10, 10 ],
             showDialog: false,
             selectedSpotID: "",
+            selectedSpotName:"",
+            selectedSpotType:"",
+            selectedUserID:"",
             showNoCard: false
         }),
         mounted() {
@@ -216,6 +219,9 @@
                 // console.log("spotInformationPage: ", this.spot[value]) // Debug
                 this.showDialog = true;
                 this.selectedSpotID = this.spot[value].spotId;
+                this.selectedSpotName = this.spot[value].name;
+                this.selectedSpotType = this.spot[value].spotType;
+                this.selectedUserID = this.spot[value].userId;
             },
             // spotInformationPage: function(value) { // TODO: spotのカードをクリックしたときに動く関数
             //     console.log(this.spot_list[value].spotId) // Debug
