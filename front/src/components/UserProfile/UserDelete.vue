@@ -66,7 +66,7 @@
                         <v-btn 
                             block
                             class="pa-5" 
-                            @click="deleteUser()"
+                            @click="deleteUserRun()"
                         >
                             <h3>はい</h3>
                         </v-btn>
@@ -126,7 +126,7 @@ export default {
     },
 
     methods: {
-        deleteUser: function() {
+        deleteUserRun: function() {
 
             deleteUser(this.$store.state.userData.userId)
                 .then(res => {

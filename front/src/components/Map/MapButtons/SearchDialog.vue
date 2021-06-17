@@ -34,10 +34,20 @@
           v-for="type in types"
           :key="type" 
           :value="type" class="mx-auto" fab >
-          <v-icon>
+          <v-tooltip bottom :disabled="type=='reset'">
+    <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            v-bind="attrs"
+            v-on="on"
+          >
             {{featureIcons[type]}}
           </v-icon>
+    </template>
+    <span>{{ spotJpNames[type] }}</span>
+    </v-tooltip> 
         </v-btn>
+
+        
       </v-btn-toggle>
     </v-container>
 
@@ -172,6 +182,7 @@ export default {
       featureIcons: getSpotTypeDict('icon'), // iconを格納するオブジェクト -> mountedでデータ追加
       types:["reset"], //spot種別一覧を格納するlist -> mountedでデータ追加
       typeNameList: getSpotTypeDict('type'), //spot type object のkey配列作成 -> mountedで'reset'追加
+      spotJpNames: getSpotTypeDict('jp'),
       nowUniv:false,//現在の大学
       dialog:false,//検索ダイアログ表示管理
       tagTypes: getTagTypeDict("all"),
@@ -200,7 +211,7 @@ export default {
     methods:{
         Search(){
             //選ばれた検索条件をMapに送信
-            this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.rating,this.selectedTags);
+            this.$emit('search',this.nowType,this.nowUniv,this.keyword == undefined ? "" : this.keyword,this.rating,this.selectedTags);
         },
         remove :function(item) {
             const index = this.selectedTags.indexOf(item.getType());

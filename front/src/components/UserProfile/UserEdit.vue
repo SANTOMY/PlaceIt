@@ -277,11 +277,13 @@ export default {
                         const userData = new User(this.$store.state.userData.userId,
                                                 !this.model.edit_username ? this.$store.state.userData.userName : this.model.edit_username,
                                                 !this.model.edit_email ? this.$store.state.userData.email : this.model.edit_email,
-                                                null
+                                                null,
+                                                this.$store.state.userData.university
                                                 )
+                        // console.log('新ユーザーデータ：',userData)
                         this.$store.commit("login", userData)
 
-                        this.reLoad() 
+                        this.reLoad()
                     } else {
                         this.editSuccessed = false;
                         //this.closeCard()
