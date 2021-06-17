@@ -118,15 +118,16 @@ export default {
                             const src = require("@/assets/noimage.png");
                             this.my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                         }).finally(()=>{
-                            i += 1;
                             this.sortSpotsByScore( this.my_spot )
-                            if (i==spot_length){
-                                this.show_count +=1;
-                                console.log('success getSpotByUserId')
-                            }
                         })
                     }).catch((exception) => {
                         console.log("Error in getReviewBySpotId: ", exception)
+                    }).finally(()=>{
+                        i += 1;
+                        if (i==spot_length){
+                            this.show_count +=1;
+                            console.log('success getSpotByUserId')
+                        }
                     })
                 }
             }).catch((exception) => {
@@ -168,18 +169,19 @@ export default {
                                 const src = require("@/assets/noimage.png");
                                 this.good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                             }).finally(()=>{
-                                i += 1;
                                 this.sortSpotsByScore( this.good_spot )
-                                if (i==spot_length){
-                                    this.show_count +=1;
-                                    console.log("success getSpotYouReviewed ")
-                                }
                             })
                         }).catch((exception => {
                             console.log("Error in getReviewBySpotId: ", exception);
                         }));
                     } ).catch((exception) => {
                         console.log( "Error in getSpot: ", exception );
+                    }).finally(()=>{
+                        i += 1;
+                        if (i==spot_length){
+                            this.show_count +=1;
+                            console.log("success getSpotYouReviewed ")
+                        }
                     })
                 }
             } ).catch((exception) => {
@@ -217,7 +219,7 @@ export default {
             } )
         },
 
-        getRecommendedSpots: async function(user_univ){ // おすすめスポット取得関数
+        getRecommendedSpots: async function( user_univ ){ // おすすめスポット取得関数
             getSpot('', '', '', '', user_univ).then( result => {
                 this.shuffleArray( result.spots ).then(result =>{
                     const spot_length = result.length
@@ -247,17 +249,18 @@ export default {
                                 const src = require("@/assets/noimage.png");
                                 this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                             }).finally(()=>{
-                                i += 1;
                                 this.sortSpotsByScore( this.spot )
-                                this.spot = this.spot.slice( 0, 6 ) // 上位6件に限定
-                                if (i==spot_length){
-                                    console.log("success getRecommendedSpots ")
-                                    this.show_count +=1;
-                                }
                             })
                         }).catch((exception => {
                             console.log("Error in getReviewBySpotId: ", exception)
-                        }));
+                        })).finally(()=>{
+                            i += 1;
+                            this.spot = this.spot.slice( 0, 6 ) // 上位6件に限定
+                            if (i==spot_length){
+                                console.log("success getRecommendedSpots ")
+                                this.show_count +=1;
+                            }
+                        });
                     }        
                 })
             }).catch((exception) => {
