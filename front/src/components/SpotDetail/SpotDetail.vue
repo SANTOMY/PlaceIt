@@ -208,7 +208,6 @@ export default {
     },
     methods: {
         changePage: function(number){
-            // console.log('(change review page)change review page to ',number)
             return this.now_review_page = number
         },
         sum: function(arr){ // 配列の要素の合計を計算
@@ -267,14 +266,21 @@ export default {
         getUserInformation: function() {//レビューからユーザー情報を取得する関数
             this.isLoadingData = true;
             this.user_list = [] // 初期値
+            this.start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
+            this.end = this.start + this.REVIEW_NUM_PER_PAGE;
+            if(this.end > this.reviews.length){
+                this.end = this.reviews.length;
+                this.length = this.end - this.start;
+            }else{
+                this.length = 3;
+            }
             let j = 0;
             for(let i = this.start; i < this.end; i++) {
-                getUserById(this.reviews[i].user_id)
+                const user_id = this.reviews[i].user_id;
+                getUserById(user_id)
                     .then(result => {      
-                        this.user_list.push(result[0]);  
-                        console.log(this.user_list);
-                        console.log(i);         
-                        getProfileImage( this.reviews[i].user_id )
+                        this.user_list.push(result[0]);
+                        getProfileImage(user_id )
                             .then(res => {
                                 if(!res.success) {
                                     this.user_list[j].src = require('@/assets/default-icon.jpeg')
@@ -315,10 +321,9 @@ export default {
         slicedReviews: function() {
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
-            for(var i = 0; i < 3; i++) {
+            for(var i = 0; i < this.length; i++) {
                 enumerated_reviews.push({id:i, content:this.reviews[this.start+i],user:this.user_list[i]});
             }
-            // console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
@@ -347,14 +352,6 @@ export default {
             this.isEditMode = false;
         },
         now_review_page: function() {
-            this.start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
-            this.end = this.start + this.REVIEW_NUM_PER_PAGE;
-            if(this.end > this.reviews.length){
-                this.end = this.reviews.length;
-                this.length = this.end - this.start;
-            }else{
-                this.length = 3;
-            }
             this.getUserInformation();
         }
     }
