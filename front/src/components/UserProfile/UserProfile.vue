@@ -50,7 +50,6 @@ export default {
         }
     },
     mounted() {
-        // console.log('query:',this.otherUser)
         if(this.otherUser==true){
             this.user= { 
                 id: this.$store.state.otherUserData.userId,
@@ -60,7 +59,6 @@ export default {
                 university: this.$store.state.otherUserData.university,
                 src: require('@/assets/default-icon.jpeg')
             }
-            // this.otherUser = true
         }else if(this.otherUser==false){
             this.user= { 
                 id: this.$store.state.userData.userId,
@@ -71,25 +69,23 @@ export default {
                 src: require('@/assets/default-icon.jpeg')
             }
         }else{
-            alert("URLが間違っており、読み込めませんでした。");
+            alert("ERROR:読み込めませんでした。");
             return
         }
-        
         this.show_count = 0
         getProfileImage( this.user.id )
             .then(result => {
-                // console.log('test, UserProfile getProfileImage success')
                 if(!result.success) return;
                 this.user.src = "data:image/jpeg;base64," + result.data.image;
             }) 
 
-        getSpotByUserId( this.user.id )
+        getSpotByUserId( this.user.id ) // get created spot by user ID
             .then( result =>{
                 this.show_count += 1
                 this.my_spot = result
         })
 
-        getSpotYouReviewed( this.user.id )
+        getSpotYouReviewed( this.user.id ) // get reviewd spot by user ID
             .then( result =>{
                 this.show_count += 1
                 this.good_spot = result
@@ -100,11 +96,6 @@ export default {
             if(this.show_count!=2) return;
             if(this.show_count==2) {
                 this.isLoading=false
-                // console.log('=========finish loading===========')
-                // console.log('my_spot',this.my_spot)
-                // console.log('good_spot',this.good_spot)
-                // console.log('user',this.user)
-                // console.log('otherUser',this.otherUser)
             }
         },
     },
