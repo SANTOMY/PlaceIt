@@ -194,6 +194,9 @@ export default {
             showDeleteDialog: false,
             showUserDialog: false,   //他のユーザープロフィール表示するか
             otherUser: true,
+            start: 0,
+            end: 3,
+            length: 3
         }
     },
     props: {
@@ -262,22 +265,24 @@ export default {
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         },
         getUserInformation: function() {//レビューからユーザー情報を取得する関数
-            this.user_list = Array(this.reviews.length).fill(undefined) // 初期値
-            let j = 0
-            for(let i = 0; i < this.reviews.length; i++) {
+            this.isLoadingData = true;
+            this.user_list = [] // 初期値
+            let j = 0;
+            for(let i = this.start; i < this.end; i++) {
                 getUserById(this.reviews[i].user_id)
-                    .then(result => {
-                        
-                        this.user_list[i]=result[0];           
+                    .then(result => {      
+                        this.user_list.push(result[0]);  
+                        console.log(this.user_list);
+                        console.log(i);         
                         getProfileImage( this.reviews[i].user_id )
                             .then(res => {
                                 if(!res.success) {
-                                    this.user_list[i].src = require('@/assets/default-icon.jpeg')
+                                    this.user_list[j].src = require('@/assets/default-icon.jpeg')
                                 }else{
-                                    this.user_list[i].src = "data:image/jpeg;base64," + res.data.image;
+                                    this.user_list[j].src = "data:image/jpeg;base64," + res.data.image;
                                 }
                                 j += 1
-                                if(j == (this.reviews.length)){
+                                if(j == (this.length)){
                                     this.isLoadingData = false; // ユーザー名を全部取得すると、ロード画面が消える
                                 }
                             })
@@ -308,14 +313,10 @@ export default {
     computed: {
         //現在のページに表示するレビューを返す
         slicedReviews: function() {
-            const start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
-            const end = start + this.REVIEW_NUM_PER_PAGE;
-            const raw_reviews = this.reviews.slice(start, end)
-            const raw_users = this.user_list.slice(start, end)
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
-            for(var i = 0; i < raw_reviews.length; i++) {
-                enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
+            for(var i = 0; i < 3; i++) {
+                enumerated_reviews.push({id:i, content:this.reviews[this.start+i],user:this.user_list[i]});
             }
             // console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
@@ -344,6 +345,17 @@ export default {
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
             this.isEditMode = false;
+        },
+        now_review_page: function() {
+            this.start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
+            this.end = this.start + this.REVIEW_NUM_PER_PAGE;
+            if(this.end > this.reviews.length){
+                this.end = this.reviews.length;
+                this.length = this.end - this.start;
+            }else{
+                this.length = 3;
+            }
+            this.getUserInformation();
         }
     }
 }
