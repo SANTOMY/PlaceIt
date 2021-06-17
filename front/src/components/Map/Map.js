@@ -222,9 +222,8 @@ export default {
         //this.map.on("locationfound",this.locationMarker);
         //spot表示
         this.showSpot(this.nowType,"","",0);
-        // var data = await getSpot("","","","","");
-        // this.spotNameList = data.spots;
-        this.spotNameList = [];
+        var data = await getSpot("","","","","");
+        this.spotNameList = data.spots;
     }, 
     //現在地追跡のために利用(予定)
     watch: {

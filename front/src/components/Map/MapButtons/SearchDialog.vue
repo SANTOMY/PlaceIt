@@ -211,7 +211,7 @@ export default {
     methods:{
         Search(){
             //選ばれた検索条件をMapに送信
-            this.$emit('search',this.nowType,this.nowUniv,this.keyword,this.rating,this.selectedTags);
+            this.$emit('search',this.nowType,this.nowUniv,this.keyword == undefined ? "" : this.keyword,this.rating,this.selectedTags);
         },
         remove :function(item) {
             const index = this.selectedTags.indexOf(item.getType());
