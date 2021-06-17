@@ -249,12 +249,12 @@ export default {
                                 this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
                             }).finally(()=>{
                                 this.sortSpotsByScore( this.spot )
+                                this.spot = this.spot.slice( 0, 6 ) // 上位6件に限定
                             })
                         }).catch((exception => {
                             console.log("Error in getReviewBySpotId: ", exception)
                         })).finally(()=>{
                             i += 1;
-                            this.spot = this.spot.slice( 0, 6 ) // 上位6件に限定
                             if (i==spot_length){
                                 console.log("success getRecommendedSpots ")
                                 this.show_count +=1;
