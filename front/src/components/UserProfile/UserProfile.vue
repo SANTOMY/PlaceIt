@@ -63,7 +63,6 @@ export default {
                 university: this.$store.state.otherUserData.university,
                 src: require('@/assets/default-icon.jpeg')
             }
-            // this.otherUser = true
         }else if(this.otherUser==false){
             this.user= { 
                 id: this.$store.state.userData.userId,
@@ -74,10 +73,10 @@ export default {
                 src: require('@/assets/default-icon.jpeg')
             }
         }else{
-            alert("URLが間違っており、読み込めませんでした。");
+            alert("ERROR:読み込めませんでした。");
             return
         }
-        
+        this.show_count = 0
         getProfileImage( this.user.id )
             .then(result => {
                 if(!result.success) return;

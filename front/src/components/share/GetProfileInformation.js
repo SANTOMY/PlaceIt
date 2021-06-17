@@ -48,13 +48,13 @@ async function getSpotYouReviewed( user_id ){
         for( let rev of result.review ){
             reviewd_spot_ids.add( rev.spot_id );
         }
-        // const all = reviewd_spot_ids.size;
-        // var added = 0;
+
         for( let reviewd_spot_id of reviewd_spot_ids ){
             getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
                 const spt = result.spots[ 0 ];
                 const spt_id = spt.spot_id;
                 const name = spt.spot_name;
+                // const good = null;
  
                 // レビューの計算
                 getReviewBySpotId(spt_id).then(result => {
