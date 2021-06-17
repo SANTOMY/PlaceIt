@@ -90,6 +90,10 @@ export default {
     methods: {    
         getSpotByUserId: async function(user_id){ // 作成スポット取得関数
             getSpot('', '', '', user_id, '').then(result => {
+                if( result.spots == undefined ){
+                    this.show_count += 1;
+                    return
+                }
                 const spot_length = result.spots.length
                 var i = 0;
                 for( var spt of result.spots ){
@@ -136,6 +140,10 @@ export default {
 
         getSpotYouReviewed: async function( user_id ){ //レビューしたスポット取得関数
             getReviewByUserId( user_id ).then( result => {
+                if( result.review == undefined ){
+                    this.show_count += 1;
+                    return
+                }
                 var reviewd_spot_ids = new Set()
                 for( let rev of result.review ){
                     reviewd_spot_ids.add( rev.spot_id );
@@ -220,6 +228,10 @@ export default {
 
         getRecommendedSpots: async function( user_univ ){ // おすすめスポット取得関数
             getSpot('', '', '', '', user_univ).then( result => {
+                if( result.spots == undefined ){
+                    this.show_count += 1;
+                    return
+                }
                 this.shuffleArray( result.spots ).then(result =>{
                     const spot_length = result.length
                     var i = 0;
@@ -250,16 +262,15 @@ export default {
                             }).finally(()=>{
                                 this.sortSpotsByScore( this.spot )
                                 this.spot = this.spot.slice( 0, 6 ) // 上位6件に限定
+                                i += 1;
+                                if (i==spot_length){
+                                    console.log("success getRecommendedSpots ")
+                                    this.show_count +=1;
+                                }
                             })
                         }).catch((exception => {
                             console.log("Error in getReviewBySpotId: ", exception)
-                        })).finally(()=>{
-                            i += 1;
-                            if (i==spot_length){
-                                console.log("success getRecommendedSpots ")
-                                this.show_count +=1;
-                            }
-                        });
+                        }));
                     }        
                 })
             }).catch((exception) => {
