@@ -2,7 +2,7 @@
     <v-dialog v-model="showDialog" width="800">
         <template v-slot:activator="{ attrs }">
             <v-container>
-                <v-btn class="px-5 py-6" max-width="500px" v-bind="attrs" @click="activate()" color="red">
+                <v-btn class="px-5 py-6c white--text" max-width="500px" v-bind="attrs" @click="activate()" color="red">
                     <h3>ユーザ情報削除</h3>
                 </v-btn>
             </v-container>
@@ -193,12 +193,3 @@ export default {
     
 }
 </script>
-
-<style type="text/css">
-<!--
-h3{
-font-size : 100%;
-color : #ffffff;
-background-color : #ffffff;
-font-weight : normal;
-}
