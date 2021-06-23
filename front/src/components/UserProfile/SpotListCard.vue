@@ -123,7 +123,7 @@
             </v-card-actions>
 
         </v-container>
-        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeDialog()"/>
+        <spot-detail :showDialog="showSpotDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeDialog()"/>
     </v-card>  
 </template>
 <script>
@@ -156,7 +156,7 @@
             num_per_page: 3, // 1ページの表示スポット数
             num_page: 1, // ページ数
             num_page_array: [ 10, 10, 10 ],
-            showDialog: false,
+            showSpotDialog: false,
             selectedSpotID: "",
             selectedSpotName:"",
             selectedSpotType:"",
@@ -186,50 +186,34 @@
                 this.num_page = this.page_num()
                 this.spot = [];
                 if(i==0){
-                    this.GoodSpotSort() // いいねしたスポット表示
+                    this.dispSpotList(this.good_spot_list) // レビューしたスポット表示
                 }else if(i==1){
-                    this.CreatedSpotSort() // 作ったスポット表示
+                    this.dispSpotList(this.my_spot_list) // 作ったスポット表示
                 }else if(i==2){
-                    this.RecommendedSpotSort() // おすすめスポット表示
+                    this.dispSpotList(this.spot_list) // おすすめスポット表示
                 }
-
                 if(this.spot.length==0) {
                     this.showNoCard = true;
                 }else{
                     this.showNoCard = false;
-                }
+                }               
             },
             // TODO: 以下3つの関数は似た形なので、1つにまとめる
-            CreatedSpotSort: function () { // 作ったスポットを表示する関数 
-                for( let i = this.begin; i < this.end; i++ ){
-                    this.spot[ i - this.begin ] = this.my_spot_list[ i ]
-                }
-            },
-            GoodSpotSort: function () { // レビューしたスポットを表示する関数
-                for( let i = this.begin; i < this.end; i++ ){
-                    this.spot[ i - this.begin ] = this.good_spot_list[ i ]
-                }
-            },
-            RecommendedSpotSort: function () { // おすすめスポットを表示する関数
-                for( let i = this.begin; i < this.end; i++ ){
-                    this.spot[ i - this.begin ] = this.spot_list[ i ]
-                }
+            // => Done
+            dispSpotList: function (inputSpotList) { // 作ったスポットを表示する関数 
+                this.spot = inputSpotList.slice(this.begin, this.end)
             },
             spotInformationPage: function(value) { // spotのカードをクリックしたときに動く関数
                 // console.log("spotInformationPage: ", this.spot[value]) // Debug
-                this.showDialog = true;
+                this.showSpotDialog = true;
                 this.selectedSpotID = this.spot[value].spotId;
                 this.selectedSpotName = this.spot[value].name;
                 this.selectedSpotType = this.spot[value].spotType;
                 this.selectedUserID = this.spot[value].userId;
             },
-            // spotInformationPage: function(value) { // TODO: spotのカードをクリックしたときに動く関数
-            //     console.log(this.spot_list[value].spotId) // Debug
-            //     this.$router.push({ path: 'spot', query: { "spotId": this.spot_list[value].spotId } })
-            closeDialog() {
-                this.showDialog = false;
+            closeSpotDialog() {
+                this.showSpotDialog = false;
             },
-
             jumpSpotPage: function( pageToJump ){
                 // < 1 2 ... 10 > ←このタイプのボタンが押された時にページを変える
                 // console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
