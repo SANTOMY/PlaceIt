@@ -207,7 +207,7 @@ export default {
             this.user.univ = this.$store.state.userData.university;
         }
         //Mapオブジェクトの生成
-        this.map = L.map('map',{zoom: 10,maxZoom: 18})
+        this.map = L.map('map',{zoom: 10,maxZoom: 18,minZoom:4})
         .addLayer(
             L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
                 attribution:
