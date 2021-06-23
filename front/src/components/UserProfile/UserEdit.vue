@@ -1,9 +1,16 @@
 <template>
-    <v-container
-        v-bind:v-model="showDialog"
-    >
+    <v-dialog v-model="showDialog" width="500">
+        <template v-slot:activator="{ attrs }">
+            <v-container>
+                <v-btn class="px-5 py-6" max-width="500px" v-bind="attrs" @click="activate()">
+                    <h3>ユーザ情報変更</h3>
+                </v-btn>
+            </v-container>
+        </template>
+        
         <v-stepper 
             v-model="state"
+            v-if='!editer'
         >
 <!-----------------------ヘッダー------------------------------------------------->
             <v-stepper-header>
@@ -27,7 +34,7 @@
 
                 <v-stepper-step 
                     step="4">
-                    Edit Finish
+                    Confirm
                 </v-stepper-step>
             </v-stepper-header>
 <!--------------------------------ステップ1--------------------------------------------->
@@ -35,7 +42,7 @@
             <v-stepper-items>
                 <v-stepper-content step="1">
                     <v-card
-                        width="400px" 
+                        width="500px" 
                         class="mx-auto mt-5"
                     ></v-card>
                     <v-card-text>
@@ -65,11 +72,11 @@
                         Skip
                         </v-btn>
                         <v-spacer/>
-                        <v-btn>
+                        <!-- <v-btn>
                             <v-icon red @click='closeCard'>
                                 mdi-close-circle-outline
                             </v-icon>
-                        </v-btn>
+                        </v-btn> -->
                     </v-card-actions>
                 </v-stepper-content>
 <!--------------------------------ステップ2--------------------------------------------->
@@ -113,12 +120,12 @@
                         >
                         Back
                         </v-btn>
-                        <v-spacer/>
+                        <!-- <v-spacer/>
                         <v-btn>
                             <v-icon red @click='closeCard'>
                                 mdi-close-circle-outline
                             </v-icon>
-                        </v-btn>
+                        </v-btn> -->
                     </v-card-actions>
                 </v-stepper-content>
 <!--------------------------------ステップ3--------------------------------------------->
@@ -164,12 +171,12 @@
                         >
                         Back
                         </v-btn>
-                        <v-spacer/>
+                        <!-- <v-spacer/>
                         <v-btn>
                             <v-icon red @click='closeCard'>
                                 mdi-close-circle-outline
                             </v-icon>
-                        </v-btn> 
+                        </v-btn>  -->
                     </v-card-actions>   
                 </v-stepper-content>
 <!--------------------------------ステップ4--------------------------------------------->
@@ -198,12 +205,12 @@
                         Back
                         </v-btn>
 
-                        <v-spacer/>
+                        <!-- <v-spacer/>
                         <v-btn>
                             <v-icon red @click='closeCard'>
                                 mdi-close-circle-outline
                             </v-icon>
-                        </v-btn> 
+                        </v-btn>  -->
                     </v-card-actions>
                     <v-alert
                         dense
@@ -216,8 +223,37 @@
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
-    </v-container>
-    
+        <v-card class="px-5" v-if='editer'>
+            <v-container>
+                <v-row justify="center">
+                    <v-col cols="6">
+                        <h1>本当に削除しますか？</h1>
+                        あなたはログインできなくなります
+                    </v-col>
+                </v-row>
+                <v-row justify="center">
+                    <v-col cols="5">
+                        <v-btn 
+                            block
+                            class="pa-5"
+                            @click="cancel()" 
+                        >
+                            <h3>いいえ</h3>
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="5">
+                        <v-btn 
+                            block
+                            class="pa-5" 
+                            @click="deleteUserRun()"
+                        >
+                            <h3>はい</h3>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script>
@@ -230,7 +266,7 @@ export default {
     data: function() {
         return {
             state: null, // 修正UIの状態(1~4で遷移)
-            showDialog: true, // trueで修正UIを表示
+            showDialog: false, // trueで修正UIを表示
             model: { // edit後の情報を書き込むclassです。
                 username : "",
                 edit_username : "",
@@ -263,9 +299,14 @@ export default {
                 v => (v && v.length >= 8) || "パスワードは8文字以上で入力してください。",
                 v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
             ],
+            showConfirm: false
         }
     },
-
+    computed: {
+        editer: function(){
+            return (this.stepData[0].edit || this.stepData[1].edit || this.stepData[2].edit) && this.showConfirm
+        },
+    },
     methods: {
         editUserInformation: function() { // edit user information関数
 
@@ -295,8 +336,7 @@ export default {
             // 修正UIを閉じる関数
             // this.reLoad()
             this.showDialog = false
-            this.$emit('close')
-
+            // this.$emit('close')
         },
 
         skipPage: function(value){
@@ -326,7 +366,6 @@ export default {
                 console.log("(Debug)failed to continue")
             }       
         },
-
         backPage: function(value){
             // 前のステップに遷移する関数
             this.state = value-1
@@ -334,9 +373,13 @@ export default {
         reLoad: function () {
             // ページをリロードする関数
             this.$router.go({path: this.$router.currentRoute.path, force: true})
-        }
+        },
+        activate: function(){
+            this.showDialog = true;
+        },
         
     }
     
 }
 </script>
+
