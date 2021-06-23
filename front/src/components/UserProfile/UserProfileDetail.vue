@@ -1,21 +1,5 @@
 <template>
     <v-container>
-        <v-toolbar
-            flat
-            color="transparent"
-        >
-            <v-icon>mdi-account</v-icon>
-            <v-toolbar-title>ユーザープロファイル</v-toolbar-title>
-        </v-toolbar>
-<!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
-        <v-dialog v-model="dialogEdit" width=500>
-            <UserEdit 
-                @close="closeUserEdit"
-                v-bind:user="user"
-                ref="child"
-            >
-            </UserEdit>
-        </v-dialog>
 <!-----------------------ユーザー写真------------------------------------------------->        
         <v-row>
             <v-col>
@@ -26,26 +10,22 @@
                 </v-layout>
                 <avatar-register v-if="!otherUser" @submit="editAvatarImage"/>
             </v-col>
-<!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
+<!-----------------------ユーザー名・所属大学と修正・削除ボタン------------------------->
             <v-col>
-  
-                ユーザー名
-                <h1>{{ user.username }}</h1>
-                
-                <v-spacer></v-spacer>
-                大学名
-                <h1>{{ user.university }}</h1>
-                <v-spacer></v-spacer>
-
-                <v-btn
-                    v-model="editer"
-                    @click="editProfile"
-                    v-if="!otherUser"
-                ><!-------editerのtrue/false変更され、editProfile()が起動するボタン----->
-                ユーザー情報修正
-                </v-btn>
-
-                <user-delete v-if="!otherUser" @submit="deleteUser"/>
+                <v-container>
+                    <v-row justify="center">
+                        <v-col>
+                            <p class="font-italic">User Name</p>
+                            <h1>{{ user.username }}</h1>
+                            <v-spacer></v-spacer>
+                            <p class="font-italic">University</p>
+                            <h1>{{ user.university }}</h1>
+                            <v-spacer></v-spacer>
+                            <user-edit v-if="!otherUser" :user="user"/>
+                            <user-delete v-if="!otherUser" />
+                        </v-col>
+                    </v-row>
+                </v-container>
             </v-col>
         </v-row>
 <!----------------------スポットリストカード------------------------------------------------->
@@ -83,27 +63,12 @@ export default {
         good_spot: null,
         spot: null,
     },
-    data() {
-        return {
-            editer: false, // User profile edit UI ON/OFF(true/false)
-            dialogEdit: false, // user information edit UI
-        }
-    },
 
     methods:  {
-        editProfile: function() {
-            this.dialogEdit = true
-        },
-        closeUserEdit: function(){          
-            this.dialogEdit = false
-        },
         editAvatarImage: function(image) {
             this.user.src = image;
             const imageFile = ConvertToFileFromBase64(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
             uploadProfileImage(imageFile, this.$store.state.userData.userId)
-        },
-
-        deleteUser: function(){
         },
 
         createImageFile: function(base64image, name) {

@@ -2,13 +2,9 @@
     <v-dialog v-model="showDialog" width="800">
         <template v-slot:activator="{ attrs }">
             <v-container>
-                <v-row justify="center">
-                    <v-col cols="6">
-                        <v-btn class="px-5 py-6" v-bind="attrs" @click="activate()" color="red">
-                            <h3>ユーザ削除</h3>
-                        </v-btn>
-                    </v-col>
-                </v-row>
+                <v-btn class="px-5 py-6c white--text" max-width="500px" v-bind="attrs" @click="activate()" color="red">
+                    <h3>ユーザ情報削除</h3>
+                </v-btn>
             </v-container>
         </template>
         
