@@ -11,7 +11,9 @@ module.exports = class UserController{
         this.register.bind(this);
         this.getUserByEmail.bind(this);
         this.editUser.bind(this);
+        this.deleteUser.bind(this);
         this.getUserById.bind(this);
+        this.getAllUniversities.bind(this);
     }
     
     async register(req, res){
@@ -96,6 +98,41 @@ module.exports = class UserController{
         });
     }
 
+    async confirmPassword(req, res){
+        const userId = req.body.userId;
+        const password = utility.isEmpty(req.body.password) ? '' : req.body.password;
+        if (utility.isEmpty(password)) {
+            debug(fileLabel,"Password is Empty"); 
+            return res.status(400).json({"success": false, "error": "password is empty"});
+        }
+        return userSQL.confirmPassword(userId, password).then((result)=>{
+            if(result.success){
+                debug(fileLabel, "Successfully confirmed " + userId);
+                return res.status(200).json({"success": true, "userId":result.userId, "confirm": result.confirm});
+            }else{
+                throw result1.data;
+            }
+        }).catch((exception)=>{
+            error(fileLabel,"Error in attempt to confirm "+ userId + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
+
+    async deleteUser(req, res){
+        const userId = req.body.userId;
+        return userSQL.deleteUser(userId).then((result)=>{
+            if(result.success){
+                debug(fileLabel, "Successfully deleted " + userId);
+                return res.status(200).json({"success": true, "userId":result.userId});
+            }else{
+                throw result1.data;
+            }
+        }).catch((exception)=>{
+            error(fileLabel,"Error in attempt to deleting "+ userId + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
+
     async getUserById(req,res){
         const userId = req.params.userId;
         return userSQL.getUserById(userId).then((result) =>{
@@ -108,6 +145,21 @@ module.exports = class UserController{
             }
         }).catch((exception)=>{
             error(fileLabel,"Error while getting user "+ userId + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
+
+    async getAllUniversities(req,res){
+        return userSQL.getAllUniversities().then((result) =>{
+            if(result.success){
+                debug(fileLabel,"Successfully get universities");
+                return res.status(200).json({"success": true, "data": result.data});
+            } else{
+                info(fileLabel, "Could not get universities: " + JSON.stringify(result));
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+        }).catch((exception)=>{
+            error(fileLabel,"Error while getting universities: " + exception);
             return res.status(400).json({"success": false, "error": exception});
         });
     }

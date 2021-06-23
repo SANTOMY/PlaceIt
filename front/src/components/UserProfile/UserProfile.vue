@@ -1,192 +1,297 @@
 <template>
-    <v-container>
-        <h1>ユーザープロファイル</h1>
-<!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
-        <v-dialog v-model="dialogEdit" width=500>
-            <UserEdit 
-                @close="closeUserEdit"
-                v-bind:user="user"
-                ref="child"
-            >
-            </UserEdit>
-        </v-dialog>
-<!-----------------------ユーザー写真------------------------------------------------->        
-        <v-row>
-            <v-col>
-                <v-layout justify-center>
-                    <v-avatar size="200">
-                        <img v-bind:src="user.src">
-                    </v-avatar>
-                </v-layout>
-            </v-col>
-<!-----------------------特定のユーザーが投稿したスポットを取得するテスト------------->
-            <!-- <v-col>
-                スポットの取得テスト1
-                <h1>{{ user.username }}</h1>
-                
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        @click="getSpotByUserId( 'aaa' )"
-                    >
-                    スポットの取得テスト2
-                    </v-btn> 
-            </v-col> -->
-<!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
-            <v-col>
-                ユーザー名
-                <h1>{{ user.username }}</h1>
-                
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        v-model="editer"
-                        @click="editProfile"
-                    ><!-------editerのtrue/false変更され、editProfile()が起動するボタン----->
-                    edit
-                    </v-btn> 
-            </v-col>
-        </v-row>
-<!----------------------スポットリストカード------------------------------------------------->
-        <SpotListCard 
-            v-bind:spot_list="spot"
-            v-bind:user_list="user"
-            v-bind:my_spot_list="my_spot"
-            color="green"
-        ></SpotListCard>
-    </v-container>
+<!-- ローディング画面 -->
+    <v-skeleton-loader
+        v-if="isLoading"
+        type="list-item-avatar-three-line, image"
+        class="mx-auto"
+    ></v-skeleton-loader>
+    <user-profile-detail 
+        v-else
+        :user="user"
+        :otherUser="otherUser"
+        :my_spot="my_spot"
+        :good_spot="good_spot"
+        :spot="spot"
+    />
 </template>
 
 <script>
 
-import SpotListCard from "./SpotListCard.vue";
-import UserEdit from "./UserEdit.vue";
-import {getUser} from '../../routes/userRequest'
-import {getSpot} from '../../routes/spotRequest'
+import userProfileDetail from "./UserProfileDetail.vue";
+import {getProfileImage} from "../../routes/imageRequest"
+import {getSpot} from '../../routes/spotRequest';
+import {average} from '../../routes/reviewRequest';
+import {getReviewBySpotId, getReviewByUserId} from '../../routes/reviewRequest';
+import {getSpotImage} from "../../routes/imageRequest"
+// import {SpotExampleData} from "../share/SpotExampleData";
+// import {getSpotByUserId,getSpotYouReviewed,getRecommendedSpots} from '../share/GetProfileInformation.js';
 
 export default {
 
     components: {
-        SpotListCard,
-        UserEdit
+        userProfileDetail
     },
     data() {
         return {
-            editer: false,
-            dialogEdit: false,
-            user: { // ユーザー仮データ
-                user_id: 'default_id',
-                username: this.$store.state.userData.userName,
-                email: this.$store.state.userData.email,
-                password: this.$store.state.userData.password,
-                src: require('@/assets/pose_kuyashii_man.png')
+            otherUser: this.$store.state.otherUser, // other user profile judge
+            user: { 
+                // ユーザー仮データ
             },
-            spot: [ // spot仮データ
-                {
-                    name: 'マクドナルド',
-                    spotId: '000000',
-                    type: 'restaurant',
-                    user_id: '2bedc185-298d-49c4-b1e7-20897646dd92',
-                    username: 'asada',
-                    good: 123,
-                    src: require("@/assets/Mac.jpg"),
-                    review:[
-                        { user_id:'000000' },
-                        { user_id:'000001' }
-                    ]
-                },
-                {
-                    name: 'モスバーガー',
-                    spotId: '000001',
-                    type: 'restaurant',
-                    username: 'takata',
-                    user_id: '000001',
-                    good: 150,
-                    src: require('@/assets/mos.png'),
-                    review:[
-                        { user_id:'000001' },
-                        { user_id:'000002' }
-                    ]
-                },      
-                {
-                    name: 'KFC',
-                    spotId: '000002',
-                    type: 'restaurant',
-                    user_id: '000002',
-                    username: 'matsuo',
-                    good: 121,
-                    src: require('@/assets/KFC.jpg'), 
-                    review:[
-                        { user_id:'000002' },
-                        { user_id:'000000' }
-                    ]
-                },
-                {
-                    name: 'Lotteria',
-                    spotId: '000003',
-                    type: 'restaurant',
-                    user_id: '000003',
-                    username: 'nakamura',
-                    good: 99,
-                    src: require('@/assets/lotteria.png'), 
-                    review:[
-                        { user_id:'000002' },
-                        { user_id:'000000' }
-                    ]
-                } 
-            ],
+            isLoading: true,
+            spot: [],
             my_spot: [
                 // 自分の作成したスポット
                 // required attribute: name, src, good
             ],
-            spot_to_show: [
-                // my_spotのうち表示するスポット
-                // いまはまだ必要ないけど，スポット投稿数が多くなると必要かも
-            ]
+            // spot_to_show: [
+            //     // my_spotのうち表示するスポット
+            //     // いまはまだ必要ないけど，スポット投稿数が多くなると必要かも
+            // ],
+            good_spot: [
+                // 自分が評価したスポット
+            ],
+            show_count: 0
         }
     },
-    mounted: function(){
-        // call getUser(email) from .vue file:
-        getUser(this.user.email)
+    mounted() {
+        if(this.otherUser==true){
+            this.user= { 
+                id: this.$store.state.otherUserData.userId,
+                username: this.$store.state.otherUserData.userName,
+                email: null,
+                password: null,
+                university: this.$store.state.otherUserData.university,
+                src: require('@/assets/default-icon.jpeg')
+            }
+        }else if(this.otherUser==false){
+            this.user= { 
+                id: this.$store.state.userData.userId,
+                username: this.$store.state.userData.userName,
+                email: this.$store.state.userData.email,
+                password: this.$store.state.userData.password,
+                university: this.$store.state.userData.university,
+                src: require('@/assets/default-icon.jpeg')
+            }
+        }else{
+            alert("ERROR:読み込めませんでした。");
+            return
+        }
+        this.show_count = 0
+        getProfileImage( this.user.id )
             .then(result => {
-                console.log(result[0])
-                console.log(result[0].username)
-                this.user.username = result[0].username
-                this.user.user_id = result[0].id
-                this.getSpotByUserId( this.user.user_id )
-                    .then( () =>{
-                        this.getLatestSpots( 0, 28 )
-                })
-        })
+                if(!result.success) return;
+                this.user.src = "data:image/jpeg;base64," + result.data.image;
+            })
+        
+        this.getSpotByUserId( this.user.id )
+        this.getSpotYouReviewed( this.user.id )
+        this.getRecommendedSpots( this.user.university )
     },
-    methods:  {
-        editProfile: function() {
-            this.dialogEdit = true
-        },
-        closeUserEdit: function(){          
-            this.dialogEdit = false
-        },
-        getSpotByUserId: async function(user_id){
-            console.log( "typeof user_id: ", typeof user_id, user_id )
-            return getSpot('', '', '', user_id, '').then(result => {
-                console.log( "result of getSpot: ", result );
-                for( var s in result.spots ){
-                    var name = result.spots[ s ].spot_name;
-                    // TODO: to get images from DB
-                    var src = require( "@/assets/Mac.jpg" );
-                    if( Math.random() >= 0.5 ){
-                        src = require('@/assets/mos.png');
-                    }
-                    var good = 1024;
-                    this.my_spot.push( { "name": name, "src": src, "good": good } );
+    methods: {    
+        getSpotByUserId: async function(user_id){ // 作成スポット取得関数
+            getSpot('', '', '', user_id, '').then(result => {
+                if( result.spots == undefined ){
+                    this.show_count += 1;
+                    return
                 }
-                return true   
+                const spot_length = result.spots.length
+                var i = 0;
+                for( var spt of result.spots ){
+                    const spt_id = spt.spot_id;
+                    const name = spt.spot_name;
+                    const type = spt.spot_type;
+                    const usr_id = spt.user_id;
+
+                    // レビューの計算
+                    getReviewBySpotId(spt_id).then(result => {
+                        const scores = [];
+                        for (var rev of result.review) {
+                            scores.push(rev.score);
+                        }
+
+                        const good = Math.round(10 * average(scores)) / 10;
+                        getSpotImage(spt_id).then((result) => {
+                            if (result.success && result.data != undefined) {
+                                const src = "data:image/jpeg;base64," + result.data[0].image
+                                this.my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                            } else {
+                                const src = require("@/assets/noimage.png");
+                                this.my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                            }
+                        }).catch((exception) => {
+                            console.log("Error in getSpotImage: ", exception)
+                            const src = require("@/assets/noimage.png");
+                            this.my_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                        }).finally(()=>{
+                            this.sortSpotsByScore( this.my_spot )
+                        })
+                    }).catch((exception) => {
+                        console.log("Error in getReviewBySpotId: ", exception)
+                    }).finally(()=>{
+                        i += 1;
+                        if (i==spot_length){
+                            this.show_count +=1;
+                            console.log('success getSpotByUserId')
+                        }
+                    })
+                }
             }).catch((exception) => {
                 console.log( "Error in getSpotByUserId: ", exception );
             })
         },
-        getLatestSpots: function( left = 0, right ){
-            console.log( "latestSpots", ( this.my_spot ).slice( left, right ) )
-            this.spot_to_show = ( this.my_spot ).slice( left, right )
-        }
-    }
-};
+
+        getSpotYouReviewed: async function( user_id ){ //レビューしたスポット取得関数
+            getReviewByUserId( user_id ).then( result => {
+                if( result.review == undefined ){
+                    this.show_count += 1;
+                    return
+                }
+                var reviewd_spot_ids = new Set()
+                for( let rev of result.review ){
+                    reviewd_spot_ids.add( rev.spot_id );
+                }
+                const spot_length = reviewd_spot_ids.size
+                var i = 0;
+                for( let reviewd_spot_id of reviewd_spot_ids ){
+                    getSpot( reviewd_spot_id, '', '', '', '' ).then( result => {
+                        const spt = result.spots[ 0 ];
+                        const spt_id = spt.spot_id;
+                        const name = spt.spot_name;
+                        const type = spt.spot_type;
+                        const usr_id = spt.user_id;
+        
+                        // レビューの計算
+                        getReviewBySpotId(spt_id).then(result => {
+                            const scores = [];
+                            for (var rev of result.review) {
+                                scores.push(rev.score);
+                            }
+                            const good = Math.round(10 * average(scores)) / 10;
+                            getSpotImage(spt_id).then((result) => {
+                                if (result.success && result.data != undefined) {
+                                    const src = "data:image/jpeg;base64," + result.data[0].image
+                                    this.good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                                } else {
+                                    const src = require("@/assets/noimage.png");
+                                    this.good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                                }
+                            }).catch((exception) => {
+                                console.log("Error in getSpotImage: ", exception)
+                                const src = require("@/assets/noimage.png");
+                                this.good_spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                            }).finally(()=>{
+                                this.sortSpotsByScore( this.good_spot )
+                            })
+                        }).catch((exception => {
+                            console.log("Error in getReviewBySpotId: ", exception);
+                        }));
+                    } ).catch((exception) => {
+                        console.log( "Error in getSpot: ", exception );
+                    }).finally(()=>{
+                        i += 1;
+                        if (i==spot_length){
+                            this.show_count +=1;
+                            console.log("success getSpotYouReviewed ")
+                        }
+                    })
+                }
+            } ).catch((exception) => {
+                console.log( "Error in getReviewByUserId: ", exception );
+            })
+        },
+
+        getLatestSpots: function( left = 0, right ,spot){ //スポットが多すぎるときの処理。
+            // TODO: 他のスポットにも対応
+            console.log( "latestSpots", ( spot ).slice( left, right ) )
+            return ( spot ).slice( left, right )
+        },
+
+        shuffleArray: async function( array ){ // 配列をシャッフルする関数
+            var newArray = [];
+            while ( array.length > 0 ) {
+                var n = array.length;
+                var k = Math.floor( Math.random() * n );
+
+                newArray.push( array[ k ] );
+                array.splice( k, 1 );
+            }
+            return newArray;
+            // return newArray.slice( 0, 10 )
+            // みたいにすると，おすすめが毎回変わって面白いかも
+        },
+
+        sortSpotsByScore: async function( array ){ // スポットをスコアの高い順にソートする関数
+            array.sort( function( a, b ){
+                if( a.good > b.good ){
+                    return -1
+                }else{
+                    return 1
+                }
+            } )
+        },
+
+        getRecommendedSpots: async function( user_univ ){ // おすすめスポット取得関数
+            getSpot('', '', '', '', user_univ).then( result => {
+                if( result.spots == undefined ){
+                    this.show_count += 1;
+                    return
+                }
+                this.shuffleArray( result.spots ).then(result =>{
+                    const spot_length = result.length
+                    var i = 0;
+                    for( var spt of result ){
+                        const spt_id = spt.spot_id;
+                        const name = spt.spot_name;
+                        const type = spt.spot_type;
+                        const usr_id = spt.user_id;
+
+                        // レビューの計算
+                        getReviewBySpotId(spt_id).then(result => {
+                            const scores = [];
+                            for (var rev of result.review) {
+                                scores.push(rev.score);
+                            }
+                            const good = Math.round(10 * average(scores)) / 10;
+                            
+                            getSpotImage(spt_id).then((result) => {
+                                if (result.success && result.data != undefined) {
+                                    const src = "data:image/jpeg;base64," + result.data[0].image
+                                    this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                                } else {
+                                    const src = require("@/assets/noimage.png");
+                                    this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                                }
+                            }).catch((exception) => {
+                                console.log("Error in getSpotImage: ", exception)
+                                const src = require("@/assets/noimage.png");
+                                this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good ,"spotType":type, "userId":usr_id});
+                            }).finally(()=>{
+                                this.sortSpotsByScore( this.spot )
+                                this.spot = this.spot.slice( 0, 6 ) // 上位6件に限定
+                                i += 1;
+                                if (i==spot_length){
+                                    console.log("success getRecommendedSpots ")
+                                    this.show_count +=1;
+                                }
+                            })
+                        }).catch((exception => {
+                            console.log("Error in getReviewBySpotId: ", exception)
+                        }));
+                    }        
+                })
+            }).catch((exception) => {
+                console.log( "Error in getSpot: ", exception );
+            })
+        },
+    },
+    watch:  {
+        show_count: function() {
+            if(this.show_count!=3) {
+                return
+            }else{
+                this.isLoading=false
+            }
+        },
+    },
+}
 </script>

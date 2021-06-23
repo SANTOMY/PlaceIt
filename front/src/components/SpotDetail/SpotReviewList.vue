@@ -4,10 +4,10 @@
     >
         <v-layout column style="height: 300px">      
             <v-flex style="overflow: auto">
-                <spot-review v-for="review in reviews" :key="review.id"
-                    :user_name="review.content.user_name"
-                    :comment="review.content.comment"
-                    :score="review.content.score"
+                <spot-review 
+                    @catchUserData="sendUserData"
+                    v-for="review in reviews" :key="review.id"
+                    :reviewer_data="review"
                 />
             </v-flex>
         </v-layout>
@@ -23,8 +23,13 @@ export default {
     },
 
     props: {
-        reviews: null
+        reviews: null,
+    },
+    methods: {
+        sendUserData(user) {
+            // SpotDetail.vue にuser dataを渡す関数（いまは使ってない）
+            this.$emit('catchUserInformation',user)
+        },
     }
-    
 }
 </script>

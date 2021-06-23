@@ -26,13 +26,52 @@
                     v-model="password"
                     :counter="32"
                     :rules="passwordRules" />
-                    
-                <v-text-field label="所属大学"
-                    prepend-icon="mdi-school"
-                    v-model="university" 
-                    :counter="64"
-                    :rules="universityRules"/>
 
+                <v-autocomplete
+                    label="所属大学"
+                    clearable
+                    v-model="university"
+                    prepend-icon="mdi-school"
+                    item-text="university"
+                    :items="universities"
+                    v-if='!this.isEditing'>
+
+                    <template v-slot:append-outer>
+                    <v-slide-x-reverse-transition
+                        mode="out-in"
+                    >
+                    <v-icon
+                        :key="`icon-${isEditing}`"
+                        :color="isEditing ? 'success' : 'info'"
+                        @click="isEditing = !isEditing"
+                    >
+                    mdi-pencil-plus
+                    </v-icon>
+                    </v-slide-x-reverse-transition>
+                    </template>
+                </v-autocomplete>
+                
+                <v-text-field label="所属大学を入力してください"
+                    v-model="university"
+                    prepend-icon="mdi-fountain-pen-tip"
+                    :counter="64"
+                    :rules="universityRules"
+                    v-if='this.isEditing'>
+                    <template v-slot:append-outer>
+                    <v-slide-x-reverse-transition
+                        mode="out-in"
+                    >
+                    <v-icon
+                        :key="`icon-${isEditing}`"
+                        color="red"
+                        @click="isEditing = !isEditing"
+                    >
+                    mdi-undo-variant
+                    </v-icon>
+                    </v-slide-x-reverse-transition>
+                    </template>
+                </v-text-field>
+                
                 <v-card-actions>
                     <v-btn @click="createUser">登録</v-btn>
                 </v-card-actions>
@@ -43,7 +82,15 @@
 </template>
 
 <script>
+/*
+import Vue from 'vue'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'; 
+Vue.component('v-select', vSelect);
+*/
+
 import {register} from '../../routes/userRequest'
+import {getAllUniversities} from '../../routes/userRequest'
 const User = require("../../store/user");
 export default {
 
@@ -53,6 +100,8 @@ export default {
             email : '',
             password : '',
             university: '',
+            addedUniversity: '',
+            isEditing: false,
 
             showPassword : false,
             usernameRules: [
@@ -71,24 +120,36 @@ export default {
             universityRules: [
                 v => !!v || "所属大学名は必須項目です。",
                 v => (v && v.length <= 64) || "所属大学名は64文字以内で入力してください。",
+                v => !(v == "その他") || "大学名を正しく入力してください。"
             ],
+            universities: [], 
         }
+    },
+    mounted: function(){
+        // call getUser(email) from .vue file:
+        getAllUniversities()
+            .then(result => {
+                this.universities = result
+        })
     },
 
     methods: {
-        createUser: function() {
+        createUser: async function() {
             if (!this.$refs.loginForm.validate()) return;
-            register(this.username,this.email,this.password,this.university)
-                .then(res => {
-                    console.log(res)
-                    //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
-                    const userData = new User(res.userId, res.userName, res.email, null, res.university)
-                    console.log(userData)
-                    this.$store.commit("login", userData)
-                    this.$router.push('/map')
-                });
-        }
-    }
+            const res = await register(this.username,this.email,this.password,this.university);
+            if(!res.success) {
+                alert(res.error);
+                return;
+            }
+            else {
+                //const userData = {"id":res.userId, "email":res.email, "username":res.userName}
+                const userData = new User(res.userId, res.userName, res.email, null, res.university)
+                this.$store.commit("login", userData)
+                this.$router.push('/map')
+            }
+
+        },
+    },
     
 }
 </script>

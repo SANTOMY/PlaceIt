@@ -268,11 +268,6 @@ export default {
 
     methods: {
         editUserInformation: function() { // edit user information関数
-            // Debug //
-            console.log(this.user.email); // 変更前のemail
-            console.log(this.model.edit_email); // 変更後のemail
-            console.log(this.model.edit_password); // 変更後のpassword
-            console.log(this.model.edit_username); // 変更後のusername
 
             // backendのデータの修正処理
             editUser(this.user.email,this.model.edit_email,this.model.edit_password,this.model.edit_username)
@@ -282,11 +277,13 @@ export default {
                         const userData = new User(this.$store.state.userData.userId,
                                                 !this.model.edit_username ? this.$store.state.userData.userName : this.model.edit_username,
                                                 !this.model.edit_email ? this.$store.state.userData.email : this.model.edit_email,
-                                                null
+                                                null,
+                                                this.$store.state.userData.university
                                                 )
+                        // console.log('新ユーザーデータ：',userData)
                         this.$store.commit("login", userData)
 
-                        this.reLoad() 
+                        this.reLoad()
                     } else {
                         this.editSuccessed = false;
                         //this.closeCard()
@@ -335,6 +332,7 @@ export default {
             this.state = value-1
         },
         reLoad: function () {
+            // ページをリロードする関数
             this.$router.go({path: this.$router.currentRoute.path, force: true})
         }
         

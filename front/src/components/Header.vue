@@ -32,14 +32,14 @@
           
         >
             <template v-slot:activator="{ on }">
-                <v-btn class="px-10 mx-2" v-if="isLoggedIn" v-on="on">
+                <v-btn class="px-10 mx-2" text v-if="isLoggedIn" v-on="on">
                     <v-icon left large color="gray" class="px-5"> mdi-account-circle</v-icon>
                     User
                 </v-btn>
             </template>
             <v-list>
                 <v-list-item>
-                    <v-btn to="/user" class="px-8 mb-2">
+                    <v-btn @click="toUserPage" class="px-8 mb-2">
                         <v-icon left large color="gray" class="px-5"> mdi-account-circle</v-icon>
                         Profile
                     </v-btn>
@@ -118,6 +118,14 @@ export default {
             this.$store.commit("logout")
             if (this.$route.path != '/map'){
                 this.$router.push('/map')
+            }
+        },
+        toUserPage() {
+            this.$store.commit("myPageDisp")
+            if(location.pathname=='/user'){ // ユーザーページにいる場合
+                this.$router.go({path: this.$router.currentRoute.path, force: true})       
+            }else{ // ユーザーページ以外にいる場合
+                this.$router.push({ path: 'user'})
             }
         }
     }

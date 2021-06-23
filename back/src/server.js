@@ -8,6 +8,7 @@ const userRoute = require('./route/userRoute');
 const spotRoute = require('./route/spotRoute');
 const reviewRoute = require('./route/reviewRoute');
 const loginRoute = require('./route/loginRoute');
+const imageRoute = require('./route/imageRoute')
 
 app.use(cors())
 
@@ -16,6 +17,7 @@ app.use('/user',userRoute)
 app.use('/spot',spotRoute)
 app.use('/review',reviewRoute)
 app.use('/login',loginRoute)
+app.use('/upload',imageRoute)
 
 app.get('/', (req, res) => {
   console.log(req);

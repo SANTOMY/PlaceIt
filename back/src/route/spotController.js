@@ -9,6 +9,7 @@ module.exports = class SpotController{
     constructor(){
         this.saveSpot.bind(this);
         this.getSpot.bind(this);
+        this.deleteSpot.bind(this);
     }
     
     async saveSpot(req, res){
@@ -35,7 +36,7 @@ module.exports = class SpotController{
         return SpotSQL.getSpotByKeywords(keywords).then((results)=>{
             if(results.success){
                 info(fileLabel, "Loaded Successfully");
-                return res.status(200).json({"success": true, "spots": results.spots, "review": results.review});
+                return res.status(200).json({"success": true, "spots": results.spots});
             }else{
                 info(fileLabel, "Loaded Unsuccessfully: " + JSON.stringify(results));
                 return res.status(400).json({"success": false, "error": results.data});
@@ -43,6 +44,42 @@ module.exports = class SpotController{
         }).catch((exception)=>{
             info(fileLabel, "ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}) +": " + JSON.stringify(result));
             error(fileLabel, "Error in attempt to load: " + exception )
+            return res.status(400).json({"success": false, "error": exception});
+        })
+    }
+
+    async editSpot(req, res) {
+        console.log("editSpot");
+        const {spotId, spotName, spotType} = req.body;
+        return SpotSQL.editSpot(spotId, spotName, spotType).then((result) => {
+            if(result.success) {
+                info(fileLabel, "Loaded Successfully");
+                return res.status(200).json({"success": true, "spotName": result.spotName, "spotType": result.spotType});
+            }
+            else {
+                info(fileLabel, "Loaded Unsuccessfully");
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+        })
+        .catch((exception)=> {
+            error(fileLabel,"Error in attempt to edit " + spotId + ": " + exception);
+            return res.status(400).json({"success": false, "error": exception});
+        });
+    }
+
+    async deleteSpot(req,res){
+        const spotId = req.body.spotId;
+        return SpotSQL.deleteSpot(spotId).then((result)=>{
+            if(result.success){
+                info(fileLabel,"Successfully deleted spot, images and reviews");
+                return res.status(200).json({"success": true})
+            } else{
+                info(fileLabel, "Unsuccessful deletion for spot " + util.inspect(spotId,{showHidden: false, depth: null}) +": " + JSON.stringify(result));
+                return res.status(400).json({"success": false, "error": result.data});
+            }
+        }).catch((exception)=>{
+            error(fileLabel, "ERROR OBJECT: " + util.inspect(exception,{showHidden: false, depth: null}) +": " + JSON.stringify(result));
+            error(fileLabel, "Error while trying to delete spot: " + exception);
             return res.status(400).json({"success": false, "error": exception});
         })
     }

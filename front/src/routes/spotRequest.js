@@ -16,7 +16,6 @@ async function saveSpot(spotName, x, y, picture, spotType, userId, comment, scor
         });
         return await reponse.json();
     }catch(exception){
-        console.log(exception);
         return{success:false, data:exception};
     }
 }
@@ -47,9 +46,48 @@ async function getSpot(spotId, spotName, spotType, userId, university){
         }
 
     } catch(exception){
-        console.log(exception);
         return {success:false, data:exception};
     }
 }
 
-export {saveSpot, getSpot};
+async function editSpot(spotId, spotName, spotType){
+    const url = serverIP + '/spot/editSpot';
+    try{
+        let reponse = await fetch(url,{
+            mode: 'cors',
+            method: 'PUT',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Origin': 'http://localhost:8080'
+            },
+            body: JSON.stringify({spotId: spotId, spotName: spotName, spotType: spotType})
+        });
+        return await reponse.json();
+    }catch(exception){
+        console.log(exception);
+        return{success:false, data:exception};
+    }
+}
+
+async function deleteSpot(spotId){
+    const url = serverIP + '/spot/deleteSpot';
+    try{
+        let reponse = await fetch(url,{
+            mode: 'cors',
+            method: 'DELETE',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Origin': 'http://localhost:8080'
+            },
+            body: JSON.stringify({spotId: spotId})
+        });
+        return await reponse.json();
+    }catch(exception){
+        console.log(exception);
+        return{success:false, data:exception};
+    }
+}
+
+export {saveSpot, getSpot, editSpot, deleteSpot};

@@ -6,6 +6,7 @@ const fileLabel = "UserSQL"
 const util = require('util');
 const bcrypt = require('bcryptjs');
 const utility = require('../utility');
+const { exception } = require('console');
 
 
 /**
@@ -13,8 +14,8 @@ const utility = require('../utility');
  */
 async function saveUser(newUser) {
     const query = {
-        text: 'INSERT INTO users.users(id, username, email, password, university) VALUES($1, $2, $3, $4, $5)',
-        values: [newUser.userId, newUser.userName, newUser.email, newUser.password, newUser.university]
+        text: 'INSERT INTO users.users(id, username, email, password, university, is_active) VALUES($1, $2, $3, $4, $5, $6)',
+        values: [newUser.userId, newUser.userName, newUser.email, newUser.password, newUser.university, true]
     };
 
     const client = await pool.connect();
@@ -115,6 +116,45 @@ async function editUser(currentEmail, newEmail, newPassword, newUserName) {
     });
 }
 
+async function confirmPassword(userId, password){
+    const confirmQuery = {
+        text: `SELECT * from users.users WHERE id='${userId}'`
+    }
+    const client = await pool.connect();
+    return client.query(confirmQuery).then( result => {
+        client.release();
+        if (result.rowCount == 0){
+            throw "User does not exist";
+        }
+        const hash = result.rows[0].password;
+        const isCorrectPassword = bcrypt.compareSync(password, hash);
+        if(!isCorrectPassword){
+            return {"success":true, "data":"Passwrod is incorrect", "userId":userId, "confirm":false};
+        }else{
+            return {"success":true, "data":"Password is correct", "userId":userId, "confirm":true};
+        }
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while confirming password. " + exception);
+        return {"success":false, "data":exception};
+    })
+}
+
+async function deleteUser(userId) {
+    const deleteQuery = {
+        text: `UPDATE users.users SET is_active=false WHERE id='${userId}'`
+    };
+    const client = await pool.connect();
+    return client.query(deleteQuery).then( result => {
+        client.release();
+        return {"success":true, "data":"Successfully deleted", "userId":userId};
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while deleting user. " + exception);
+        return {"success":false, "data":exception};
+    });
+}
+
 async function login(email, password) {
     const query = {
         text: `SELECT * FROM users.users WHERE email='${email}'`
@@ -128,7 +168,7 @@ async function login(email, password) {
         const isCorrectPassword = bcrypt.compareSync(password, hash);
         info(fileLabel,"authentication by email: " + email);
         if (isCorrectPassword) {
-            return {"success":true, "data":"Password is correct", "email":result.rows[0].email, "id":result.rows[0].id, "username":result.rows[0].username, "password":result.rows[0].password, "university":result.rows[0].university};
+            return { "success": true, "data": "Password is correct", "email": result.rows[0].email, "id": result.rows[0].id, "username": result.rows[0].username, "password": result.rows[0].password, "university": result.rows[0].university, "is_active": result.rows[0].is_active };
         } else {
             return {"success":false, "data":"Password is incorrect"};
         }
@@ -139,5 +179,22 @@ async function login(email, password) {
     });
 }
 
-module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser,
-     login:login, getUserById:getUserById};
+async function getAllUniversities() {
+    const query = {
+        text: `SELECT DISTINCT university FROM users.users WHERE university IS NOT NULL`
+    };
+    const client = await pool.connect();
+    return client.query(query).then( result => {
+        client.release();
+        if (result.rowCount == 0)
+            return {"success":false, "data":"University is not exist"};
+        return {"success":true, "data":result.rows};
+    }).catch((exception)=>{
+        client.release();
+        error(fileLabel,"Error while get universities. " + exception);
+        return {"success":false, "data":exception};      
+    });
+}
+
+module.exports = {saveUser:saveUser, getUserByEmail:getUserByEmail, editUser:editUser, confirmPassword:confirmPassword, deleteUser:deleteUser,
+     login:login, getUserById:getUserById, getAllUniversities:getAllUniversities};
