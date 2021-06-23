@@ -100,6 +100,7 @@
                 <template v-slot:activator="{on, attrs}">
                     <v-btn 
                     text
+                    v-if="userLogin!=null"
                     @click="moreDetail=!moreDetail"
                     v-bind="attrs"
                     v-on="on"
@@ -143,17 +144,29 @@
                     group
                     mandatory
                     >
-                        <v-btn :value="false" class="mx-auto" fab >
-                            <v-icon>
-                                mdi-alpha-a-circle-outline
-                            </v-icon>
+                        <v-btn :value="false" class="mx-auto" fab>
+                            <v-tooltip bottom>
+                            <template v-slot:activator="{on, attrs}">
+                                <v-icon v-bind="attrs" v-on="on">
+                                    mdi-alpha-a-circle-outline
+                                </v-icon>
+                            </template>
+                            <span>Show all spots regardless of the university.</span>
+                            </v-tooltip>
                         </v-btn>
+                        
                         <v-btn :value="true" class="mx-auto" fab >
-                            <v-icon>
-                                mdi-account-cowboy-hat
-                            </v-icon>
+                            <v-tooltip bottom>
+                            <template v-slot:activator="{on, attrs}">
+                                <v-icon v-bind="attrs" v-on="on">
+                                    mdi-account-cowboy-hat
+                                </v-icon>
+                            </template>
+                            <span>Show only spots of your university.</span>
+                            </v-tooltip>
                         </v-btn>
                     </v-btn-toggle>
+                
                 </v-container>
             </v-card>
         </v-expand-transition>
