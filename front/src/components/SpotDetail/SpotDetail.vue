@@ -31,7 +31,7 @@
                 >
                     <v-carousel-item v-for="photo in photos" :key="photo.id">
                         <v-sheet color="black" height=100%>
-                            <v-img :src="photo.image" height=500 contain />
+                            <v-img :src="photo.image" height=500 contain style="background-color:white;"/>
                         </v-sheet>
                     </v-carousel-item>
                 </v-carousel>
@@ -120,6 +120,7 @@
                             <spot-review-register  
                                 v-if="this.$store.state.userData != null"
                                 :spot_id="spot_id"
+                                :spot_name="spotData.spot_name"
                                 :spot_type="typesToType()"
                                 @submit="updateDetail()"
                             />

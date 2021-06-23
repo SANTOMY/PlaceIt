@@ -2,11 +2,13 @@ import L from 'leaflet'
 
 // このスクリプトは以下のURLのスクリプトを一部改変したものです。
 // https://github.com/Leaflet/Leaflet.Icon.Glyph/blob/gh-pages/Leaflet.Icon.Glyph.js
+// アイコン画像は以下のリポジトリから拝借しました。
+// https://github.com/coryasilva/Leaflet.ExtraMarkers/blob/master/src/assets/img/markers_default.png
 
 L.Icon.Glyph = L.Icon.extend({
 	options: {
-		iconSize: [25, 41],
-		iconAnchor:  [12, 41],
+		iconSize: [36, 46],
+		iconAnchor:  [18, 46],
 		popupAnchor: [1, -34],
 		shadowSize:  [41, 41],
 		iconUrl: require('../assets/markers/marker-icon-blue.png'),
@@ -16,8 +18,8 @@ L.Icon.Glyph = L.Icon.extend({
 		prefix: '',
 		glyph: 'home',
 		glyphColor: 'white',
-		glyphSize: '17px',	// in CSS units
-		glyphAnchor: [0, -7],	// In pixels, counting from the center of the image.
+		glyphSize: '18px',	// in CSS units
+		glyphAnchor: [0, -5],	// In pixels, counting from the center of the image.
 	},
 
 	createIcon: function () {
