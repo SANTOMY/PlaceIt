@@ -7,6 +7,7 @@ import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
 import '../../plugins/Leaflet.Icon.Glyph.js'
 import { getSpotTypeDict } from '../share/SpotTypeFunction'
+import mapLoading from './MapLoading.vue'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -23,7 +24,8 @@ export default {
         spotRegButton,
         nowLocButton,
         spotDetail,
-        searchDialog
+        searchDialog,
+        mapLoading
     },
     data: function(){
         return {
@@ -53,14 +55,17 @@ export default {
                 password: null,
                 univ:"",
             },
-            tags: []
+            tags: [],
+            isLoadingSpot: false
         };
     },
     methods: {
         //Map上に検索条件にあったスポットを表示する関数
         showSpot: async function (type, univ, keyword) {
             if (type == "reset") type = "";
+            this.isLoadingSpot = true
             var data = await getSpot("", "", type, "", univ);
+            this.isLoadingSpot = false
             if (data.success){
                 var spots = data.spots;
                 //キーワードを含まないスポットを除外

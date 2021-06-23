@@ -143,12 +143,12 @@
                     group
                     mandatory
                     >
-                        <v-btn value="false" class="mx-auto" fab >
+                        <v-btn :value="false" class="mx-auto" fab >
                             <v-icon>
                                 mdi-alpha-a-circle-outline
                             </v-icon>
                         </v-btn>
-                        <v-btn value="true" class="mx-auto" fab >
+                        <v-btn :value="true" class="mx-auto" fab >
                             <v-icon>
                                 mdi-account-cowboy-hat
                             </v-icon>
