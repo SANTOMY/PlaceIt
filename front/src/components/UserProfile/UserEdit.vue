@@ -28,14 +28,8 @@
                     >
                         {{ value.name }}
                     </v-stepper-step>
-
                     <v-divider :key="index"/>
                 </template>
-
-                <!-- <v-stepper-step 
-                    step="4">
-                    Confirm
-                </v-stepper-step> -->
             </v-stepper-header>
 <!--------------------------------ステップ1--------------------------------------------->
 <!-- 同様処理を複数回行っているところが複数箇所あるため、今後プログラムを短くする予定です。。。 -->
@@ -162,42 +156,7 @@
                         </v-btn>
                     </v-card-actions>   
                 </v-stepper-content>
-<!--------------------------------ステップ4--------------------------------------------->
-                <!-- <v-stepper-content step="4">
-                    <v-card
-                        width="400px" 
-                        class="mx-auto mt-5"
-                    ></v-card>
-                    <v-card-text>
-                        <v-form ref="loginForm1">
-                            本当に修正しますか？
-                        </v-form>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn
-                        color="primary"
-                        @click="editUserInformation"
-                        >
-                        Edit
-                        </v-btn>
-
-                        <v-btn 
-                        text
-                        @click="backPage(4)"
-                        >
-                        Back
-                        </v-btn>
-
-                    </v-card-actions>
-                    <v-alert
-                        dense
-                        type="error"
-                        class="mt-7"
-                        v-if="!editSuccessed"
-                    >
-                        編集できませんでした
-                    </v-alert>
-                </v-stepper-content> -->
+<!------------------------------------------------------------------------------------>
             </v-stepper-items>
         </v-stepper>
 <!--------------------------------Confirm--------------------------------------------->
@@ -242,6 +201,7 @@
                 </v-alert>
             </v-container>
         </v-card>
+<!------------------------------------------------------------------------------------>
     </v-dialog>
 </template>
 
