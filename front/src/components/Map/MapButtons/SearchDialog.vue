@@ -19,36 +19,41 @@
       >
       mdi-card-search-outline
     </v-icon>
-  </v-btn>
-  </template>
-  <!-- ダイアログの中身 -->
-  <v-card>
+</v-btn>
+</template>
+    <!-- ダイアログの中身 -->
+    <v-card id="search-dialog">
+    <!-- closeボタン -->
+    <v-btn 
+        id="close" 
+        @click="dialog=false" 
+        right 
+        fixed
+        text>
+        <v-icon> mdi-close </v-icon>
+    </v-btn>
     <!-- スポットタイプ検索 -->
     <v-container>
-      <v-btn-toggle
-        v-model="nowType"
-        group
-        mandatory
-      >
-        <v-btn
-          v-for="type in types"
-          :key="type" 
-          :value="type" class="mx-auto" fab >
-          <v-tooltip bottom :disabled="type=='reset'">
-    <template v-slot:activator="{ on, attrs }">
-          <v-icon
-            v-bind="attrs"
-            v-on="on"
-          >
-            {{featureIcons[type]}}
-          </v-icon>
-    </template>
-    <span>{{ spotJpNames[type] }}</span>
-    </v-tooltip> 
-        </v-btn>
-
-        
-      </v-btn-toggle>
+        <v-btn-toggle
+            v-model="nowType"
+            group
+            mandatory>
+            <v-btn
+                v-for="type in types"
+                :key="type" 
+                :value="type" class="mx-auto" fab >
+                <v-tooltip bottom :disabled="type=='reset'">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                            v-bind="attrs"
+                            v-on="on">
+                            {{featureIcons[type]}}
+                        </v-icon>
+                    </template>
+                    <span>{{ spotJpNames[type] }}</span>
+                </v-tooltip> 
+            </v-btn>
+        </v-btn-toggle>
     </v-container>
 
     <!-- tag検索 -->
@@ -170,13 +175,16 @@
                 </v-container>
             </v-card>
         </v-expand-transition>
-        
-        <!-- 検索ボタン -->
-        <v-btn @click="Search(); dialog=false">
-            <v-icon>
-            mdi-card-search
-            </v-icon>
-        </v-btn> 
+
+        <v-container>
+            <!-- 検索ボタン -->
+            <v-btn @click="Search(); dialog=false">
+                <v-icon>
+                mdi-card-search
+                </v-icon>
+            </v-btn> 
+
+        </v-container>
     </v-card>
     </v-dialog>
 </template>
@@ -247,7 +255,21 @@ export default {
 </script>
 
 <style>
+#dialog-container{
+    z-index: 1000;
+}
 #search-button{
-  z-index: 1000;
+    z-index: 1000;
+    position: relative;
+}
+#close{
+    z-index: 2000;
+    position: absolute;
+    text-align: right;
+    margin:0;
+}
+#search-dialog{
+    z-index: 1000;
+    position: relative;
 }
 </style>
