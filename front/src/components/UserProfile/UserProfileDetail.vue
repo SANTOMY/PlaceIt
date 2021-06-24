@@ -49,13 +49,7 @@
             </v-col>
         </v-row>
 <!----------------------スポットリストカード------------------------------------------------->
-        <SpotListCard 
-            v-bind:spot_list="spot"
-            v-bind:user_list="user"
-            v-bind:my_spot_list="my_spot"
-            v-bind:good_spot_list="good_spot"
-            color="green"
-        ></SpotListCard>
+        <spot-list-card :userId="userId" :university="university" color="green"/>
     </v-container>
 </template>
 
@@ -78,18 +72,21 @@ export default {
     },
     props: {
         otherUser: Boolean,
-        user: null,
-        my_spot: null,
-        good_spot: null,
-        spot: null,
+        user: Object,
+        isLoading: Boolean
     },
     data() {
         return {
             editer: false, // User profile edit UI ON/OFF(true/false)
             dialogEdit: false, // user information edit UI
+            userId: "",
+            university: ""
         }
     },
-
+    mounted(){
+        this.userId = this.user.id;
+        this.university = this.user.university;
+    },
     methods:  {
         editProfile: function() {
             this.dialogEdit = true
