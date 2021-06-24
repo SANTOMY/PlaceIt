@@ -123,7 +123,7 @@
             </v-card-actions>
 
         </v-container>
-        <spot-detail :showDialog="showSpotDialog" :spot_id="selectedSpotID" :user_id="selectedUserID" @close="closeSpotDialog()"/>
+        <spot-detail :showDialog="showSpotDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeSpotDialog()"/>
     </v-card>  
 </template>
 <script>

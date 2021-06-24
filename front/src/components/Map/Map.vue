@@ -8,7 +8,7 @@
         <!-- 現在地ボタン -->
         <now-loc-button v-on:click.native="setNowLocation()"/>
         <map-loading v-if="isLoadingSpot"/>
-        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" :user_id="selectedSpotUserId" @close="closeDialog()"/>
+        <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedSpotUserId" @close="closeDialog()"/>
     </div>  
 </template>
 
