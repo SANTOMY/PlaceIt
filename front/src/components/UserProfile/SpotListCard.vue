@@ -189,7 +189,13 @@
             getSpotByUserId: async function(user_id){ // 作成スポット取得関数
                 getSpot('', '', '', user_id, '').then(result => {
                     if( result.spots == undefined ){
-                        return
+                        if(result == "spot does not exist"){
+                            const spot_length = 1;
+                            this.num_page = Math.ceil(spot_length/this.num_per_page)
+                            this.showNoCard = true;
+                            this.isLoading = false;
+                        }
+                        return;
                     }
                     const spot_length = result.spots.length
                     this.num_page = Math.ceil(spot_length/this.num_per_page)
@@ -197,6 +203,8 @@
                         this.end = spot_length
                     }
                     var j = this.begin;
+                    console.log(this.begin)
+                    console.log(this.end)
                     for(let i = this.begin; i < this.end; i++){
                         const spt = result.spots[i];
                         const spt_id = spt.spot_id;
@@ -238,6 +246,10 @@
                         })
                     }
                 }).catch((exception) => {
+                    if(exception.error == "spot does not exist"){
+                        this.showNoCard = true;
+                        this.isLoading = false;
+                    }
                     console.log( "Error in getSpotByUserId: ", exception );
                 })
             },
@@ -245,7 +257,14 @@
             getSpotYouReviewed: async function( user_id ){ //レビューしたスポット取得関数
                 getReviewByUserId( user_id ).then( result => {
                     if( result.review == undefined ){
-                        return
+                        console.log(result)
+                        if(result == "No reviews exist by this user"){
+                            const spot_length = 1;
+                            this.num_page = Math.ceil(spot_length/this.num_per_page)
+                            this.showNoCard = true;
+                            this.isLoading = false;
+                        }
+                        return;
                     }
                     var reviewed_spot_ids = []
                     for( let rev of result.review ){
@@ -311,7 +330,13 @@
             getRecommendedSpots: async function(){ // おすすめスポット取得関数
                 getSpot('', '', '', '', this.university).then( result => {
                     if( result.spots == undefined ){
-                        return
+                        if(result == "spot does not exist"){
+                            const spot_length = 1;
+                            this.num_page = Math.ceil(spot_length/this.num_per_page)
+                            this.showNoCard = true;
+                            this.isLoading = false;
+                        }
+                        return;
                     }
                     const spot_length = result.spots.length
                     this.num_page = Math.ceil(spot_length/this.num_per_page)
