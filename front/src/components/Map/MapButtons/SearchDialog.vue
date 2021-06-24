@@ -250,6 +250,7 @@ export default {
             this.selectedTags=[];
             this.keyword="";
             this.nowUniv=false;
+            this.moreDetail=false;
 
         }
     },
