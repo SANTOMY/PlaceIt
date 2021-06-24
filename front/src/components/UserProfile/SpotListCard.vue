@@ -242,20 +242,20 @@
                     if( result.review == undefined ){
                         return
                     }
-                    var reviewd_spot_ids = []
+                    var reviewed_spot_ids = []
                     for( let rev of result.review ){
-                        if(!reviewd_spot_ids.includes(rev.spot_id)){
-                            reviewd_spot_ids.push( rev.spot_id );
+                        if(!reviewed_spot_ids.includes(rev.spot_id)){
+                            reviewed_spot_ids.push( rev.spot_id );
                         }
                     }
-                    const spot_length = reviewd_spot_ids.length;
+                    const spot_length = reviewed_spot_ids.length;
                     this.num_page = Math.ceil(spot_length/this.num_per_page);
                     if(spot_length < this.end){
                         this.end = spot_length;
                     }
                     var j = this.begin;
                     for(let i = this.begin; i < this.end; i++){
-                        getSpot( reviewd_spot_ids[i], '', '', '', '' ).then( result => {
+                        getSpot( reviewed_spot_ids[i], '', '', '', '' ).then( result => {
                             const spt = result.spots[0];
                             const spt_id = spt.spot_id;
                             const name = spt.spot_name;
