@@ -183,7 +183,14 @@
                 mdi-card-search
                 </v-icon>
             </v-btn> 
-
+            <v-tooltip bottom>
+                <template v-slot:activator="{on, attrs}">
+                    <v-btn @click="Clear();" class="mx-10" v-bind="attrs" v-on="on">
+                        <v-icon> mdi-file-refresh </v-icon>
+                    </v-btn> 
+                </template>
+                <span> Clear all your input.</span>
+            </v-tooltip>
         </v-container>
     </v-card>
     </v-dialog>
@@ -238,6 +245,13 @@ export default {
             const index = this.selectedTags.indexOf(item.getType());
             if (index >= 0) this.selectedTags.splice(index, 1);
         },
+        Clear(){
+            this.nowType='reset';
+            this.selectedTags=[];
+            this.keyword="";
+            this.nowUniv=false;
+
+        }
     },
     watch: {
         'nowType': function(){ // spot type を変えた時の処理
