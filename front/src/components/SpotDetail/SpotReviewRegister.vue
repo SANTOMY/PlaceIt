@@ -19,7 +19,7 @@
         <v-card class="px-5">
             <v-container>
                 <v-card-title>
-                    <h2>新規レビュー</h2>
+                    <h2>「{{spot_name}}」にレビューを追加する</h2>
                 </v-card-title>
                 <v-form class="mt-5">
                 <!-- コメント入力フォーム -->
@@ -96,7 +96,8 @@ export default {
     },
     props: {
         spot_id: String,
-        spot_type: String
+        spot_type: String,
+        spot_name: String
     },
     methods: {
         onClickedRegisterButton: function() {

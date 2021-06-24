@@ -130,10 +130,9 @@
                     </v-col>
                 </v-card-actions>
 
-            </v-container>
-            <spot-detail :showDialog="showDialog" :spot_id="selectedSpotID" @close="closeDialog()"/>
-        </v-card>  
-    </v-container>
+        </v-container>
+        <spot-detail :showDialog="showSpotDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeSpotDialog()"/>
+    </v-card>  
 </template>
 <script>
     import spotDetail from '../SpotDetail/SpotDetail';
@@ -166,17 +165,23 @@
             num_per_page: 3, // 1ページの表示スポット数
             num_page: 1, // ページ数
             num_page_array: [ 10, 10, 10 ],
-            showDialog: false,
+            showSpotDialog: false,
             selectedSpotID: "",
             showNoCard: false,
             isLoading: true,
             userId: "",
-            university: ""
+            university: "",
+            selectedSpotName:"",
+            selectedSpotType:"",
+            selectedUserID:"",
         }),
         mounted() {
             // カテゴリ（おすすめ，作成，いいね）毎のページ数計算
             this.userId = this.user.id;
             this.university = this.user.university;
+            if(this.$store.state.otherUser){
+                this.CategorySelect=1
+            }
             this.ChangeCategory( this.CategorySelect )
         },
         methods:  {
@@ -398,13 +403,15 @@
                 }
             },
             spotInformationPage: function(value) { 
-                this.showDialog = true;
+                this.showSpotDialog = true;
                 this.selectedSpotID = this.spot[value].spotId;
+                this.selectedSpotName = this.spot[value].name;
+                this.selectedSpotType = this.spot[value].spotType;
+                this.selectedUserID = this.spot[value].userId;
             },
-            closeDialog() {
-                this.showDialog = false;
+            closeSpotDialog() {
+                this.showSpotDialog = false;
             },
-
             jumpSpotPage: function( pageToJump ){
                 // < 1 2 ... 10 > ←このタイプのボタンが押された時にページを変える
                 // console.log( "jumpSpotPage is called. pageToJump: ", pageToJump )
