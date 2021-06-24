@@ -129,10 +129,10 @@
                         </v-row>
                     </v-col>
                 </v-card-actions>
-
-        </v-container>
-        <spot-detail :showDialog="showSpotDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeSpotDialog()"/>
-    </v-card>  
+            </v-container>
+            <spot-detail :showDialog="showSpotDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeSpotDialog()"/>
+        </v-card>  
+    </v-container>
 </template>
 <script>
     import spotDetail from '../SpotDetail/SpotDetail';
