@@ -270,7 +270,7 @@ export default {
         },
         getUserInformation: function() {//レビューからユーザー情報を取得する関数
             this.isLoadingData = true;
-            this.user_list = [] // 初期値
+            this.user_list =  new Object(); // 初期値
             this.start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
             this.end = this.start + this.REVIEW_NUM_PER_PAGE;
             if(this.end > this.reviews.length){
@@ -284,13 +284,13 @@ export default {
                 const user_id = this.reviews[i].user_id;
                 getUserById(user_id)
                     .then(result => {      
-                        this.user_list.push(result[0]);
+                        this.user_list[user_id] = result[0];
                         getProfileImage(user_id )
                             .then(res => {
                                 if(!res.success) {
-                                    this.user_list[j].src = require('@/assets/default-icon.jpeg')
+                                    this.user_list[user_id].src = require('@/assets/default-icon.jpeg')
                                 }else{
-                                    this.user_list[j].src = "data:image/jpeg;base64," + res.data.image;
+                                    this.user_list[user_id].src = "data:image/jpeg;base64," + res.data.image;
                                 }
                                 j += 1
                                 if(j == (this.length)){
@@ -327,7 +327,7 @@ export default {
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
             for(var i = 0; i < this.length; i++) {
-                enumerated_reviews.push({id:i, content:this.reviews[this.start+i],user:this.user_list[i]});
+                enumerated_reviews.push({id:i, content:this.reviews[this.start+i],user:this.user_list[this.reviews[this.start+i].user_id]});
             }
             return enumerated_reviews;
         },
