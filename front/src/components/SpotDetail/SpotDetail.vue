@@ -156,6 +156,7 @@ import spotReviewRegister from './SpotReviewRegister.vue'
 import spotEdit from './SpotEdit.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {average, getReviewBySpotId} from '../../routes/reviewRequest'
+import {getSpot} from '../../routes/spotRequest'
 import {getSpotImage} from '../../routes/imageRequest'
 import { getUserById } from '../../routes/userRequest.js'
 import {getProfileImage} from "../../routes/imageRequest"
@@ -203,8 +204,6 @@ export default {
     props: {
         spot_id: String,
         showDialog: Boolean,
-        spot_name: String,
-        spot_type: String,
         user_id: String
     },
     methods: {
@@ -232,7 +231,12 @@ export default {
         },
         updateDetail: function() {
             this.isLoadingData = true;      // データを取得している間はローディング画面を表示する
-            this.isLoadingPhoto = true;      
+            this.isLoadingPhoto = true; 
+            getSpot(this.spot_id, "", "", "", "")
+                .then(res => {
+                    this.spotData.spot_name = res.spots[0].spot_name;
+                    this.spotData.spot_type = res.spots[0].spot_type;
+                })     
             getReviewBySpotId(this.spot_id, "", "", "", "")
                 .then(res => {
                     this.reviews = res.review;
@@ -344,8 +348,6 @@ export default {
     watch: {
         showDialog: function() {    //spot詳細ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
-            this.spotData.spot_name=this.spot_name;
-            this.spotData.spot_type=this.spot_type;
             this.spotData.user_id=this.user_id;
             this.updateDetail()
             this.now_review_page = 1;
