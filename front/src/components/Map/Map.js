@@ -44,8 +44,6 @@ export default {
             time:0,//タイマー用変数
             showDialog:false, //ダイアログを表示するか
             selectedSpotID: "", //クリックして選択しているspotのid
-            selectedSpotName: "",
-            selectedSpotType: "",
             selectedSpotUserId: "",
             markers:null,//マーカーリストのレイヤー群
             univFlag:false,//大学別検索の有効化・無効化
@@ -82,10 +80,7 @@ export default {
                     var marker = L.marker([spot.y, spot.x],
                         { icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type.split(",")[0]], color: color_dict[spot.spot_type.split(",")[0]] }) })
                         .on('click', this.markerClickEvent);
-                    marker.spot_name = spot.spot_name;
                     marker.spot_id = spot.spot_id;
-                    marker.spot_type = spot.spot_type;
-                    marker.spot_picture = spot.spot_picture;
                     marker.user_id = spot.user_id;
                     markerSet.push(marker)
                 });
@@ -123,8 +118,6 @@ export default {
         markerClickEvent(event){
             this.showDialog = true;
             this.selectedSpotID = event.target.spot_id;
-            this.selectedSpotName = event.target.spot_name;
-            this.selectedSpotType = event.target.spot_type;
             this.selectedSpotUserId = event.target.user_id;
         },
 
