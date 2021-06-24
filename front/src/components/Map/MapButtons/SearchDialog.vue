@@ -212,7 +212,7 @@ export default {
       keyword:"",//検索キーワード
       moreDetail:false,//詳細検索フォームの表示管理フラグ
       rating:0,//評価の閾値
-      userLogin: this.$store.state.userData,
+      userLogin: null,
     }
   },
   components: {
@@ -248,6 +248,9 @@ export default {
             });
             if (spotType == "reset")
                 this.filterdTags = [];
+        },
+        'dialog': function(){ // dialogが開いたときの処理
+            this.userLogin = this.$store.state.userData;
         },
     },
     
