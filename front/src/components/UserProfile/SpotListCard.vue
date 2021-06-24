@@ -166,6 +166,9 @@
         mounted() {
             this.spot = this.spot_list
             // カテゴリ（おすすめ，作成，いいね）毎のページ数計算
+            if(this.$store.state.otherUser){
+                this.CategorySelect=1
+            }
             this.ChangeCategory( this.CategorySelect )
         },
         methods:  {
