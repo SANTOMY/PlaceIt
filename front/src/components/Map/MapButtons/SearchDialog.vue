@@ -19,36 +19,41 @@
       >
       mdi-card-search-outline
     </v-icon>
-  </v-btn>
-  </template>
-  <!-- ダイアログの中身 -->
-  <v-card>
+</v-btn>
+</template>
+    <!-- ダイアログの中身 -->
+    <v-card id="search-dialog">
+    <!-- closeボタン -->
+    <v-btn 
+        id="close" 
+        @click="dialog=false" 
+        right 
+        fixed
+        text>
+        <v-icon> mdi-close </v-icon>
+    </v-btn>
     <!-- スポットタイプ検索 -->
     <v-container>
-      <v-btn-toggle
-        v-model="nowType"
-        group
-        mandatory
-      >
-        <v-btn
-          v-for="type in types"
-          :key="type" 
-          :value="type" class="mx-auto" fab >
-          <v-tooltip bottom :disabled="type=='reset'">
-    <template v-slot:activator="{ on, attrs }">
-          <v-icon
-            v-bind="attrs"
-            v-on="on"
-          >
-            {{featureIcons[type]}}
-          </v-icon>
-    </template>
-    <span>{{ spotJpNames[type] }}</span>
-    </v-tooltip> 
-        </v-btn>
-
-        
-      </v-btn-toggle>
+        <v-btn-toggle
+            v-model="nowType"
+            group
+            mandatory>
+            <v-btn
+                v-for="type in types"
+                :key="type" 
+                :value="type" class="mx-auto" fab >
+                <v-tooltip bottom :disabled="type=='reset'">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                            v-bind="attrs"
+                            v-on="on">
+                            {{featureIcons[type]}}
+                        </v-icon>
+                    </template>
+                    <span>{{ spotJpNames[type] }}</span>
+                </v-tooltip> 
+            </v-btn>
+        </v-btn-toggle>
     </v-container>
 
     <!-- tag検索 -->
@@ -100,6 +105,7 @@
                 <template v-slot:activator="{on, attrs}">
                     <v-btn 
                     text
+                    v-if="userLogin!=null"
                     @click="moreDetail=!moreDetail"
                     v-bind="attrs"
                     v-on="on"
@@ -143,27 +149,49 @@
                     group
                     mandatory
                     >
-                        <v-btn :value="false" class="mx-auto" fab >
-                            <v-icon>
-                                mdi-alpha-a-circle-outline
-                            </v-icon>
+                        <v-btn :value="false" class="mx-auto" fab>
+                            <v-tooltip bottom>
+                            <template v-slot:activator="{on, attrs}">
+                                <v-icon v-bind="attrs" v-on="on">
+                                    mdi-alpha-a-circle-outline
+                                </v-icon>
+                            </template>
+                            <span>Show all spots regardless of the university.</span>
+                            </v-tooltip>
                         </v-btn>
+                        
                         <v-btn :value="true" class="mx-auto" fab >
-                            <v-icon>
-                                mdi-account-cowboy-hat
-                            </v-icon>
+                            <v-tooltip bottom>
+                            <template v-slot:activator="{on, attrs}">
+                                <v-icon v-bind="attrs" v-on="on">
+                                    mdi-account-cowboy-hat
+                                </v-icon>
+                            </template>
+                            <span>Show only spots of your university.</span>
+                            </v-tooltip>
                         </v-btn>
                     </v-btn-toggle>
+                
                 </v-container>
             </v-card>
         </v-expand-transition>
-        
-        <!-- 検索ボタン -->
-        <v-btn @click="Search(); dialog=false">
-            <v-icon>
-            mdi-card-search
-            </v-icon>
-        </v-btn> 
+
+        <v-container>
+            <!-- 検索ボタン -->
+            <v-btn @click="Search(); dialog=false">
+                <v-icon>
+                mdi-card-search
+                </v-icon>
+            </v-btn> 
+            <v-tooltip bottom>
+                <template v-slot:activator="{on, attrs}">
+                    <v-btn @click="Clear();" class="mx-10" v-bind="attrs" v-on="on">
+                        <v-icon> mdi-file-refresh </v-icon>
+                    </v-btn> 
+                </template>
+                <span> Clear all your input.</span>
+            </v-tooltip>
+        </v-container>
     </v-card>
     </v-dialog>
 </template>
@@ -191,7 +219,7 @@ export default {
       keyword:"",//検索キーワード
       moreDetail:false,//詳細検索フォームの表示管理フラグ
       rating:0,//評価の閾値
-      userLogin: this.$store.state.userData,
+      userLogin: null,
     }
   },
   components: {
@@ -217,6 +245,14 @@ export default {
             const index = this.selectedTags.indexOf(item.getType());
             if (index >= 0) this.selectedTags.splice(index, 1);
         },
+        Clear(){
+            this.nowType='reset';
+            this.selectedTags=[];
+            this.keyword="";
+            this.nowUniv=false;
+            this.moreDetail=false;
+
+        }
     },
     watch: {
         'nowType': function(){ // spot type を変えた時の処理
@@ -228,13 +264,30 @@ export default {
             if (spotType == "reset")
                 this.filterdTags = [];
         },
+        'dialog': function(){ // dialogが開いたときの処理
+            this.userLogin = this.$store.state.userData;
+        },
     },
     
 }
 </script>
 
 <style>
+#dialog-container{
+    z-index: 1000;
+}
 #search-button{
-  z-index: 1000;
+    z-index: 1000;
+    position: relative;
+}
+#close{
+    z-index: 2000;
+    position: absolute;
+    text-align: right;
+    margin:0;
+}
+#search-dialog{
+    z-index: 1000;
+    position: relative;
 }
 </style>
