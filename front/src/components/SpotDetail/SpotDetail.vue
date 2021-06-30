@@ -196,9 +196,6 @@ export default {
             showDeleteDialog: false,
             showUserDialog: false,   //他のユーザープロフィール表示するか
             otherUser: true,
-            start: 0,
-            end: 3,
-            length: 3
         }
     },
     props: {
@@ -208,6 +205,7 @@ export default {
     },
     methods: {
         changePage: function(number){
+            // console.log('(change review page)change review page to ',number)
             return this.now_review_page = number
         },
         sum: function(arr){ // 配列の要素の合計を計算
@@ -269,31 +267,22 @@ export default {
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         },
         getUserInformation: function() {//レビューからユーザー情報を取得する関数
-            this.isLoadingData = true;
-            this.user_list =  new Object(); // 初期値
-            this.start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
-            this.end = this.start + this.REVIEW_NUM_PER_PAGE;
-            if(this.end > this.reviews.length){
-                this.end = this.reviews.length;
-                this.length = this.end - this.start;
-            }else{
-                this.length = 3;
-            }
-            let j = 0;
-            for(let i = this.start; i < this.end; i++) {
-                const user_id = this.reviews[i].user_id;
-                getUserById(user_id)
-                    .then(result => {      
-                        this.user_list[user_id] = result[0];
-                        getProfileImage(user_id )
+            this.user_list = Array(this.reviews.length).fill(undefined) // 初期値
+            let j = 0
+            for(let i = 0; i < this.reviews.length; i++) {
+                getUserById(this.reviews[i].user_id)
+                    .then(result => {
+                        
+                        this.user_list[i]=result[0];           
+                        getProfileImage( this.reviews[i].user_id )
                             .then(res => {
                                 if(!res.success) {
-                                    this.user_list[user_id].src = require('@/assets/default-icon.jpeg')
+                                    this.user_list[i].src = require('@/assets/default-icon.jpeg')
                                 }else{
-                                    this.user_list[user_id].src = "data:image/jpeg;base64," + res.data.image;
+                                    this.user_list[i].src = "data:image/jpeg;base64," + res.data.image;
                                 }
                                 j += 1
-                                if(j == (this.length)){
+                                if(j == (this.reviews.length)){
                                     this.isLoadingData = false; // ユーザー名を全部取得すると、ロード画面が消える
                                 }
                             })
@@ -324,11 +313,16 @@ export default {
     computed: {
         //現在のページに表示するレビューを返す
         slicedReviews: function() {
+            const start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
+            const end = start + this.REVIEW_NUM_PER_PAGE;
+            const raw_reviews = this.reviews.slice(start, end)
+            const raw_users = this.user_list.slice(start, end)
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
-            for(var i = 0; i < this.length; i++) {
-                enumerated_reviews.push({id:i, content:this.reviews[this.start+i],user:this.user_list[this.reviews[this.start+i].user_id]});
+            for(var i = 0; i < raw_reviews.length; i++) {
+                enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
             }
+            // console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
@@ -353,9 +347,6 @@ export default {
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
             this.isEditMode = false;
-        },
-        now_review_page: function() {
-            this.getUserInformation();
         }
     }
 }
