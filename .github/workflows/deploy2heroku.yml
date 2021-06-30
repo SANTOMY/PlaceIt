@@ -30,4 +30,3 @@ jobs:
             heroku_email: ${{secrets.HEROKU_EMAIL}}
             appdir: back
             usedocker: true
-
