@@ -14,15 +14,7 @@
             <v-icon>mdi-account</v-icon>
             <v-toolbar-title>ユーザープロファイル</v-toolbar-title>
         </v-toolbar>
-<!-----------------------修正処理(修正ボタンを押すと起動)------------------------------------------------>
-        <v-dialog v-if="!isLoading" v-model="dialogEdit" width=500>
-            <UserEdit 
-                @close="closeUserEdit"
-                v-bind:user="user"
-                ref="child"
-            >
-            </UserEdit>
-        </v-dialog>
+
 <!-----------------------ユーザー写真------------------------------------------------->        
         <v-row v-if="!isLoading">
             <v-col>
@@ -35,24 +27,20 @@
             </v-col>
 <!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
             <v-col>
-  
-                ユーザー名
-                <h1>{{ user.username }}</h1>
-                
-                <v-spacer></v-spacer>
-                大学名
-                <h1>{{ user.university }}</h1>
-                <v-spacer></v-spacer>
-
-                <v-btn
-                    v-model="editer"
-                    @click="editProfile"
-                    v-if="!otherUser"
-                ><!-------editerのtrue/false変更され、editProfile()が起動するボタン----->
-                ユーザー情報修正
-                </v-btn>
-
-                <user-delete v-if="!otherUser" @submit="deleteUser"/>
+                <v-container>
+                    <v-row justify="center">
+                        <v-col>
+                            <p class="font-italic">User Name</p>
+                            <h1>{{ user.username }}</h1>
+                            <v-spacer></v-spacer>
+                            <p class="font-italic">University</p>
+                            <h1>{{ user.university }}</h1>
+                            <v-spacer></v-spacer>
+                            <user-edit v-if="!otherUser" :user="user"/>
+                            <user-delete v-if="!otherUser" />
+                        </v-col>
+                    </v-row>
+                </v-container>
             </v-col>
         </v-row>
 <!----------------------スポットリストカード------------------------------------------------->
