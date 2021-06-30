@@ -4,7 +4,7 @@ export function getSpotTypeDict(value) {
         restaurant: "mdi-silverware-fork-knife",// restaurantのアイコン
         travel: "mdi-bag-suitcase",             // travelのアイコン
         shopping: "mdi-cart",                   // shoppingのアイコン
-        amusements: "mdi-baseball-bat",         // amusementsのアイコン
+        amusements: "mdi-human-scooter",         // amusementsのアイコン
         accomodation: "mdi-bed",                // accomodationのアイコン
         lifework: "mdi-mother-heart",           // lifeworkのアイコン
     }
