@@ -11,3 +11,4 @@ COPY ./src /app/src
 RUN apk update && \
     apk add --no-cache nodejs npm && \
     npm install
+    
