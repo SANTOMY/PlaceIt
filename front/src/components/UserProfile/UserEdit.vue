@@ -1,9 +1,16 @@
 <template>
-    <v-container
-        v-bind:v-model="showDialog"
-    >
+    <v-dialog v-model="showDialog" width="500">
+        <template v-slot:activator="{ attrs }">
+            <v-container>
+                <v-btn class="px-5 py-6" max-width="500px" v-bind="attrs" @click="activate()">
+                    <h3>ユーザ情報変更</h3>
+                </v-btn>
+            </v-container>
+        </template>
+        
         <v-stepper 
             v-model="state"
+            v-if='!editer'
         >
 <!-----------------------ヘッダー------------------------------------------------->
             <v-stepper-header>
@@ -21,21 +28,17 @@
                     >
                         {{ value.name }}
                     </v-stepper-step>
-
-                    <v-divider :key="index"/>
+                    <v-divider 
+                    v-if='index!=2'
+                    :key="index"/>
                 </template>
-
-                <v-stepper-step 
-                    step="4">
-                    Edit Finish
-                </v-stepper-step>
             </v-stepper-header>
 <!--------------------------------ステップ1--------------------------------------------->
 <!-- 同様処理を複数回行っているところが複数箇所あるため、今後プログラムを短くする予定です。。。 -->
             <v-stepper-items>
                 <v-stepper-content step="1">
                     <v-card
-                        width="400px" 
+                        width="500px" 
                         class="mx-auto mt-5"
                     ></v-card>
                     <v-card-text>
@@ -65,11 +68,6 @@
                         Skip
                         </v-btn>
                         <v-spacer/>
-                        <v-btn>
-                            <v-icon red @click='closeCard'>
-                                mdi-close-circle-outline
-                            </v-icon>
-                        </v-btn>
                     </v-card-actions>
                 </v-stepper-content>
 <!--------------------------------ステップ2--------------------------------------------->
@@ -112,12 +110,6 @@
                         @click="backPage(2)"
                         >
                         Back
-                        </v-btn>
-                        <v-spacer/>
-                        <v-btn>
-                            <v-icon red @click='closeCard'>
-                                mdi-close-circle-outline
-                            </v-icon>
                         </v-btn>
                     </v-card-actions>
                 </v-stepper-content>
@@ -164,60 +156,55 @@
                         >
                         Back
                         </v-btn>
-                        <v-spacer/>
-                        <v-btn>
-                            <v-icon red @click='closeCard'>
-                                mdi-close-circle-outline
-                            </v-icon>
-                        </v-btn> 
                     </v-card-actions>   
                 </v-stepper-content>
-<!--------------------------------ステップ4--------------------------------------------->
-                <v-stepper-content step="4">
-                    <v-card
-                        width="400px" 
-                        class="mx-auto mt-5"
-                    ></v-card>
-                    <v-card-text>
-                        <v-form ref="loginForm1">
-                            本当に修正しますか？
-                        </v-form>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn
-                        color="primary"
-                        @click="editUserInformation"
-                        >
-                        Edit
-                        </v-btn>
-
-                        <v-btn 
-                        text
-                        @click="backPage(4)"
-                        >
-                        Back
-                        </v-btn>
-
-                        <v-spacer/>
-                        <v-btn>
-                            <v-icon red @click='closeCard'>
-                                mdi-close-circle-outline
-                            </v-icon>
-                        </v-btn> 
-                    </v-card-actions>
-                    <v-alert
-                        dense
-                        type="error"
-                        class="mt-7"
-                        v-if="!editSuccessed"
-                    >
-                        編集できませんでした
-                    </v-alert>
-                </v-stepper-content>
+<!------------------------------------------------------------------------------------>
             </v-stepper-items>
         </v-stepper>
-    </v-container>
-    
+<!--------------------------------Confirm--------------------------------------------->
+        <v-card class="px-5" v-if='editer'>
+            <v-container>
+                <v-row justify="center">
+                    <v-col cols="10">
+                        <h1>本当に修正しますか？</h1>
+                        <p>修正項目</p>
+                        <p v-if="this.stepData[0].edit">・ユーザー名</p>
+                        <p v-if="this.stepData[1].edit">・メールアドレス</p>
+                        <p v-if="this.stepData[2].edit">・パスワード</p>
+                    </v-col>
+                </v-row>
+                <v-row justify="center">
+                    <v-col cols="5">
+                        <v-btn 
+                            block
+                            class="pa-5"
+                            @click="cancel" 
+                        >
+                            <h3>いいえ</h3>
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="5">
+                        <v-btn 
+                            block
+                            class="pa-5" 
+                            @click="editUserInformation"
+                        >
+                            <h3>はい</h3>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <v-alert
+                    dense
+                    type="error"
+                    class="mt-7"
+                    v-if="!editSuccessed"
+                >
+                    編集できませんでした
+                </v-alert>
+            </v-container>
+        </v-card>
+<!------------------------------------------------------------------------------------>
+    </v-dialog>
 </template>
 
 <script>
@@ -229,8 +216,8 @@ export default {
     },
     data: function() {
         return {
-            state: null, // 修正UIの状態(1~4で遷移)
-            showDialog: true, // trueで修正UIを表示
+            state: null, // 修正UIの状態(1~3で遷移)
+            showDialog: false, // trueで修正UIを表示
             model: { // edit後の情報を書き込むclassです。
                 username : "",
                 edit_username : "",
@@ -250,22 +237,27 @@ export default {
             ],
             // 以下、修正入力上のルール設定
             usernameRules: [ // usernameの入力ルール
-                v => !!v || "ユーザ名は必須項目です。",
-                v => (v && v.length <= 32) || "ユーザ名は32文字以内で入力してください。",
+                // v => !!v || "ユーザ名は必須項目です。",
+                v => (v && v.length <= 32) || "ユーザ名は1文字以上、32文字以内で入力してください。",
             ],
             emailRulesEdit: [ // emailの入力ルール
-                v => !!v || "メールアドレスは必須項目です。",
+                // v => !!v || "メールアドレスは必須項目です。",
                 v => (v && v.length <= 128) || "メールアドレスは128文字以内で入力してください。",
                 v => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || "メールアドレスの形式が正しくありません。"
             ],
             passwordRulesEdit: [ // password の入力ルール
-                v => !!v || "パスワードは必須項目です。",
+                // v => !!v || "パスワードは必須項目です。",
                 v => (v && v.length >= 8) || "パスワードは8文字以上で入力してください。",
                 v => (v && v.length <= 32) || "パスワードは32文字以内で入力してください。"
             ],
+            showConfirm: false
         }
     },
-
+    computed: {
+        editer: function(){ // 修正確認UIの表示判定
+            return (this.stepData[0].edit || this.stepData[1].edit || this.stepData[2].edit) && this.showConfirm
+        },
+    },
     methods: {
         editUserInformation: function() { // edit user information関数
 
@@ -277,35 +269,35 @@ export default {
                         const userData = new User(this.$store.state.userData.userId,
                                                 !this.model.edit_username ? this.$store.state.userData.userName : this.model.edit_username,
                                                 !this.model.edit_email ? this.$store.state.userData.email : this.model.edit_email,
-                                                null
+                                                null,
+                                                this.$store.state.userData.university
                                                 )
-                        this.$store.commit("login", userData)
 
-                        this.reLoad() 
+                        this.$store.commit("login", userData)
+                        this.reLoad()
                     } else {
                         this.editSuccessed = false;
-                        //this.closeCard()
                     }
                 });
         },
 
-        closeCard: function(){
-            // 修正UIを閉じる関数
-            // this.reLoad()
-            this.showDialog = false
-            this.$emit('close')
-
-        },
-
         skipPage: function(value){
             // 修正をスキップする関数
-            this.state = value+1
+            // [SKIP]ボタンを押したときに起動
             this.stepData[value-1].edit = false
             this.editSuccessed = true;
+            if((this.stepData[0].edit || this.stepData[1].edit || this.stepData[2].edit)&&this.state==3){
+                this.showConfirm = true;
+            }else if(this.state!=3){
+                this.state = value+1
+            }else{
+                alert('変更項目が1つもありません')
+            }
         },
 
         continuePage: function(value){
             // 修正項目を入力した後に次のステップに遷移する関数
+            // [Continue]ボタンを押したときに起動
             if(value==1 && this.$refs.loginFormName.validate()){
                 this.stepData[value-1].edit = true
                 this.state = value+1
@@ -316,25 +308,33 @@ export default {
             }
             else if(value==3 && this.$refs.loginForm.validate()){
                 this.stepData[value-1].edit = true
-                this.state = value+1
+                // this.state = value+1
                 this.editSuccessed = true;
+                this.showConfirm = true;
             }
             else {
                 // Debag
+                alert('修正内容を入力して下さい')
                 console.log("(Debug)failed to continue")
             }       
         },
-
         backPage: function(value){
             // 前のステップに遷移する関数
+            // [BACK]ボタンを押したときに起動
             this.state = value-1
         },
         reLoad: function () {
             // ページをリロードする関数
             this.$router.go({path: this.$router.currentRoute.path, force: true})
-        }
-        
-    }
-    
+        },
+        activate: function(){
+            this.showDialog = true;
+        },
+        cancel: function(){
+            this.editSuccessed = false;
+            this.showConfirm = false;
+        },
+    },
 }
 </script>
+

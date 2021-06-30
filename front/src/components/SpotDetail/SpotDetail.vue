@@ -31,7 +31,7 @@
                 >
                     <v-carousel-item v-for="photo in photos" :key="photo.id">
                         <v-sheet color="black" height=100%>
-                            <v-img :src="photo.image" height=500 contain />
+                            <v-img :src="photo.image" height=500 contain style="background-color:white;"/>
                         </v-sheet>
                     </v-carousel-item>
                 </v-carousel>
@@ -120,7 +120,8 @@
                             <spot-review-register  
                                 v-if="this.$store.state.userData != null"
                                 :spot_id="spot_id"
-                                :spot_type="spotData.spot_type"
+                                :spot_name="spotData.spot_name"
+                                :spot_type="typesToType()"
                                 @submit="updateDetail()"
                             />
                         </v-col>
@@ -155,6 +156,7 @@ import spotReviewRegister from './SpotReviewRegister.vue'
 import spotEdit from './SpotEdit.vue'
 import radarChartDisp from '../share/RadarChartDisp'
 import {average, getReviewBySpotId} from '../../routes/reviewRequest'
+import {getSpot} from '../../routes/spotRequest'
 import {getSpotImage} from '../../routes/imageRequest'
 import { getUserById } from '../../routes/userRequest.js'
 import {getProfileImage} from "../../routes/imageRequest"
@@ -194,18 +196,18 @@ export default {
             showDeleteDialog: false,
             showUserDialog: false,   //他のユーザープロフィール表示するか
             otherUser: true,
+            start: 0,
+            end: 3,
+            length: 3
         }
     },
     props: {
         spot_id: String,
         showDialog: Boolean,
-        spot_name: String,
-        spot_type: String,
         user_id: String
     },
     methods: {
         changePage: function(number){
-            // console.log('(change review page)change review page to ',number)
             return this.now_review_page = number
         },
         sum: function(arr){ // 配列の要素の合計を計算
@@ -229,7 +231,12 @@ export default {
         },
         updateDetail: function() {
             this.isLoadingData = true;      // データを取得している間はローディング画面を表示する
-            this.isLoadingPhoto = true;      
+            this.isLoadingPhoto = true; 
+            getSpot(this.spot_id, "", "", "", "")
+                .then(res => {
+                    this.spotData.spot_name = res.spots[0].spot_name;
+                    this.spotData.spot_type = res.spots[0].spot_type;
+                })     
             getReviewBySpotId(this.spot_id, "", "", "", "")
                 .then(res => {
                     this.reviews = res.review;
@@ -262,22 +269,31 @@ export default {
             return [average(score1),average(score2),average(score3),average(score4),average(score5)];
         },
         getUserInformation: function() {//レビューからユーザー情報を取得する関数
-            this.user_list = Array(this.reviews.length).fill(undefined) // 初期値
-            let j = 0
-            for(let i = 0; i < this.reviews.length; i++) {
-                getUserById(this.reviews[i].user_id)
-                    .then(result => {
-                        
-                        this.user_list[i]=result[0];           
-                        getProfileImage( this.reviews[i].user_id )
+            this.isLoadingData = true;
+            this.user_list =  new Object(); // 初期値
+            this.start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
+            this.end = this.start + this.REVIEW_NUM_PER_PAGE;
+            if(this.end > this.reviews.length){
+                this.end = this.reviews.length;
+                this.length = this.end - this.start;
+            }else{
+                this.length = 3;
+            }
+            let j = 0;
+            for(let i = this.start; i < this.end; i++) {
+                const user_id = this.reviews[i].user_id;
+                getUserById(user_id)
+                    .then(result => {      
+                        this.user_list[user_id] = result[0];
+                        getProfileImage(user_id )
                             .then(res => {
                                 if(!res.success) {
-                                    this.user_list[i].src = require('@/assets/default-icon.jpeg')
+                                    this.user_list[user_id].src = require('@/assets/default-icon.jpeg')
                                 }else{
-                                    this.user_list[i].src = "data:image/jpeg;base64," + res.data.image;
+                                    this.user_list[user_id].src = "data:image/jpeg;base64," + res.data.image;
                                 }
                                 j += 1
-                                if(j == (this.reviews.length)){
+                                if(j == (this.length)){
                                     this.isLoadingData = false; // ユーザー名を全部取得すると、ロード画面が消える
                                 }
                             })
@@ -308,16 +324,11 @@ export default {
     computed: {
         //現在のページに表示するレビューを返す
         slicedReviews: function() {
-            const start = (this.now_review_page-1) * this.REVIEW_NUM_PER_PAGE;
-            const end = start + this.REVIEW_NUM_PER_PAGE;
-            const raw_reviews = this.reviews.slice(start, end)
-            const raw_users = this.user_list.slice(start, end)
             // レビューごとにidを振っておかないとv-forでワーニング出るので対応
             var enumerated_reviews = []
-            for(var i = 0; i < raw_reviews.length; i++) {
-                enumerated_reviews.push({id:i, content:raw_reviews[i],user:raw_users[i]});
+            for(var i = 0; i < this.length; i++) {
+                enumerated_reviews.push({id:i, content:this.reviews[this.start+i],user:this.user_list[this.reviews[this.start+i].user_id]});
             }
-            // console.log('cut reviewer data:',enumerated_reviews)
             return enumerated_reviews;
         },
         isLoading: function() {     //データとイメージ両方を読み終えた場合のみローディングを完了する
@@ -337,13 +348,14 @@ export default {
     watch: {
         showDialog: function() {    //spot詳細ダイアログが開いた(閉じた)時に実行するメソッド
             if(!this.showDialog) return;
-            this.spotData.spot_name=this.spot_name;
-            this.spotData.spot_type=this.spot_type;
             this.spotData.user_id=this.user_id;
             this.updateDetail()
             this.now_review_page = 1;
             this.photos = [{picture_id:1, image:require("@/assets/noimage.png")}]
             this.isEditMode = false;
+        },
+        now_review_page: function() {
+            this.getUserInformation();
         }
     }
 }

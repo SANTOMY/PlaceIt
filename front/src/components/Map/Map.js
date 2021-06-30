@@ -7,6 +7,7 @@ import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
 import '../../plugins/Leaflet.Icon.Glyph.js'
 import { getSpotTypeDict } from '../share/SpotTypeFunction'
+import mapLoading from './MapLoading.vue'
 
 //アイコンをロード
 delete  L.Icon.Default.prototype._getIconUrl
@@ -23,7 +24,8 @@ export default {
         spotRegButton,
         nowLocButton,
         spotDetail,
-        searchDialog
+        searchDialog,
+        mapLoading
     },
     data: function(){
         return {
@@ -42,8 +44,6 @@ export default {
             time:0,//タイマー用変数
             showDialog:false, //ダイアログを表示するか
             selectedSpotID: "", //クリックして選択しているspotのid
-            selectedSpotName: "",
-            selectedSpotType: "",
             selectedSpotUserId: "",
             markers:null,//マーカーリストのレイヤー群
             univFlag:false,//大学別検索の有効化・無効化
@@ -53,14 +53,17 @@ export default {
                 password: null,
                 univ:"",
             },
-            tags: []
+            tags: [],
+            isLoadingSpot: false
         };
     },
     methods: {
         //Map上に検索条件にあったスポットを表示する関数
         showSpot: async function (type, univ, keyword) {
             if (type == "reset") type = "";
+            this.isLoadingSpot = true
             var data = await getSpot("", "", type, "", univ);
+            this.isLoadingSpot = false
             if (data.success){
                 var spots = data.spots;
                 //キーワードを含まないスポットを除外
@@ -77,10 +80,7 @@ export default {
                     var marker = L.marker([spot.y, spot.x],
                         { icon: L.icon.glyph({ prefix: 'mdi', glyph: icon_dict[spot.spot_type.split(",")[0]], color: color_dict[spot.spot_type.split(",")[0]] }) })
                         .on('click', this.markerClickEvent);
-                    marker.spot_name = spot.spot_name;
                     marker.spot_id = spot.spot_id;
-                    marker.spot_type = spot.spot_type;
-                    marker.spot_picture = spot.spot_picture;
                     marker.user_id = spot.user_id;
                     markerSet.push(marker)
                 });
@@ -118,8 +118,6 @@ export default {
         markerClickEvent(event){
             this.showDialog = true;
             this.selectedSpotID = event.target.spot_id;
-            this.selectedSpotName = event.target.spot_name;
-            this.selectedSpotType = event.target.spot_type;
             this.selectedSpotUserId = event.target.user_id;
         },
 
@@ -207,7 +205,7 @@ export default {
             this.user.univ = this.$store.state.userData.university;
         }
         //Mapオブジェクトの生成
-        this.map = L.map('map',{zoom: 10,maxZoom: 18})
+        this.map = L.map('map',{zoom: 10,maxZoom: 18,minZoom:4})
         .addLayer(
             L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
                 attribution:
@@ -222,9 +220,8 @@ export default {
         //this.map.on("locationfound",this.locationMarker);
         //spot表示
         this.showSpot(this.nowType,"","",0);
-        // var data = await getSpot("","","","","");
-        // this.spotNameList = data.spots;
-        this.spotNameList = [];
+        var data = await getSpot("","","","","");
+        this.spotNameList = data.spots;
     }, 
     //現在地追跡のために利用(予定)
     watch: {

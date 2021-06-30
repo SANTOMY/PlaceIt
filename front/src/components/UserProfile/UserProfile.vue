@@ -1,31 +1,69 @@
 <template>
+    <v-container>
 <!-- ローディング画面 -->
     <v-skeleton-loader
         v-if="isLoading"
         type="list-item-avatar-three-line, image"
         class="mx-auto"
     ></v-skeleton-loader>
-    <user-profile-detail 
-        v-else
-        :user="user"
-        :otherUser="otherUser"
-        :my_spot="my_spot"
-        :good_spot="good_spot"
-        :spot="spot"
-    />
+        <v-toolbar
+            v-if="!isLoading"
+            flat
+            color="transparent"
+        >
+            <v-icon>mdi-account</v-icon>
+            <v-toolbar-title>ユーザープロファイル</v-toolbar-title>
+        </v-toolbar>
+
+<!-----------------------ユーザー写真------------------------------------------------->        
+        <v-row v-if="!isLoading">
+            <v-col>
+                <v-layout justify-center>
+                    <v-avatar size="200">
+                        <img v-bind:src="user.src">
+                    </v-avatar>
+                </v-layout>
+                <avatar-register v-if="!otherUser" @submit="editAvatarImage"/>
+            </v-col>
+<!-----------------------ユーザー名とプロフィール修正ボタン------------------------->
+            <v-col>
+                <v-container>
+                    <v-row justify="center">
+                        <v-col>
+                            <p class="font-italic">User Name</p>
+                            <h1>{{ user.username }}</h1>
+                            <v-spacer></v-spacer>
+                            <p class="font-italic">University</p>
+                            <h1>{{ user.university }}</h1>
+                            <v-spacer></v-spacer>
+                            <user-edit v-if="!otherUser" :user="user"/>
+                            <user-delete v-if="!otherUser" />
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-col>
+        </v-row>
+<!----------------------スポットリストカード------------------------------------------------->
+        <spot-list-card v-if="!isLoading" :user="user"  color="green"/>
+    </v-container>
 </template>
 
 <script>
 
-import userProfileDetail from "./UserProfileDetail.vue";
 import {getProfileImage} from "../../routes/imageRequest"
-import {SpotExampleData} from "../share/SpotExampleData";
-import {getSpotByUserId,getSpotYouReviewed} from '../share/GetProfileInformation.js';
-
+import SpotListCard from "./SpotListCard.vue";
+import UserEdit from "./UserEdit.vue";
+import {uploadProfileImage} from "../../routes/imageRequest"
+import AvatarRegister from "./AvatarRegister.vue"
+import {ConvertToFileFromBase64} from '../share/ConvertImageFunctions';
+import UserDelete from "./UserDelete.vue";
 export default {
 
     components: {
-        userProfileDetail
+        SpotListCard,
+        UserEdit,
+        AvatarRegister,
+        UserDelete,
     },
     data() {
         return {
@@ -34,7 +72,7 @@ export default {
                 // ユーザー仮データ
             },
             isLoading: true,
-            spot: SpotExampleData(),
+            spot: [],
             my_spot: [
                 // 自分の作成したスポット
                 // required attribute: name, src, good
@@ -46,11 +84,11 @@ export default {
             good_spot: [
                 // 自分が評価したスポット
             ],
-            show_count: 0
+            editer: false, // User profile edit UI ON/OFF(true/false)
+            dialogEdit: false // user information edit UI
         }
     },
     mounted() {
-        // console.log('query:',this.otherUser)
         if(this.otherUser==true){
             this.user= { 
                 id: this.$store.state.otherUserData.userId,
@@ -60,7 +98,6 @@ export default {
                 university: this.$store.state.otherUserData.university,
                 src: require('@/assets/default-icon.jpeg')
             }
-            // this.otherUser = true
         }else if(this.otherUser==false){
             this.user= { 
                 id: this.$store.state.userData.userId,
@@ -71,42 +108,61 @@ export default {
                 src: require('@/assets/default-icon.jpeg')
             }
         }else{
-            alert("URLが間違っており、読み込めませんでした。");
+            alert("ERROR:読み込めませんでした。");
             return
         }
-        
         this.show_count = 0
         getProfileImage( this.user.id )
             .then(result => {
-                // console.log('test, UserProfile getProfileImage success')
                 if(!result.success) return;
                 this.user.src = "data:image/jpeg;base64," + result.data.image;
-            }) 
-
-        getSpotByUserId( this.user.id )
-            .then( result =>{
-                this.show_count += 1
-                this.my_spot = result
-        })
-
-        getSpotYouReviewed( this.user.id )
-            .then( result =>{
-                this.show_count += 1
-                this.good_spot = result
             })
+        this.isLoading=false;
     },
-    watch:  {
-        show_count: function() {
-            if(this.show_count!=2) return;
-            if(this.show_count==2) {
-                this.isLoading=false
-                // console.log('=========finish loading===========')
-                // console.log('my_spot',this.my_spot)
-                // console.log('good_spot',this.good_spot)
-                // console.log('user',this.user)
-                // console.log('otherUser',this.otherUser)
-            }
+    methods: {    
+
+        getLatestSpots: function( left = 0, right ,spot){ //スポットが多すぎるときの処理。
+            // TODO: 他のスポットにも対応
+            console.log( "latestSpots", ( spot ).slice( left, right ) )
+            return ( spot ).slice( left, right )
         },
-    },
+
+        shuffleArray: async function( array ){ // 配列をシャッフルする関数
+            var newArray = [];
+            while ( array.length > 0 ) {
+                var n = array.length;
+                var k = Math.floor( Math.random() * n );
+
+                newArray.push( array[ k ] );
+                array.splice( k, 1 );
+            }
+            return newArray;
+            // return newArray.slice( 0, 10 )
+            // みたいにすると，おすすめが毎回変わって面白いかも
+        },
+        editProfile: function() {
+            this.dialogEdit = true
+        },
+        closeUserEdit: function(){          
+            this.dialogEdit = false
+        },
+        editAvatarImage: function(image) {
+            this.user.src = image;
+            const imageFile = ConvertToFileFromBase64(image, "hoge.jpeg"); //DB保存時に別の名前に変えられるから適当な名前にしてる
+            uploadProfileImage(imageFile, this.$store.state.userData.userId)
+        },
+
+        deleteUser: function(){
+        },
+
+        createImageFile: function(base64image, name) {
+            var bin = atob(base64image.replace(/^.*,/, ''));
+            var buffer = new Uint8Array(bin.length);
+            for (var i = 0; i < bin.length; i++) {
+                buffer[i] = bin.charCodeAt(i);
+            }
+            return new File([buffer.buffer], name, {type: "image/jpeg"});
+        },
+    }
 }
 </script>
