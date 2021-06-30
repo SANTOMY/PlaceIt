@@ -6,10 +6,10 @@ const env = dotenv.config();
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const pool = new pg.Pool({
-    user: process.env.POSTGRES_USER,
-    host: process.env.POSTGRES_HOST,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
+    user: env.parsed.USER,
+    host: env.parsed.HOST,
+    database: env.parsed.DB,
+    password: env.parsed.PASSWORD,
     port: 5432,
     ssl: true
   })

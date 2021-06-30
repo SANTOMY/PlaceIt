@@ -9,7 +9,7 @@ async function register(userName, email, password, university){
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Origin': '0.0.0.0'
+                'Origin': 'http://localhost:8080'
             },
             body: JSON.stringify({userName: userName, email: email, password: password, university: university})
         });
@@ -68,7 +68,7 @@ async function editUser(currentEmail,newEmail,newPassword,newUserName){
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Origin': '0.0.0.0'
+                'Origin': 'http://localhost:8080'
             },
             body: JSON.stringify({currentEmail: currentEmail, newEmail: newEmail, newPassword: newPassword, newUserName: newUserName})
         });
@@ -86,7 +86,7 @@ async function login(email,password){
             headers:{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Origin': '0.0.0.0'
+                'Origin': 'http://localhost:8080'
             },
             body: JSON.stringify({email: email, password: password})
         });

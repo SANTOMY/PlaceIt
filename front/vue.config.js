@@ -3,15 +3,14 @@ const vuetifyOptional = process.env.NODE_ENV === "production"
   : [];
 
 module.exports = {
-    configureWebpack: {
-      plugins: [
-        ...vuetifyOptional,
-      ],
-    },
-    transpileDependencies: vuetifyOptional.length > 0 ? ["vuetify"] : [],
-    devServer: {
-      public: '0.0.0.0:8080',
-      disableHostCheck: true
-    }
-  
+  configureWebpack: {
+    plugins: [
+      ...vuetifyOptional,
+    ],
+  },
+  transpileDependencies: vuetifyOptional.length > 0 ? ["vuetify"] : [],
+  devServer: {
+    public: '0.0.0.0:8080'
   }
+
+}
