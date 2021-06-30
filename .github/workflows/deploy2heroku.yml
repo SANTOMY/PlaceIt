@@ -1,0 +1,35 @@
+name: heroku
+on:
+  push:
+    branches:
+      - deploy
+  workflow_dispatch:
+
+jobs: 
+  push-front:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: push-front
+          uses: akhileshns/heroku-deploy@v3.7.8
+          with:
+            heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+            heroku_app_name: "place-it-front"
+            heroku_email: ${{secrets.HEROKU_EMAIL}}
+            appdir: front
+            usedocker: true
+  push-back:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: push-back
+          uses: akhileshns/heroku-deploy@v3.7.8
+          with:
+            heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+            heroku_app_name: "place-it-back"
+            heroku_email: ${{secrets.HEROKU_EMAIL}}
+            appdir: back
+            usedocker: true
+
+
+	
