@@ -130,7 +130,7 @@
                     </v-col>
                 </v-card-actions>
             </v-container>
-            <spot-detail :showDialog="showSpotDialog" :spot_id="selectedSpotID" :spot_name="selectedSpotName" :spot_type="selectedSpotType" :user_id="selectedUserID" @close="closeSpotDialog()"/>
+            <spot-detail :showDialog="showSpotDialog" :spot_id="selectedSpotID" :user_id="selectedUserID" @close="closeSpotDialog()"/>
         </v-card>  
     </v-container>
 </template>
@@ -171,8 +171,8 @@
             isLoading: true,
             userId: "",
             university: "",
-            selectedSpotName:"",
-            selectedSpotType:"",
+            // selectedSpotName:"", // 未使用
+            // selectedSpotType:"", // 未使用
             selectedUserID:"",
         }),
         mounted() {
@@ -203,8 +203,7 @@
                         this.end = spot_length
                     }
                     var j = this.begin;
-                    console.log(this.begin)
-                    console.log(this.end)
+                    
                     for(let i = this.begin; i < this.end; i++){
                         const spt = result.spots[i];
                         const spt_id = spt.spot_id;
@@ -220,15 +219,15 @@
                             getSpotImage(spt_id).then((result) => {
                                 if (result.success && result.data != undefined) {
                                     const src = "data:image/jpeg;base64," + result.data[0].image
-                                    this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                                    this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good, "userId" : user_id });
                                 } else {
                                     const src = require("@/assets/noimage.png");
-                                    this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                                    this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good, "userId" : user_id });
                                 }
                             }).catch((exception) => {
                                 console.log("Error in getSpotImage: ", exception)
                                 const src = require("@/assets/noimage.png");
-                                this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                                this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good, "userId" : user_id });
                             }).finally(()=>{
                                 j += 1;
                                 if(j == this.end){
@@ -294,15 +293,15 @@
                                 getSpotImage(spt_id).then((result) => {
                                     if (result.success && result.data != undefined) {
                                         const src = "data:image/jpeg;base64," + result.data[0].image
-                                        this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                                        this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good, "userId" : spt.user_id });
                                     } else {
                                         const src = require("@/assets/noimage.png");
-                                        this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                                        this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good, "userId" : spt.user_id });
                                     }
                                 }).catch((exception) => {
                                     console.log("Error in getSpotImage: ", exception)
                                     const src = require("@/assets/noimage.png");
-                                    this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good });
+                                    this.spot.push({ "spotId": spt_id, "name": name, "src": src, "good": good, "userId" : spt.user_id });
                                 }).finally(()=>{
                                     j += 1;
                                     if(j == this.end){
@@ -358,15 +357,15 @@
                             getSpotImage(spt.spot_id).then((result) => {
                                 if (result.success && result.data != undefined) {
                                     const src = "data:image/jpeg;base64," + result.data[0].image
-                                    this.spot.push({ "spotId": spt.spot_id, "name": spt.spot_name, "src": src, "good": good });
+                                    this.spot.push({ "spotId": spt.spot_id, "name": spt.spot_name, "src": src, "good": good, "userId" : spt.user_id });
                                 } else {
                                     const src = require("@/assets/noimage.png");
-                                    this.spot.push({ "spotId": spt.spot_id, "name": spt.spot_name, "src": src, "good": good });
+                                    this.spot.push({ "spotId": spt.spot_id, "name": spt.spot_name, "src": src, "good": good, "userId" : spt.user_id });
                                 }
                             }).catch((exception) => {
                                 console.log("Error in getSpotImage: ", exception)
                                 const src = require("@/assets/noimage.png");
-                                this.spot.push({ "spotId": spt.spot_id, "name": spt.spot_name, "src": src, "good": good });
+                                this.spot.push({ "spotId": spt.spot_id, "name": spt.spot_name, "src": src, "good": good, "userId" : spt.user_id });
                             }).finally(()=>{
                                 j += 1;
                                 if(j == this.end){
@@ -430,8 +429,8 @@
             spotInformationPage: function(value) { 
                 this.showSpotDialog = true;
                 this.selectedSpotID = this.spot[value].spotId;
-                this.selectedSpotName = this.spot[value].name;
-                this.selectedSpotType = this.spot[value].spotType;
+                // this.selectedSpotName = this.spot[value].name; // 未使用
+                // this.selectedSpotType = this.spot[value].spotType; // 未使用
                 this.selectedUserID = this.spot[value].userId;
             },
             closeSpotDialog() {
