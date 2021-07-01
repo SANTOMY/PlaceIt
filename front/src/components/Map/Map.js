@@ -101,11 +101,13 @@ export default {
         // },
         //Map上のどこかををクリックした時に起動する関数
         mapClickEvent(event){
-            if(this.flag){
+            if(this.$store.state.userData!=null){
+                if(this.flag){
                 this.flag=false
                 this.getPoint(event);
                 this.regSpot(event);
             }else{this.flag=true;}
+        }
         },
 
         //Map上のクリックされた箇所の経緯度を取得する関数

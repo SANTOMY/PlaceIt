@@ -118,8 +118,8 @@
                         </v-icon>
                     </v-btn>
                 </template>
-                <span v-if="!moreDetail">Set more search details for filtering.</span>
-                <span v-if="moreDetail">Finish to set search details for filtering.</span>
+                <span v-if="!moreDetail">より詳細な検索</span>
+                <span v-if="moreDetail">詳細検索を閉じる</span>
             </v-tooltip>
         </v-card-actions>
         </v-container>
@@ -156,7 +156,7 @@
                                     mdi-alpha-a-circle-outline
                                 </v-icon>
                             </template>
-                            <span>Show all spots regardless of the university.</span>
+                            <span>全ての所属大学のスポットを表示</span>
                             </v-tooltip>
                         </v-btn>
                         
@@ -167,7 +167,7 @@
                                     mdi-account-cowboy-hat
                                 </v-icon>
                             </template>
-                            <span>Show only spots of your university.</span>
+                            <span>あなたの所属大学のスポットを表示</span>
                             </v-tooltip>
                         </v-btn>
                     </v-btn-toggle>
@@ -189,7 +189,7 @@
                         <v-icon> mdi-file-refresh </v-icon>
                     </v-btn> 
                 </template>
-                <span> Clear all your input.</span>
+                <span> 入力をクリア </span>
             </v-tooltip>
         </v-container>
     </v-card>
