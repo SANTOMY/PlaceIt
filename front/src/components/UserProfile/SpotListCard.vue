@@ -203,8 +203,7 @@
                         this.end = spot_length
                     }
                     var j = this.begin;
-                    // console.log(this.begin)
-                    // console.log(this.end)
+                    
                     for(let i = this.begin; i < this.end; i++){
                         const spt = result.spots[i];
                         const spt_id = spt.spot_id;
