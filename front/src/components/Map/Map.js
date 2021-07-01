@@ -102,8 +102,7 @@ export default {
         //Map上のどこかををクリックした時に起動する関数
         mapClickEvent(event){
             if(this.$store.state.userData!=null){
-            
-            if(this.flag){
+                if(this.flag){
                 this.flag=false
                 this.getPoint(event);
                 this.regSpot(event);
