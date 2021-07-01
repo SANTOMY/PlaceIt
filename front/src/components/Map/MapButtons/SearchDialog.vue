@@ -189,7 +189,7 @@
                         <v-icon> mdi-file-refresh </v-icon>
                     </v-btn> 
                 </template>
-                <span> Clear all your input.</span>
+                <span> 入力をクリア </span>
             </v-tooltip>
         </v-container>
     </v-card>
