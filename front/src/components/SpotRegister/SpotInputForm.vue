@@ -289,7 +289,6 @@ export default {
     },
 
     mounted: function() {
-        console.log(this.initialSpotData)
         this.spot_data.name = this.initialSpotData.spot_name;
         this.spot_data.types = this.initialSpotData.spot_type.split(",")[0];
         this.spot_data.scores = this.initialScores;

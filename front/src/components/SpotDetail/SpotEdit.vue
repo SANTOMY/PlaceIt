@@ -31,7 +31,6 @@ export default {
 
     methods: {
         onUpdate: function(spotData, imageFile) {
-            console.log(this.spotId, spotData.name, spotData.types + "," + spotData.tags);
             editSpot(this.spotId, spotData.name, spotData.types + "," + spotData.tags)
                 .then(res => {
                     if(!res.success || imageFile == undefined) {
