@@ -29,13 +29,7 @@
             </v-col>
         </v-row>
 <!----------------------スポットリストカード------------------------------------------------->
-        <SpotListCard 
-            v-bind:spot_list="spot"
-            v-bind:user_list="user"
-            v-bind:my_spot_list="my_spot"
-            v-bind:good_spot_list="good_spot"
-            color="green"
-        ></SpotListCard>
+        <spot-list-card :userId="userId" :university="university" color="green"/>
     </v-container>
 </template>
 
@@ -58,12 +52,9 @@ export default {
     },
     props: {
         otherUser: Boolean,
-        user: null,
-        my_spot: null,
-        good_spot: null,
-        spot: null,
+        user: Object,
+        isLoading: Boolean
     },
-
     methods:  {
         editAvatarImage: function(image) {
             this.user.src = image;
