@@ -126,14 +126,16 @@ export default {
 
         //現在地アイコンを更新する関数(予定)
         locationMarker(location){
+            if(this.locMarker != null) {
+                this.map.removeLayer(this.locMarker);
+            }
             var pulsingIcon = L.icon.pulse({
-                iconSize:[20,20]
-                ,color:'#57c6fd'
-                ,fillColor:'#57c6fd'
-                ,heartbeat: 2
+                iconSize:[25,25]
+                ,color:'#1bb1ce'
+                ,fillColor:'#1bb1ce'
+                ,heartbeat: 1
             });
-            console.log(this.map);
-            L.marker(location.latlng, {icon:pulsingIcon}).addTo(this.map);
+            this.locMarker = L.marker(location.latlng, {icon:pulsingIcon}).addTo(this.map);
         },
 
         //スポット登録関数
@@ -228,6 +230,9 @@ export default {
 
         //現在地マーカーを設置(予定)
         this.map.on("locationfound",this.locationMarker);
+
+        //setInterval(this.setNowLocation, 1000 * 20);
+
         //spot表示
         this.showSpot(this.nowType,"","",0);
         var data = await getSpot("","","","","");
