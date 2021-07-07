@@ -32,9 +32,15 @@ export function getTagTypeDict(value) {
                     new TagType("station", "mdi-train", "駅", ["lifework"]),
                     new TagType("bus", "mdi-bus-stop", "バス停", ["lifework"]),
                     new TagType("super", "mdi-basket-outline", "スーパー", ["shopping"]),
-                    new TagType("fashion", "mdi-hanger", "ファッション", ["shopping"]),
+                    new TagType("fashion", "mdi-tshirt-crew", "ファッション", ["shopping"]),
                     new TagType("aquarium", "mdi-jellyfish-outline", "水族館", ["travel"]),
                     new TagType("school", "mdi-school-outline", "学校", ["lifework"]),
+                    new TagType("cake", "mdi-cupcake", "デザート", ["restaurant"]),
+                    new TagType("bank", "mdi-bank", "博物館", ["travel"]),
+                    new TagType("bowling", "mdi-bowling", "ボーリング", ["amusements"]),
+                    new TagType("domain", "mdi-domain", "会社", ["lifework"]),
+                    new TagType("bycicle", "mdi-bicycle", "自転車", ["shopping", "travel"]),
+                    new TagType("rentacar", "mdi-car", "レンタカー", ["lifework", "travel"]),
                     //new TagType("", "mdi-", "", [""]),
 
     ]
