@@ -6,6 +6,7 @@ import {getSpot} from '../../routes/spotRequest'
 import spotDetail from '../SpotDetail/SpotDetail.vue'
 import searchDialog from './MapButtons/SearchDialog.vue'
 import '../../plugins/Leaflet.Icon.Glyph.js'
+import '../../plugins/L.Icon.Pulse.js'
 import { getSpotTypeDict } from '../share/SpotTypeFunction'
 import mapLoading from './MapLoading.vue'
 
@@ -124,8 +125,17 @@ export default {
         },
 
         //現在地アイコンを更新する関数(予定)
-        locationMarker(){
-            this.map.locate({ setView: true, zoom: this.zoom});
+        locationMarker(location){
+            if(this.locMarker != null) {
+                this.map.removeLayer(this.locMarker);
+            }
+            var pulsingIcon = L.icon.pulse({
+                iconSize:[25,25]
+                ,color:'#1bb1ce'
+                ,fillColor:'#1bb1ce'
+                ,heartbeat: 1
+            });
+            this.locMarker = L.marker(location.latlng, {icon:pulsingIcon}).addTo(this.map);
         },
 
         //スポット登録関数
@@ -195,7 +205,7 @@ export default {
         // },
         closeDialog() {
             this.showDialog = false;
-    }
+        }
 },
 
     //画面読み込み時の関数
@@ -219,7 +229,10 @@ export default {
         this.map.locate({ setView: true, zoom:this.zoom});
 
         //現在地マーカーを設置(予定)
-        //this.map.on("locationfound",this.locationMarker);
+        this.map.on("locationfound",this.locationMarker);
+
+        //setInterval(this.setNowLocation, 1000 * 20);
+
         //spot表示
         this.showSpot(this.nowType,"","",0);
         var data = await getSpot("","","","","");

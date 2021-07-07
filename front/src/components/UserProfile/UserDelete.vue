@@ -17,8 +17,8 @@
             <v-container>
                 <v-row>
                     <v-col>
-                        <v-title class="mb-5"><h1>あなたのデータを削除</h1></v-title>
-                            あなたのパスワードを入力してください
+                        <h1>あなたのデータを削除</h1>
+                        あなたのパスワードを入力してください
                         <v-form @submit.prevent>
                             <v-text-field label=""
                                 prepend-icon="mdi-lock" 
