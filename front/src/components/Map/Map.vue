@@ -14,7 +14,7 @@
 
 <script lang='js' src='./Map.js' />
 
-<style scoped>
+<style>
 /* むやみにいじると地図表示が消えるので注意*/
 html,
 body,
@@ -40,4 +40,6 @@ body {
 }
     /* 各オブジェクトのstyleでz-indexを0以上に設定する 
     基本は1000でOK*/
+@import '../../plugins/L.Icon.Pulse.css'
+
 </style>
